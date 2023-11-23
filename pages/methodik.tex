@@ -153,6 +153,114 @@ Dimensionen, wodurch eine anschauliche Darstellung in Form von Koordinatenpaaren
 ermöglicht wird. Dieser Aspekt ist entscheidend, um Studiengänge in einem
 zweidimensionalen Diagramm zu positionieren, wobei ähnliche Studiengänge
 aufgrund ihrer inhaltlichen Ähnlichkeiten nahe beieinander liegen. Die Anwendung
-des MDS-Algorithmus auf eine genormte Tabelle, in der die Studiengänge nach
-ihren Anteilen an verschiedenen Inhaltskategorien gewichtet sind, ermöglicht
-eine effektive Positionierung im Diagramm.
+des MDS-Algorithmus auf eine genormte Tabelle, in der im Falle von StudyMap die 
+Studiengänge nach ihren Anteilen an verschiedenen Inhaltskategorien gewichtet
+sind, ermöglicht eine effektive Positionierung im Diagramm
+(siehe \autoref{table:input-mds}).
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|l|l|}
+    \hline
+        \textbf{Kürzel} & \textbf{Architektur} & \textbf{Gesundheit} & \textbf{Technik} & \textbf{Informatik} & \textbf{Wirtschaft} & \textbf{Internat.} \\ \hline
+        \textbf{AT} & 0,55 & 0,06 & 0,09 & 0,04 & 0 & 0 \\ \hline
+        \textbf{B} & 0,75 & 0 & 0 & 0,1 & 0 & 0,01 \\ \hline
+        \textbf{ID} & 0,1 & 0,05 & 0,15 & 0,05 & 0,05 & 0 \\ \hline
+        \textbf{HK} & 0,01 & 0,7 & 0,01 & 0,01 & 0,1 & 0,05 \\ \hline
+        \textbf{PA} & 0 & 0 & 0,6 & 0,2 & 0,12 & 0,02 \\ \hline
+        \textbf{IE} & 0 & 0 & 0,34 & 0,32 & 0,22 & 0,04 \\ \hline
+        \textbf{LP} & 0 & 0,89 & 0,01 & 0 & 0,04 & 0,02 \\ \hline
+        \textbf{SA} & 0 & 0,98 & 0 & 0 & 0 & 0 \\ \hline
+        \textbf{IN} & 0 & 0 & 0,05 & 0,9 & 0 & 0,2 \\ \hline
+        \textbf{IW} & 0 & 0 & 0,05 & 0,75 & 0,15 & 0,2 \\ \hline
+        % \textbf{IM} & 0 & 0,2 & 0,1 & 0,65 & 0 & 0,05 \\ \hline
+        % \textbf{BW} & 0 & 0 & 0 & 0 & 0,6 & 0,1 \\ \hline
+        % \textbf{EB} & 0 & 0 & 0 & 0 & 0,5 & 0,4 \\ \hline
+        % \textbf{SE} & 0 & 0 & 0,45 & 0,35 & 0,05 & 0,05 \\ \hline
+        % \textbf{UI} & 0 & 0 & 0,36 & 0,12 & 0 & 0,04 \\ \hline
+        % \textbf{MS} & 0 & 0 & 0,66 & 0,18 & 0 & 0,04 \\ \hline
+        % \textbf{IR} & 0 & 0 & 0 & 0 & 0,1 & 0,8 \\ \hline
+        % \textbf{REE} & 0 & 0 & 0,25 & 0,15 & 0,05 & 0,05 \\ \hline
+        % \textbf{EI} & 0 & 0 & 0,5 & 0,25 & 0,05 & 0,05 \\ \hline
+        % \textbf{ME} & 0 & 0 & 0,75 & 0,1 & 0,03 & 0,02 \\ \hline
+        % \textbf{BE} & 0 & 0,07 & 0,6 & 0,12 & 0,11 & 0,06 \\ \hline
+        % \textbf{MB} & 0 & 0 & 0,87 & 0,1 & 0,02 & 0 \\ \hline
+        % \textbf{PT} & 0 & 0,95 & 0 & 0,03 & 0 & 0,09 \\ \hline
+    \end{tabular}
+
+    \caption{Exemplarische Eingabetabelle für den MDS-Algorithmus}
+    \label{table:input-mds}
+\end{table}
+
+\autoref{table:input-mds} stellt eine stark vereinfachte Eingabetabelle für den
+MDS-Algorithmus dar. Die erste Spalte enthält die Kürzel der verschiedenen
+Studiengänge, wobei beispielsweise \textit{AT} für den Bachelor-Studiengang
+Architektur steht. Die folgenden Spalten enthalten genormte Werte zwischen 0 und
+1, die die prozentualen Anteile verschiedener Inhaltskategorien in den
+jeweiligen Studiengängen repräsentieren. Diese genormten Werte werden im
+n-dimensionalen Raum positioniert. Durch Anwendung des MDS-Algorithmus werden im
+Verlauf die n-Dimensionen auf zwei Dimensionen reduziert, um schließlich eine
+ästhetisch ansprechende Visualisierung in Form eines Diagramms zu generieren.
+
+Der klassische MDS-Algorithmus besteht aus den folgenden vier Schritten:
+
+
+% https://ceopedia.org/index.php/Multidimensional_scaling
+\paragraph*{1. Berechnung der Distanzmatrix $ D_{ij} $}
+Die Berechnung der Distanzmatrix $ D_{ij} $ erfolgt mithilfe des euklidischen
+Abstands zwischen den Studiengängen im n-dimensionalen Raum. Der euklidische
+Abstand zwischen zwei Punkten $ P_{i} $ und $ P_{j} $ wird nach der Formel
+
+$$ d(P_i, P_j) = \sqrt{(x_i - x_j)^2 + (y_i - y_j)^2 + \ldots + (z_i - z_j)^2} $$
+
+berechnet, wobei $ x_{i} $, $ y_{i} $, ..., $ z_{i} $ die Koordinaten von Punkt
+$ P_{i} $ im n-dimensionalen Raum sind. Für die Studiengangsdaten bedeutet das,
+dass die n-Dimesionen die verschiedenen Inhaltskategorien repräsentieren.
+
+Die euklidische Distanzmatrix $ D_{ij} $ enthält dann die euklidischen Abstände
+zwischen jedem Paar von Studiengängen. In der Matrix sind die Elemente
+$ D_{ij} $ die Distanzen zwischen den Studiengängen $ i $ und $ j $. Je näher
+die Studiengänge in der Distanzmatrix beieinander liegen, desto näher werden sie
+im finalen Diagramm platziert und umgekehrt.
+
+Konkret in Python implementiert, sieht die Berechnung der Distanzmatrix wie
+folgt aus:
+
+\begin{lstlisting}[style=Python]
+def calculate_distance_matrix(X):
+    euclidean = lambda x,y:ma.sqrt(np.sum((np.array(x)-np.array(y))**2))
+    D = []
+    for x in X:
+        tmp = []
+        for y in X:
+            tmp.append(euclidean(x, y))
+        D.append(tmp)
+    return D
+\end{lstlisting}
+
+% https://dorianhe.github.io/Intro-to-Multidimensional-Scaling/
+% https://ceopedia.org/index.php/Multidimensional_scaling
+% https://www.hongfeili.com/files/paper100/paper4.pdf
+\paragraph*{2. Anwendung der Centering Matrix $ C $ zur Normalisierung der
+Distanzen}
+Die Formel $ C = I - \frac{1}{n} \vec{e} * \vec{e}^T $ berechnet die
+sogenannte Centering Matrix. $ I $ ist die Einheitsmatrix, $ \frac{1}{n} $ ist
+der Kehrwert der Anzahl der Datenpunkte und $ \vec{e} $ ist ein Vektor gefüllt
+mit Einsen. Das Symbol $ \vec{e}^T $ bezeichnet wie üblich die Transposition
+des Vektors.
+
+Die Centering Matrix $ C $ wird verwendet, um die Distanzmatrix $ D $ zu
+zentrieren. Das Zentrieren ist wichtig, um die Distanzen zwischen den Punkten
+in der n-dimensionalen Raummatrix zu normieren und somit den Schwerpunkt der
+Daten im Raum zu korrigieren.
+
+Schließlich wird diese eingesetzt um die Zentriermatrix $ B $ aus der
+Distanzmatrix zu berechnen:
+$$ B = - \frac{1}{2} * C * D_{ij} * C $$
+
+\paragraph*{3. Spektralzerlegung}
+Die Matrix $ B $ wird nun spektral zerlegt, um die Eigenwerte $ \lambda_{i} $
+und die zugehörigen Eigenvektoren $ v_{i} $ zu erhalten.
+$$ B = W * \Lambda * W^-1 $$
+Hierbei ist $ W $ die Matrix der Eigenvektoren und $ \Lambda $ ist eine
+Diagonalmatrix mit den Eigenwerten auf der Hauptdiagonale.
