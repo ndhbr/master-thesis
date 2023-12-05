@@ -1,7 +1,4 @@
 \section{Methodik}
-
-\subsection{Beschreibung der Datenquelle und -beschaffung}
-
 \subsection{Beschreibung der Algorithmen}
 Der Studiengangsfinder soll Studieninteressierten einen schnellen Überblick über
 alle in Frage kommenden Studiengänge ermöglichen.  Dabei soll dem Nutzer eine
@@ -399,7 +396,120 @@ die Google Suchtrends von 2021 zum Suchbegriff \glqq OTH Regensburg
 Studiengänge\grqq{} herangezogen (siehe Anhang
 \ref{appendix:google-search-trends}). Die Trends zeigen eine Jahressumme von
 1194 Suchanfragen. Die Anzahl an Suchanfragen lassen sich offensichtlich nicht
-1:1 in Seitenaufrufe projezieren, verdeutlichen aber dennoch einen ungefähren
+1:1 in Seitenaufrufe projizieren, verdeutlichen aber dennoch einen ungefähren
 Richtwert. Die Datengenerierung hingegen wird nur bei größeren Änderungen an den
 Inhalten von Studiengängen, oder beim Hinzufügen bzw. Entfernen eines 
 Studiengangs ausgelöst.
+
+\subsection{Beschreibung der Datenquelle und -beschaffung}
+\subsubsection{Herkunft der Daten}
+Die Grundlage für den Studiengangsfinder wurde in enger Zusammenarbeit mit Frau
+Rösel, der Vizepräsidentin der Hochschule Regensburg, gelegt. Wir initiierten
+den Prozess durch die Definition klarer Anforderungen an die benötigten
+Informationen. Dazu gehört unter anderem die Definition der Inhaltskategorien
+der Studiengänge. Der erste Entwurf entsprach folgender Aufteilung:
+
+\begin{enumerate}
+    \item Architektur und Bau
+    \item Design und Medien
+    \item Gesundheit und Soziales
+    \item Technik
+    \item Informatik und Mathematik
+    \item Marketing und Kommunikation
+    \item Erneuerbare Energien, Nachhaltigkeit und Umwelttechnik
+    \item Wirtschaft und Management
+    \item Internationales
+\end{enumerate}
+
+Diese Anforderungen wurden dann innerhalb der Hochschule kommuniziert und von
+einer Teilmenge der Studiendekane für vereinzelte Studiengänge ausgefüllt. Das
+heißt konkret, dass für 22 Studiengänge jeweils für alle dieser
+Inhaltskategorien ein Wert festgelegt wurde.
+
+\subsubsection{Festlegung der Inhaltskategorien}
+Im nächsten Schritt werden die Werte auf die Zeile normiert. Das heißt, die
+Summe aller Inhaltskategorie-Werte pro Studiengang beträgt eins.
+
+Im Umkehrschluss bedeutet das jedoch, dass die Studiengänge aufgrund von
+Überschneidungen in den Kategorien nicht korrekt abgebildet werden können.
+Beispiel:
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|}
+    \hline
+    \textbf{Studienfeld}           & \textbf{...} & \textbf{Informatik und Mathematik} & \textbf{Internationales} & \textbf{...} \\ \hline
+    Informatik                     & ...          & 0,8                                & 0,2                      & ...          \\ \hline
+    International Computer Science & ...          & 0,4                                & 0,6                      & ...          \\ \hline
+    \end{tabular}
+
+    \caption{Aufteilung der Werte bei auf Studiengang genormte Werte}
+    \label{table:norm-values}
+\end{table}
+
+Tabelle \ref{table:norm-values} zeigt die Problematik der Überschneidungen. Der
+Studiengang International Computer Science ist von den Inhalten nahezu
+identisch zum Studiengang Informatik. Der Hauptunterschied ist, dass die Fächer
+in Englisch angeboten werden. Dies hat zur Folge, dass der Studiengang
+eigentlich sowohl in der Kategorie Informatik und Mathematik, als auch in der
+Kategorie Internationales einen hohen Wert benötigt. Da die Zeilensumme eins
+beträgt, ist dies nicht realistisch abbildbar. Aus diesem Grund wurde
+entschieden die Werte pro Zelle, d.h. pro Kategorie und Studiengang auf eins
+zu normieren. Mit dieser Aufteilung, kann ein Studiengang sowohl in Informatik
+und Mathematik beispielsweise einen Wert von 0,8 haben, als auch in der
+Kategorie Internationales.
+
+Die anfängliche Kategorisierung der Studiengänge in neun allgemeine
+Inhaltskategorien stellte sich als unzureichend heraus, da nach der Anwendung
+des MDS-Algorithmus viele Studiengänge überlappend dargestellt wurden. Diese
+Herausforderung führte zu einer entscheidenden Überarbeitung des
+Kategorisierungssystems, um präzisere und differenzierte Bewertungen zu
+ermöglichen. Die Lösung bestand in der Einführung von sogenannten Supergruppen,
+die eine tiefere Bewertung der Studiengänge ermöglichten.
+
+Ursprünglich waren Studiengänge wie \textit{Architektur} und
+\textit{Bauingenieurwesen} in einer einzigen Kategorie
+\textit{Architektur und Bau} zusammengefasst. Die Neuerung bestand darin, diese
+in separate Kategorien wie \textit{Architektur} und \textit{Bau} zu unterteilen.
+Ein zusätzliches Feld in der Eingabedatei legte fest, welche dieser Kategorien
+später in der Benutzeroberfläche zu einer Supergruppe zusammengeführt werden
+sollten. Dieser Ansatz ermöglichte eine präzisere Bewertung von Studiengängen,
+insbesondere bei Studiengängen wie \textit{Architektur} und
+\textit{Bauingenieurwesen}. Hier konnte der Studiengang \textit{Architektur} als
+mehr \textit{Architektur} und weniger \textit{Bau} bewertet werden, während es
+bei \textit{Bauingenieurwesen} genau umgekehrt war. Vor dieser Anpassung konnte
+nur ein Wert für \textit{Architektur und Bau} festgelegt werden.
+
+Um die Benutzeroberfläche übersichtlich zu halten, wurden Supergruppen
+eingeführt. Diese ermöglichen eine aggregierte Darstellung mehrerer Kategorien,
+ohne die Benutzeroberfläche unnötig zu komplex zu gestalten. Frau Rösel brachte
+entscheidende Impulse in diesen Prozess ein. Durch ihre Rückmeldung wurden
+darüber hinaus neue Kategorien wie \textit{Sprachkompetenzen},
+\textit{Digitalität} und \textit{Future Skills} eingeführt. Diese dienen dazu,
+eine noch präzisere Differenzierung und Bewertung der Studiengänge zu
+ermöglichen. Folgende Liste zeigt die neuen Kategorien - jeder Listeneintrag
+enthält dabei eine Supergruppe mit einem oder mehrere Kategorien:
+
+\begin{enumerate}
+    \item Architektur, Bau (Architektur und Bau)
+    \item Design, Medien (Design und Medien)
+    \item Gesundheit, Soziales (Gesundheit und Soziales)
+    \item Maschinenbau, Elektrotechnik (Technik)
+    \item Informatik (Informatik)
+    \item Naturwissenschaften, Mathematik (Naturwissenschaften und Mathematik)
+    \item Marketing, Kommunikation (Marketing und Kommunikation)
+    \item Erneuerbare Energien, Umwelttechnik (Erneuerbare Energien und
+    Umwelttechnik)
+    \item Nachhaltikeit (Nachhaltigkeit)
+    \item Wirtschaft, Management (Wirtschaft und Management)
+    \item Sprachkompetenzen (Sprachkompetenzen)
+    \item Digitalität (Digitalität)
+    \item Future Skills (Future Skills)
+\end{enumerate}
+
+Die neuen Kategorien, ergänzt durch die kluge Einführung der Supergruppen,
+schaffen eine optimierte Grundlage für den MDS-Algorithmus. Dieser kann nun
+Studiengänge präziser positionieren, da die Unterscheidungen und Bewertungen auf
+einer feineren Ebene vorgenommen werden. Diese Anpassungen tragen entscheidend
+dazu bei, das Ziel einer verfeinerten Studienorientierung und -wahl zu
+erreichen.
