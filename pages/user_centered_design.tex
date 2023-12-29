@@ -46,7 +46,7 @@ Offene Fragen zu Designelementen, Verständlichkeit von Informationen und allgem
 Die Rückmeldungen der Studienteilnehmenden lassen sich in folgende konsistente
 Muster zusammenfassen.
 
-\paragraph{Bild 1: Visualisierung der Studiengänge}
+\paragraph{Bild 1: Visualisierung der Studiengänge}\label{sec:visualisierung-der-studiengänge}
 Die Übersichtskarte wurde von den Teilnehmenden als unübersichtlich und geclustert wahrgenommen. Besonders die Farbähnlichkeit der Studiengänge wurde als störend
 empfunden.
 
@@ -267,7 +267,7 @@ Der dritte Teil der Studie beinhaltet drei Fragen, die von den Schülerinnen und
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{aufgabe3.1-wordcloud}
-    \caption{Wordcloud zu \glqq Was findest du an dem Konzept gut?\grqq{} (Aufgabe 3)}
+    \caption{Wordcloud zu \glqq Was findest du an dem Konzept gut?\grqq{} (Umfrage Teil 3)}
     \bildquelle{Eigene Darstellung}
     \label{fig:prototyp-umfrage-aufgaben-3-1-wordcloud}
 \end{figure}
@@ -281,7 +281,7 @@ Weitere Schlagwörter, die ins Auge fallen, sind \textit{schnell}, \textit{über
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{aufgabe3.2-wordcloud}
-    \caption{Wordcloud zu \glqq Was findest du an dem Konzept schlecht?\grqq{} (Aufgabe 3)}
+    \caption{Wordcloud zu \glqq Was findest du an dem Konzept schlecht?\grqq{} (Umfrage Teil 3)}
     \bildquelle{Eigene Darstellung}
     \label{fig:prototyp-umfrage-aufgaben-3-2-wordcloud}
 \end{figure}
@@ -314,6 +314,41 @@ Der Button \glqq Mehr erfahren\grqq{} geht in der Übersicht unter. Dieser Punkt
 Es wurde zweimal nach dem Einstiegsgehalt in konkreten Zahlen gefragt. Ein Nachteil dieser Implementierung besteht darin, dass die Werte regelmäßig überprüft und gewartet werden müssen, im Gegensatz zur aktuellen Implementierung mit den einfachen Bewertungen \glqq Überdurchschnittlich\grqq{}, \glqq Durchschnittlich\grqq{} usw. Deshalb wird dieser Punkt auch nicht weiter untersucht.
 
 % Hast du neue Ideen für den Prototypen?
+% Text: Auch hier muss mit den ganzen Antworten gearbeitet werden
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{aufgabe3.3-wordcloud}
+    \caption{Wordcloud zu \glqq Hast du neue Ideen für den Prototypen?\grqq{} (Umfrage Teil 3)}
+    \bildquelle{Eigene Darstellung}
+    \label{fig:prototyp-umfrage-aufgaben-3-3-wordcloud}
+\end{figure}
 
+Die in \autoref{fig:prototyp-umfrage-aufgaben-3-3-wordcloud} genannten Punkte ähneln sehr den Kritikpunkten, die in der vorherigen Frage \glqq Was findest du an dem Konzept schlecht?\grqq{} behandelt wurden. Im Folgenden werden die Kritikpunkte auf Basis der Wordcloud und den vollen Antworten der Teilnehmenden gruppiert und zusammengefasst dargestellt. Die Original-Antworten sind, wie bei den vorherigen Fragen auch, im Anhang aufgeführt.
+
+
+\begin{itemize}
+    \item Vergleichsfunktion optisch ansprechender gestalten
+    \item Vergleichsfunktion über mehr als zwei Studiengänge
+    \item Suchfunktion zur Vergleichsfunktion hinzufügen
+    \item Persönlichkeitstest einführen (als Orientierung)
+    \item Ähnliche Studiengänge anders platzieren/gestalten
+    \item Absolute Werte bei Gehälter
+    \item Mehr Informationen zu den einzelnen Fächern ggf. Bezug auf die Schule
+    nehmen
+    \item Farben ändern
+\end{itemize}
+%% Punkte einfügen
+
+Die optische Gestaltung der Vergleichsfunktion wurde mehrmals erwähnt. Die Farben und die Gestaltung des Buttons zur Aktivierung der Vergleichsfunktion sowie der Inhaltsbalken sollten geändert werden. Außerdem wurde der Wunsch geäußert, dass man mehr als zwei Studiengänge gleichzeitig vergleichen kann. Es stellt sich jedoch die Frage, ob dies sinnvoll ist, da es auf mobilen Endgeräten schnell unübersichtlich werden könnte. Ein weiterer oft genannter Wunsch ist eine Suchfunktion innerhalb der Vergleichsfunktion. Dies könnte, wie bei der vorherigen Frage bereits beschrieben, entweder durch eine alphabetisch sortierte Liste oder durch ein Autocomplete-Textfeld gelöst werden. Ein Autocomplete-Textfeld schlägt Vorschläge vor, während Buchstaben eingegeben werden. Es ähnelt somit einem Suchfeld.
+
+Außerdem wurde mehrfach ein Persönlichkeitstest gewünscht, der spezifische Fragen an den oder die Studieninteressierte stellt und daraus eine Empfehlung für das zu wählende Studium ableitet. Wie bereits in \autoref{sec:konzepte-von-studiengangsfindern} erwähnt, bringt dies jedoch auch einige Limitierungen mit sich. Eine Möglichkeit für die Zukunft wäre, eine optionale Online-Umfrage anzubieten. Diese könnte die Ergebnisse aufgrund der eingegebenen Daten in StudyMap als eine Art Heatmap darstellen und die Zugehörigkeit zu einer bestimmten Position und somit zu einer Supergruppe bzw. Studiengang markieren. Eine Heatmap ist eine grafische Darstellung von Daten, bei der Werte in einer Matrix durch Farben codiert werden. Intensivere Farben repräsentieren höhere Werte, um Muster oder Trends visuell hervorzuheben. In diesem Fall werden die Zugehörigkeiten zur Kategorie \glqq Wirtschaft\grqq{} dargestellt. 
+
+Es wurde erwähnt, dass die Sektion \glqq Ähnliche Bachelor-Studiengänge\grqq{} nicht gut platziert ist. Dieser Eindruck könnte aufgrund der eher standardmäßigen Gestaltung (siehe \autoref{fig:mockup-bubbles-popup} ganz unten im Popup) entstehen. Eine Möglichkeit wäre, die Studiengänge mit Icons zu versehen oder sie wie bei dem Abschnitt \glqq Firmen in Regensburg\grqq{} mit schwarzen, abgerundeten Rechtecken als Schaltflächen zu präsentieren.
+
+Absolute Werte bei den Gehältern können aus den vorher genannten Gründen nicht umgesetzt werden.
+
+Für die Kurzübersicht wäre es vermutlich zu umfangreich, Informationen zu den einzelnen Fächern bereitzustellen. Das Popup ist bereits sehr voll - mehr Inhalt könnte die Benutzererfahrung negativ beeinflussen. Ein zusätzlicher Reiter für alle Fächer wäre vermutlich zu viel. Um die einzelnen Fächer einzusehen, muss der Interessierte lediglich auf den Button \glqq Mehr erfahren\grqq{} klicken und schließlich den Studienverlaufsplan des jeweiligen Studiengangs öffnen. Dort sind alle präzisen Informationen über den Studiengang für den Benutzer zu finden. StudyMap bietet einen Überblick und eine grobe Orientierungshilfe für das Studium. Für weitere Informationen steht Studieninteressierten die OTH-Website mit detaillierten Informationen zu allen Studiengängen zur Verfügung.
+
+Wie bereits in \autoref{sec:visualisierung-der-studiengänge} erläutert, werden die Bubbles in den Fakultätsfarben eingefärbt. Dies ist eine Anforderung der Vizepräsidentin der OTH-Regensburg und der Fakultäten der Hochschule. Daher kann dem Wunsch nach anderen Farben nicht entsprochen werden. Andere Farben könnten zu Verwirrung führen, da nicht klar ist, warum eine bestimmte Bubble beispielsweise grün gefärbt ist. Die aktuelle Lösung definiert klar, welcher Studiengang welche Farbe erhält. So umfasst z.B. die Supergruppe Technik nicht nur die Studiengänge der Fakultät Maschinenbau, sondern auch die Studiengänge der Fakultät für Elektro- und Informationstechnik. Obwohl die Studiengänge in derselben Supergruppe sind, kann man sie durch die Farben leichter voneinander unterscheiden.
 
 \subsection{Zusammenfassung der Studien}
