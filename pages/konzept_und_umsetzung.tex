@@ -1,4 +1,4 @@
-\section{Konzept und Umsetzung an der OTH-Regensburg}
+\section{Konzept eines innovativen Studiengangsfinders}
 \subsection{Vorstellung der OTH-Regensburg als Fallbeispiel}
 Die Ostbayerische Technische Hochschule Regensburg (OTH-Regensburg) dient in
 dieser Masterarbeit als praxisorientiertes Fallbeispiel für die Konzeption und 
@@ -9,14 +9,14 @@ Die OTH-Regensburg, gegründet im Jahr 1971, ist eine der größten Hochschulen
 für angewandte Wissenschaften in Deutschland. Mit ihrem breiten Spektrum an 
 praxisorientierten Studiengängen und ihrer engen Verbindung zur Industrie bietet
 die OTH-Regensburg eine ideale Umgebung für die Entwicklung und Implementierung
-eines innovativen Studiengangsfinders. \parencite{ueber-die-oth}
+eines innovativen Studiengangsfinders. \parencite{regensburg_oth_2023}
 
 Die Hochschule zeichnet sich durch eine moderne Infrastruktur, hochqualifizierte 
 Dozenten und eine enge Zusammenarbeit mit regionalen Unternehmen aus. Mit mehr
 als 50 Bachelor- und Masterstudiengängen in den Bereichen
 Ingenieurwissenschaften, Naturwissenschaften, Wirtschaft und
 Sozialwissenschaften bietet die OTH-Regensburg eine breite Palette an 
-Studienmöglichkeiten. \parencite{ueber-die-oth}
+Studienmöglichkeiten. \parencite{regensburg_oth_2023}
 
 \subsubsection{Herausforderung und Zielsetzung}
 Wie viele Bildungseinrichtungen steht auch die OTH-Regensburg vor der
@@ -26,23 +26,10 @@ dieser Masterarbeit entwickelt wird, soll dazu beitragen, potenziellen
 Studierenden eine klarere Orientierung über die verfügbaren Studienmöglichkeiten
 zu bieten und ihre Entscheidungsfindung zu unterstützen.
 
-Durch die Anwendung des Studiengangsfinders an der OTH-Regensburg wird nicht nur
-ein innovatives Werkzeug für Studieninteressierte geschaffen, sondern auch die 
-Effektivität und Transparenz der Studienorientierung an der Hochschule selbst 
-verbessert. Die Integration und algorithmische Verarbeitung von Daten zu 
-Studiengängen und Schwerpunkten ermöglicht eine präzisere Darstellung der 
-Studienvielfalt und fördert gleichzeitig die strategische Ausrichtung der
-Hochschule.
+Durch die Anwendung des Studiengangsfinders StudyMap an der OTH-Regensburg wird nicht nur ein innovatives Werkzeug für Studieninteressierte geschaffen, sondern auch die Effektivität und Transparenz der Studienorientierung an der Hochschule selbst verbessert. Die Integration und algorithmische Verarbeitung von Daten zu Studiengängen und Schwerpunkten ermöglicht eine präzisere Darstellung der Studienvielfalt und fördert gleichzeitig die strategische Ausrichtung der Hochschule.
 
 \subsection{Konzept für eine automatisch generierte Infografik}\label{sec:konzept}
-Die Grundlage für das Konzept der automatisch generierten Infografik bildet die
-methodische Vorarbeit, die in den vorhergehenden Kapiteln detailliert erläutert
-wurde. Im Zuge der Methodik, wie in Kapitel \ref{sec:methodik} beschrieben,
-wurden Studiengänge anhand verschiedener Kategorien bewertet und mithilfe des
-MDS-Algorithmus in zweidimensionale Koordinaten transformiert. Das daraus
-resultierende Zahlenmaterial bildet die Grundlage für die Visualisierung in der
-Infografik. In den folgenden Unterkapiteln wird ein erstes Designkonzept für die
-Software vorgestellt.
+Die Grundlage für das Konzept der automatisch generierten Infografik bildet die methodische Vorarbeit, die in den vorhergehenden Kapiteln detailliert erläutert wurde. Im Zuge der Methodik, wie in Kapitel \ref{sec:methodik} beschrieben, wurden Studiengänge anhand verschiedener Kategorien bewertet und mithilfe des MDS-Algorithmus in zweidimensionale Koordinaten transformiert. Das daraus resultierende Zahlenmaterial bildet die Grundlage für die Visualisierung in der Infografik. In den folgenden Unterkapiteln wird ein erstes Designkonzept für die Software vorgestellt.
 
 \subsubsection{Visualisierung der Studiengänge}
 
@@ -129,8 +116,26 @@ Durch die Integration dieses Fensters wird die Benutzerfreundlichkeit erheblich
 verbessert, da der Nutzer einen tieferen Einblick in die einzelnen Studiengänge
 erhält, ohne die Seite wechseln zu müssen.
 
-% \subsection{Beschreibung der Positionsberechnung der Infografik}
+\subsection{Datenpflege und -sicherung}
+Um StudyMap stets mit aktuellen Daten betreiben zu können, müssen diese gepflegt werden. Wie in \autoref{sec:herkunft-der-daten} erläutert, stammen die Daten bisher von der Vizepräsidentin der OTH-Regensburg. Bis zur Übergabe des Projekts wird das auch so bleiben.
 
-% \subsection{Technische Details zur Umsetzung}
+\subsubsection{Verwaltungssoftware vs. Anleitung}\label{sec:verwaltungssoftware}
+Aufgrund des technischen Aufwands beim Einpflegen der Daten per SSH- und SCP-Verbindung sowie dem manuellen Aufruf des Python-Skripts zur Generierung der Positionsdaten wird hier eine Unterstützung benötigt. Während SSH (Secure Shell) dazu da ist eine verschlüsselte Verbindung zur Kommandozeile des Servers aufzubauen, ermöglicht SCP (Secure Copy) den sicheren Austausch von Dateien mit dem Server.
 
-% \subsection{Anwendung des entwickelten Systems auf die Studiengänge der OTH-Regensburg}
+Bei einer manuellen Aktualisierung der Daten über SCP müssen die neuen Dateien auf den Server kopiert werden. Anschließend ist das Python-Skript mit den richtigen Parametern aufzurufen, um den Prozess zu starten. Um die im nächsten Abschnitt beschriebene Produktiv- und Stagingumgebung einzuhalten, sind außerdem verschiedene Ordnerstrukturen zu beachten.
+
+Der technische Hintergrund der Person, die das Projekt in Zukunft betreuen wird, ist ungewiss. Daher sollte ein Verwaltungstool zur Vereinfachung des Pflegeprozesses entwickelt werden. Die Alternative einer Anleitung in Form eines PDF-Dokuments könnte aufgrund der Komplexität der Vorgänge schnell zu kompliziert und umständlich werden. Des Weiteren erhöht sich bei jedem manuell zu erledigenden Schritt die Wahrscheinlichkeit für Fehler.
+
+\subsubsection{Staging- und Produktivumgebung}
+Im diesem Abschnitt wird der Bedarf einer Trennung zwischen Staging- und Produktivumgebung erläutert. Unter einer Staging-Umgebung versteht man in der Informatik ein Testsystem, welches unter annähernd realen Bedingungen erlaubt die Anwendung zu testen - meist ist diese nur über einen speziellen Zugang für authentifizierte Personen erreichbar. Die Produktivumgebung hingegen bezeichnet die für die Öffentlichkeit freigegebene Version der Software.
+
+Für einen Menschen ist der Prozess der Positionsberechnung nicht deterministisch nachvollziehbar, daher ist eine Testumgebung erforderlich. Im ungünstigsten Fall überlappen sich die Bubbles im Canvas bei vorheriger ähnlicher Bewertung der Studiengänge. Für diesen Fall muss eine Staging-Umgebung zur Verfügung stehen, auf der ein neuer Datensatz getestet werden kann. Sobald dieser optimiert und von den verantwortlichen Personen freigegeben wird, sollte der Staging-Datensatz per Knopfdruck in die Produktivumgebung überführt werden können.
+
+Dieser zweistufige Prozess erhöht die Fehlersicherheit und ermöglicht es, neue Berechnungen zu testen, ohne sie direkt der Öffentlichkeit zur Verfügung zu stellen.
+
+\subsubsection{Datensicherung}
+Neben der im vorigen Abschnitt erläuterten Trennung von Staging- und Produktivumgebung ist ein weiterer wesentlicher Bestandteil des Konzepts die Datensicherung. Sollte trotz Stagingumgebung ein Fehler auftreten, müssen die alten Daten wiederhergestellt werden können.
+
+Für diesen Fall sieht das Konzept vor, dass bei jeder Produktivschaltung der Staging-Version ein Backup erstellt wird. Dieses Backup sollte im Verwaltungstool per Knopfdruck in die Staging-Umgebung zurückgespielt werden können. Von dort aus kann es begutachtet und schließlich wieder produktiv geschaltet werden.
+
+Durch diese doppelte Sicherung sollte ein Großteil der versehentlich eingelesenen ungültigen Daten vermieden werden. Zusätzlich muss es immer möglich sein, den aktuell verwendeten Datensatz herunterzuladen. Wenn eine neu zuständige Person den aktuellen Datensatz bearbeiten möchte, kann sie so den aktuellen Stand herunterladen und bearbeiten, ohne die vorher zuständige Person kontaktieren zu müssen. Darüber hinaus steht im Idealfall immer ein sogenannter Template-Datensatz zum Download zur Verfügung, der im Falle einer korrupten Datensicherung und einer kaputten Staging- oder Produktivversion einen validen Datenstand als Basis liefert.
