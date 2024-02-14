@@ -231,4 +231,34 @@ CSS wiederum steht für Cascading Style Sheets und definiert Darstellungsregeln 
 
 Im Fall von StudyMap wird Angular Material UI verwendet. Angular Material UI ist ein von Google entwickeltes CSS-Framework. Die Entscheidung für dieses Framework beruht darauf, dass es ebenso wie das Angular Framework von Google LLC entwickelt wurde und daher sehr gut parallel kombiniert werden kann. \parencite{google_llc_angular_2024}
 \subsection{Architektur}
-% Todo
+Das Gesamtbild StudyMap setzt sich aus den vorher genauer erläuterten Komponenten REST-API, Pixi.js, Python-Backend und Node.js als Webserver für alle Dienste zusammen. Dieses Kapitel beschäftigt sich mit der Architektur und der Kommunikation der einzelnen Komponenten untereinander.
+
+Obwohl die Softwarearchitektur erst in den letzten 30 Jahren an Bedeutung gewonnen hat, ist sie ein fester Bestandteil der Softwareentwicklung und definiert wesentliche tragende Säulen des Produkts. Dabei geht die Softwarearchitektur nicht auf die internen Details einer bestimmten Komponente ein. \parencite{vogel_einleitung_2009} Sie soll komplexe Zusammenhänge übersichtlich darstellen und Fragen wie folgende beantworten:
+\begin{itemize}
+    \item Wie hängen die Systembausteine miteinander zusammen?
+    \item Welche Schnittstellen haben die Komponenten?
+    \item Worauf sind Strukturierungen und Entscheidungen zurückzuführen?
+\end{itemize}
+
+Für StudyMap ist eine Darstellung der Softwarearchitektur aus mehreren Gründen essentiell.
+
+\paragraph*{Grund 1: Komplexität}
+Die Komplexität der Software wird übersichtlicher dargestellt. Da bei der Verwendung mehrerer Programmiersprachen wie JavaScript, TypeScript und Python schnell die Übersicht über die einzelnen Komponenten verloren gehen kann, besteht die Gefahr, ineffizienten oder im schlimmsten Fall fehlerhaften Code zu produzieren. Ein weiterer Grund ist die Einarbeitung zukünftiger Entwickler.
+
+\paragraph*{Grund 2: Einarbeitung}
+Da StudyMap im Rahmen dieser Masterarbeit entsteht, ist es abzusehen, dass es immer wieder wechselnde Stakeholder und Weiterentwickler für das Projekt geben wird. Diese müssen zwangsläufig eingearbeitet werden und das Gesamtprojekt verstehen. Ein Entwickler, dem der gesamte Workspace ohne Strukturgrafik mit vier miteinander kommunizierenden Projekten präsentiert wird, könnte überfordert sein. Deshalb dient die Softwarearchitektur der effizienten Einarbeitung.
+
+\paragraph*{Grund 3: Sicherheit}
+Schließlich ist die Strukturgrafik für die Sicherheit der Hochschule von Bedeutung. StudyMap enthält einen geschützten Administrationsbereich. Es sollte im Vorfeld genau festgelegt werden, dass z.B. der Administrationsbereich nur über das VPN der Hochschule erreichbar ist, um die Wahrscheinlichkeit eines Hackerangriffs zu reduzieren. Solche Beziehungen lassen sich mithilfe der Definition einer Softwarearchitektur präzise festlegen. Außerdem benötigt man diese Darstellung explizit an der OTH-Regensburg, um einen Server vom Rechenzentrum für das Hosting von StudyMap zu erhalten. Weitere Informationen dazu finden Sie im \autoref{sec:deployment}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{architecture}
+    \caption{Softwarearchitektur von StudyMap}
+    \bildquelle{Eigene Darstellung}
+    \label{fig:studymap-architecture}
+\end{figure}
+
+% TODO: Describe Architektur
+
+\subsection{Deployment}\label{sec:deployment}
