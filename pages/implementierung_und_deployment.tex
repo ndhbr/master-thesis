@@ -7,15 +7,10 @@ Smartphones und Desktop-Geräten, wodurch sich außerdem neue Herausforderungen
 hinsichtlich der Bedienung ergeben. Im Folgenden werden die Hauptkomponenten des
 Technologiestacks und ihre jeweiligen Funktionen erläutert.
 
-\subsubsection{Pixi.js - Interaktive Grafik}
-Für die Darstellung der interaktiven Grafik wurde Pixi.js gewählt. Pixi.js ist
-ein leistungsstarkes WebGL-Rendering-Framework, das eine schnelle und
-reibungslose Darstellung von Grafiken ermöglicht. \parencite{pixijs_pixijs_2023} Die
-Entscheidung für Pixi.js basiert auf seiner Effizienz bei der Verarbeitung
-komplexer 2D-Grafiken und seiner Fähigkeit, eine ansprechende Benutzererfahrung
-zu bieten.
+\subsubsection{PixiJS - Interaktive Grafik}
+Für die Darstellung der interaktiven Grafik wurde PixiJS gewählt. PixiJS ist ein leistungsstarkes WebGL-Rendering-Framework, das eine schnelle und reibungslose Darstellung von Grafiken ermöglicht. \parencite{pixijs_pixijs_2023} WebGL (Web Graphics Library) ist eine JavaScript-Schnittstelle zur Berechnung hochperformanter, interaktiver 2D- und 3D-Grafiken zur Anzeige im Browser. \parencite{mozilla_corporation_webgl_2023} Da nicht jeder Browser WebGL unterstützt, verwendet PixiJS als Ausweichlösung immer das klassische HTML5 Canvas ohne Hardwareunterstützung. \parencite{pixijs_pixijs_2024}
 
-Neben Pixi.js wurden verschiedene weitere Bibliotheken betrachtet:
+Die Entscheidung für PixiJS basiert auf seiner Effizienz bei der Verarbeitung komplexer 2D-Grafiken und seiner Fähigkeit, eine ansprechende Benutzererfahrung zu bieten. Neben PixiJS wurden verschiedene weitere Bibliotheken betrachtet:
 \begin{itemize}
     \item three.js: WebGL 3D-Framework
     \item D3.js: 2D-Datenvisualisierungsbibliothek
@@ -52,11 +47,11 @@ eine umfassende Benutzerinteraktion für Smartphone und Desktop-Gerät erfordert
 als unzureichend erachtet wurde. \parencite{etimberg_paperjs_2023}
 
 Obwohl \textit{Fabric.js} als vielversprechende Alternative erschien, wurde
-Pixi.js aufgrund mehrerer Faktoren bevorzugt \parencite{zaytsev_fabricjs_2023}. Der
-professionellere Website-Auftritt von Pixi.js trug dazu bei, das Vertrauen in
+PixiJS aufgrund mehrerer Faktoren bevorzugt \parencite{zaytsev_fabricjs_2023}. Der
+professionellere Website-Auftritt von PixiJS trug dazu bei, das Vertrauen in
 die Zuverlässigkeit und Wartbarkeit des Frameworks zu stärken. Ein weiterer
 bedeutender Punkt ist die Anzahl der GitHub-Sterne in Relation zu der Anzahl an
-\textit{offenen Issues}, die Pixi.js aufweist. Eine höhere Anzahl an
+\textit{offenen Issues}, die PixiJS aufweist. Eine höhere Anzahl an
 GitHub-Sternen mit gleichzeitig weniger offenen Issues, deutet oft auf eine
 größere und aktivere Entwicklergemeinschaft hin, was wiederum auf
 kontinuierliche Weiterentwicklung und Wartung schließen lässt.
@@ -164,7 +159,7 @@ Inhalten von Studiengängen, oder beim Hinzufügen bzw. Entfernen eines
 Studiengangs ausgelöst. Dies wiederum passiere meist insgesamt nur einmal pro
 Jahr.
 
-\subsubsection{Node.js - REST-API}
+\subsubsection{Node.js - REST-API}\label{sec:node-js-restapi}
 Wie im vorherigen Abschnitt erläutert, ist neben dem Python-Programm auch eine Webschnittstelle erforderlich. In diesem Fall wird hierfür Node.js in Kombination mit der Bibliothek Express verwendet. Node.js ist eine JavaScript-Runtime-Umgebung, die auf der V8 JavaScript Engine von Google basiert und eine serverseitige Ausführung von JavaScript ermöglicht. \parencite{foundation_nodejs_2023} Express wiederum ist ein quelloffenes Webanwendungs-Framework für Node.js. Es erleichtert die Erstellung von Webanwendungen und APIs, indem es eine Reihe von Funktionen und Tools für den Aufbau von Webanwendungen bereitstellt.
 \parencite{foundation_express_2023}
 
@@ -173,47 +168,195 @@ Der daraus entstehende Webservice ermöglicht den Zugriff, auf die vom Python-Sk
 Eine REST-API (Representational State Transfer Application Programming Interface) ist eine zustandslose Schnittstelle, die es ermöglicht, über HTTP-Methoden, wie GET, POST oder PATCH, auf Ressourcen des Systems zuzugreifen und mit ihnen zu interagieren.
 
 \noindent
-In der folgenden \autoref{table:rest-api} werden die REST-Endpunkte von StudyMap vorgestellt:
+In der folgenden \autoref{table:rest-api} werden die REST-Endpunkte von StudyMap vorgestellt. Alle Einträge mit einem \code{x} in der Spalte \textbf{Auth.} setzen eine Authentifizierung, welche im späteren \autoref{paragraph:angular-basic-auth} näher erläutert wird, voraus:
 \begin{table}[!ht]
     \centering
-    \begin{tabular}{|l|l|l|l|}
+    \begin{tabular}{|l|l|l|c|}
     \hline
-    \textbf{Methode} & \textbf{Pfad}             & \textbf{Rückgabewert} \\ \hline
-    \textbf{GET}     & /data/history             & application/json      \\ \hline
-    \textbf{PATCH}   & /data/history/restore/:id & application/json      \\ \hline
-    \textbf{GET}     & /data/generate?mode=:mode & application/json      \\ \hline
-    \textbf{GET}     & /data/download/:version   & application/zip       \\ \hline
-    \textbf{POST}    & /data/upload              & application/json      \\ \hline
+    \textbf{Methode} & \textbf{Pfad}                & \textbf{Rückgabewert} & \multicolumn{1}{l|}{\textbf{Auth.}} \\ \hline
+    \textbf{GET}     & /bubbles/bachelor?mode=:mode & application/json      &                                     \\ \hline
+    \textbf{GET}     & /details/:abb?mode=:mode     & application/json      &                                     \\ \hline
+    \textbf{GET}     & /admin/data/history                & application/json      & x                                   \\ \hline
+    \textbf{PATCH}   & /admin/data/history/restore/:id    & application/json      & x                                   \\ \hline
+    \textbf{GET}     & /admin/data/generate?mode=:mode    & application/json      & x                                   \\ \hline
+    \textbf{GET}     & /admin/data/download/:version      & application/zip       & x                                   \\ \hline
+    \textbf{POST}    & /admin/data/upload                 & application/json      & x                                   \\ \hline
     \end{tabular}
 
     \caption{StudyMap-API: REST-Endpunkte}
     \label{table:rest-api}
 \end{table}
 
+Bestimmte Endpunkte enthalten so genannte Query-Parameter. Query-Parameter sind Key-Value-Paare, die an das Ende einer URL angehängt werden können, um dem Webserver zusätzliche Informationen mitzuteilen. \parencite{branch_query_2024} \autoref{table:rest-api} zeigt einige Endpunkte mit dem Query-Parameter \code{mode}.
+
+\noindent
+Beispiel für eine Anfrage:
+\begin{lstlisting}[style=Python, mathescape=true]
+    GET /bubbles/bachelor$\textbf{?mode=staging}$ HTTP/1.1
+    Host: ...
+\end{lstlisting}
+
+% TODO: QUERY PARAMETER ERKLÄREN und danach Beispielausgaben zu den anderen
+% API Dingern auch machen
+
 \noindent
 Beschreibung der in \autoref{table:rest-api} aufgezählten Endpunkte:
 
-\paragraph*{/data/history}
+\paragraph*{/bubbles/bachelor?mode=:mode}
 \vspace{-1.0em}
-Gibt alle existierenden Datensicherungen in einem Array aus IDs aus.
+Gibt alle gespeicherten Bachelor-Studiengänge in einem JSON-Positions-Array aus. Darin befindet sich der Name des Studiengangs, sein Kürzel, die zugehörige Supergruppe und die Farbe der Fakultät, um die Bubble entsprechend einzufärben. Außerdem enthält jeder Studiengang die relative Position in der StudyMap, die vom Algorithmus berechnet und auf 1 normiert wurde.
 
-\paragraph*{/data/history/restore/:id}
+\noindent
+Queryparameter: \code{:mode} $\in$ {'staging', 'production'}
+
+\noindent
+Beispielausgabe:
+
+\begin{lstlisting}[style=Python]
+    {
+        "positions": [
+            [
+                "Architektur",
+                "AT",
+                "Architektur und Bau",
+                "#A0CCCC",
+                [
+                    0.4013795552124245,
+                    1.0
+                ]
+            ],
+            [
+                "Bauingenieurwesen",
+                "B",
+                "Architektur und Bau",
+                "#A0CCCC",
+                [
+                    0.2742689117831777,
+                    0.8832423039306634
+                ]
+            ],
+            ...
+        ],
+    }
+\end{lstlisting}
+
+\paragraph*{/details/:abb?mode=:mode}
+\vspace{-1.0em}
+Sobald alle Studiengänge abgerufen wurden und der Benutzer auf eine der Bubbles klickt, öffnet sich ein Popup mit Details über den Studiengang. Der Klick ruft den Befehl \code{/details/:abb} auf, wobei \code{:abb} für das Kürzel des Studiengangs steht. Die Ausgabe ist erneut ein JSON und enthält die Details des Studiengangs.
+
+\noindent
+Queryparameter: \code{:mode} $\in$ {'staging', 'production'}
+
+\noindent
+Beispielausgabe:
+
+\begin{lstlisting}[style=Python]
+    {
+        "name": "Informatik",
+        "abb": "IN",
+        "supergroup": "Bachelor of Science (B.Sc.)",
+        "length": 7,
+        "course_url": "https://www.oth-regensburg.de/studieren/...",
+        "starting_salary": "Überdurchschnittlich",
+        "description": "Sie möchten mit Informatik die Zukunft gestalten? Informatik ist in allen Branchen ...",
+        "local_companies": [
+            { "name": "Vector", "url": "https://www.vector.com/" },
+            ...
+        ],
+        "related_studies": [
+            { "name": "International Computer Science", "abb": "ICS" },
+            ...
+        ],
+        "contents": [
+            { "name": "Architektur", "score": 0.0 },
+            { "name": "Bau", "score": 0.0 },
+            { "name": "Design", "score": 0.3 },
+            { "name": "Gesundheit", "score": 0.0 },
+            { "name": "Informatik", "score": 1.0 },
+            { "name": "Internationales", "score": 0.2 },
+            ...
+        ]
+    }
+\end{lstlisting}
+
+\paragraph*{/admin/data/history}
+\vspace{-1.0em}
+Gibt alle existierenden (maximal zehn) Datensicherungen in einem Array aus IDs aus.
+
+\noindent
+Beispielausgabe:
+\begin{lstlisting}[style=Python]
+    ["1708014679710","1708014600777"]
+\end{lstlisting}
+
+\paragraph*{/admin/data/history/restore/:id}
 \vspace{-1.0em}
 Stellt Datensicherung mit der ID :id wieder in die Staging-Umgebung her. :id ist ein Pfadparameter.
 
-\paragraph*{/data/generate?mode=:mode}
-\vspace{-1.0em}
-Erstellt anhand der bereits hochgeladenen Dateien eine neue Version und erzeugt im Falle einer Produktivversion eine Datensicherung. :mode ist dabei ein Queryparameter mit :mode $\in$ {'staging', 'production'}.
+\noindent
+Beispielausgabe bei erfolgreicher Wiederherstellung (HTTP-Statuscode 200):
+\begin{lstlisting}[style=Python]
+{
+    "message": "Starte Bearbeitung: staging -> staging\nBubbles wurden neu generiert.\nFolgende .JSON-Vorlagen wurden nicht gefunden: B, ID, HK, PA, IE, LP, SA, IW, EB, ISE, UI, MS, IR, REE, EI, ME, BE, MB, PT, ICS\nEs wurden insgesamt 4 Studiengangsvorlagen bearbeitet.\nProzess erfolgreich beendet.\n"
+}
+\end{lstlisting}
 
-\paragraph*{/data/download/:version}
+\noindent
+Beispielausgabe bei Fehlerfall (HTTP-Statuscode 500):
+\begin{lstlisting}[style=Python]
+{
+    "message": "Fehler beim Wiederherstellen des letzten Standes."
+}
+\end{lstlisting}
+
+\paragraph*{/admin/data/generate?mode=:mode}
+\vspace{-1.0em}
+Erstellt anhand der bereits hochgeladenen Dateien eine neue Version und erzeugt im Falle einer Produktivversion eine Datensicherung.
+
+\noindent
+Queryparameter: \code{:mode} $\in$ {'staging', 'production'}
+
+\noindent
+Beispielausgabe bei Generierung einer Produktivversion (HTTP-Statuscode 200):
+\begin{lstlisting}[style=Python, mathescape=true]
+{
+    "message": "Starte Bearbeitung: $\textbf{staging -> production}$\nBubbles wurden neu generiert.\nFolgende .JSON-Vorlagen wurden nicht gefunden: B, ID, HK, PA, IE, LP, SA, IW, EB, ISE, UI, MS, IR, REE, EI, ME, BE, MB, PT, ICS\nEs wurden insgesamt 4 Studiengangsvorlagen bearbeitet.\nProzess erfolgreich beendet.\n"
+}
+\end{lstlisting}
+
+\noindent
+Beispielausgabe bei Fehlerfall beim Upload von neuen Daten (HTTP-Statuscode 400):
+\begin{lstlisting}[style=Python]
+{
+    "message": "    self.dataset = Dataset(input_path)\n  File '.../backend/generator/dataset.py', line 20, in __init__\n    for i, row in enumerate(csvreader):\n  File '.../lib/python3.9/codecs.py', line 322, in decode\n    (result, consumed) = self._buffer_decode(data, self.errors, final)\nUnicodeDecodeError: 'utf-8' codec can't decode byte 0x9f in position 14: invalid start byte\n"
+}
+\end{lstlisting}
+
+\paragraph*{/admin/data/download/:version}
 \vspace{-1.0em}
 Erstellt aus der Version :version eine .zip-Datei und erstellt daraus einen Download-Stream. Für den Pfadparameter :version gilt :version $\in$ {'staging', 'production', 'template'}.
 
-\paragraph*{/data/upload}
+\paragraph*{/admin/data/upload}
 \vspace{-1.0em}
-Nimmt mehrere Dateien entgegen und speichert diese im Input des StudyMap-Algorithmus. Die zu hochladenden Dateien müssen im Body der HTTP-Anfrage enthalten sein. Dabei gibt es die Regeln: dataset (1 Datei), faculties (1 Datei) und details (maximal 50 Dateien). Die hochgeladenen Dateien können anschließend per Aufruf von /data/generate verarbeitet werden.
+Nimmt mehrere Dateien entgegen und speichert diese im Input des StudyMap-Algorithmus. Die zu hochladenden Dateien müssen im Body der HTTP-Anfrage enthalten sein. Dabei gibt es die Regeln: dataset (1 Datei), faculties (1 Datei) und details (maximal 50 Dateien). Die hochgeladenen Dateien können anschließend per Aufruf von \code{/admin/data/generate} verarbeitet werden.
 
-Durch die in diesem Unterkapitel beschriebene Web-Schnittstelle kann das Pixi.js-Frontend in Echtzeit die benötigten Informationen abrufen, um die interaktive Grafik der Studiengänge zu erstellen. Die klare Trennung von Backend und Frontend gewährleistet eine effiziente Datenübertragung und ermöglicht eine dynamische Aktualisierung der Grafik bei Änderungen im Datensatz.
+\noindent
+Beispielausgabe bei erfolgreichem Upload (HTTP-Statuscode 200):
+\begin{lstlisting}[style=Python]
+{
+    "message": "Dateien erfolgreich hochgeladen."
+}
+\end{lstlisting}
+
+\noindent
+Beispielausgabe bei fehlerhaften Download (HTTP-Statuscode 500):
+\begin{lstlisting}[style=Python]
+{
+    "message": "Fehler beim Dateiupload."
+}
+\end{lstlisting}
+
+Durch die in diesem Unterkapitel beschriebene Web-Schnittstelle kann das PixiJS-Frontend in Echtzeit die benötigten Informationen abrufen, um die interaktive Grafik der Studiengänge zu erstellen. Die klare Trennung von Backend und Frontend gewährleistet eine effiziente Datenübertragung und ermöglicht eine dynamische Aktualisierung der Grafik bei Änderungen im Datensatz.
 
 \subsubsection{Angular - Administrationsoberfläche}
 Um den im Kapitel Konzept aufgeführten Anforderungen wie Datensicherung und Trennung von Staging- und Produktivumgebung gerecht zu werden, ist die Implementierung einer Verwaltungssoftware notwendig. Um die Entwicklung möglichst zukunftssicher, d.h. leicht erweiterbar zu gestalten, wird ein sogenanntes Webframework eingesetzt.
@@ -230,8 +373,8 @@ HTML steht für HyperText Markup Language und ist die Sprache des Internets. HTM
 CSS wiederum steht für Cascading Style Sheets und definiert Darstellungsregeln für HTML-Elemente. CSS-Regeln enthalten Definitionen zu Größe, Form, Farbe, Animation und Layout der einzelnen HTML-Elemente einer Website. \parencite{mozilla_corporation_what_2024}
 
 Im Fall von StudyMap wird Angular Material UI verwendet. Angular Material UI ist ein von Google entwickeltes CSS-Framework. Die Entscheidung für dieses Framework beruht darauf, dass es ebenso wie das Angular Framework von Google LLC entwickelt wurde und daher sehr gut parallel kombiniert werden kann. \parencite{google_llc_angular_2024}
-\subsection{Architektur}
-Das Gesamtbild StudyMap setzt sich aus den vorher genauer erläuterten Komponenten REST-API, Pixi.js, Python-Backend und Node.js als Webserver für alle Dienste zusammen. Dieses Kapitel beschäftigt sich mit der Architektur und der Kommunikation der einzelnen Komponenten untereinander.
+\subsection{Softwarearchitektur}
+Das Gesamtbild StudyMap setzt sich aus den vorher genauer erläuterten Komponenten REST-API, PixiJS, Python-Backend und Node.js als Webserver für alle Dienste zusammen. Dieses Kapitel beschäftigt sich mit der Architektur und der Kommunikation der einzelnen Komponenten untereinander.
 
 Obwohl die Softwarearchitektur erst in den letzten 30 Jahren an Bedeutung gewonnen hat, ist sie ein fester Bestandteil der Softwareentwicklung und definiert wesentliche tragende Säulen des Produkts. Dabei geht die Softwarearchitektur nicht auf die internen Details einer bestimmten Komponente ein. \parencite{vogel_einleitung_2009} Sie soll komplexe Zusammenhänge übersichtlich darstellen und Fragen wie folgende beantworten:
 \begin{itemize}
@@ -259,6 +402,73 @@ Schließlich ist die Strukturgrafik für die Sicherheit der Hochschule von Bedeu
     \label{fig:studymap-architecture}
 \end{figure}
 
-% TODO: Describe Architektur
+\autoref{fig:studymap-architecture} zeigt die Softwarearchitektur von StudyMap. Die Anwendungskomponenten werden durch abgerundete Rechtecke beschrieben. Die schwarzen Rechtecke repräsentieren die Backend-Komponenten, während die blauen die Frontend-Komponenten darstellen. Die Beziehungen zwischen den Komponenten werden durch Pfeile visualisiert.
+
+\subsubsection{Frontend-Komponenten}\label{sec:frontend-komponenten}
+Alle Frontend-Komponenten werden über die Node.js-Webschnittstelle gehostet. Node.js wird mithilfe von Express genutzt, um neben der in \autoref{sec:node-js-restapi} erläuterten REST-API auch die restlichen Webseiten wie die Anwendung selbst und die Administrationsoberfläche bereitzustellen. Die Frontend-Komponenten in Dunkelblau sind ausschließlich über eine aktive VPN-Verbindung der Hochschule erreichbar.
+
+\paragraph*{StudyMap}
+Die Frontend-Komponente StudyMap ist das fertige Produkt. Die StudyMap-App besteht aus dem PixiJS-Canvas, der mit Bootstrap verbunden ist, um den Studiengangsdetails-Dialog anzuzeigen (siehe \autoref{fig:mockup-bubbles-popup}). Es handelt sich um eine reine Web-App ohne weitere Design-Elemente rund um den Canvas herum. Der Grund dafür ist, dass die StudyMap-Anwendung als iFrame in die Website der Hochschule eingebunden wird, d.h. die Anwendung muss den gesamten Bildschirminhalt ausfüllen, damit sich der iFrame später nahtlos in die Hochschulwebsite einfügt. Das HTML-Element iFrame erlaubt die Einbindung externer Webseiten in eine Seite. Ein klassisches Beispiel hierfür ist die Einbindung einer Anfahrtskarte eines Kartendienstleisters wie OpenStreetMap auf Unternehmenswebsites. \parencite{mozilla_corporation_iframe_2024} In dieser Arbeit wird der Studiengangsfinder in die Hochschulwebsite eingebettet.
+
+\noindent
+Webschnittstelle: \code{/app.html}
+
+\paragraph*{Produktiv}
+Wie in \autoref{fig:studymap-architecture} dargestellt, ist die Produktiv-Schnittstelle eine HTML-Website, die die StudyMap-App per iFrame einbettet.  Das Bestreben ist es, ein möglichst realitätsnahes Produktivsystem nachzubilden, weshalb die Produktivkomponente einen ähnlich breiten Platz für den iFrame verwendet, wie er auch auf der Website der OTH zur Verfügung steht. Die Produktivkomponente ist ausschließlich über das VPN der Hochschule erreichbar.
+
+\noindent
+Webschnittstelle: \code{/index.html}
+
+\paragraph*{Staging}
+Die Staging-Umgebung ist identisch zur Produktivumgebung. Der einzige Unterschied besteht darin, dass die StudyMap-App nicht mit \code{/app.html}, sondern mit \code{/app.html?mode=staging} eingebunden wird. StudyMap soll die Daten aus dem Staging-Bereich des Backends abrufen und darstellen.
+
+Mit dieser Testseite können neue Daten vor der Veröffentlichung getestet und optimiert werden. Die Staging-Komponente ist ebenfalls nur per VPN erreichbar.
+
+\noindent
+Webschnittstelle: \code{/staging.html}
+
+\paragraph*{Angular}\label{paragraph:angular-basic-auth}
+Die vierte und letzte Komponente ist die Angular-Administrationsoberfläche. Offensichtlich darf auch dieser Teil der Anwendung nur über eine authentifizierte VPN-Verbindung erreichbar sein. Der gesamte Administrationsbereich ist durch eine Basic-Auth-Middleware geschützt.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{basic-auth}
+    \caption{Basic-Auth-Middleware von StudyMap}
+    \bildquelle{Eigene Darstellung}
+    \label{fig:basic-auth}
+\end{figure}
+
+Basic-Auth ist ein allgemeines Authentifizierungsframework, das standardmäßig in der HTTP-Definition enthalten ist. \parencite{mozilla_corporation_http_2023} Es wird von allen gängigen Browsern unterstützt und erfordert nicht die Implementierung eines eigenen Authentifizierungsverfahrens. \parencite{fyrd_headers_2024} Wenn ein Webserver, in diesem Fall das Node.js-Webinterface, eine Authentifizierung anfordert, können Browser diese Anforderung verarbeiten und ein generisches Anmeldeformular anzeigen (siehe \autoref{fig:basic-auth}).
+
+In \autoref{fig:basic-auth} fehlt ein SSL-Zertifikat, wodurch keine verschlüsselte Verbindung möglich ist. SSL-Zertifikate sind kleine Datendateien, die kryptografische Schlüssel digital an eine Organisation binden. Somit können HTTPS-Verbindungen genutzt werden, welche wiederum die Browserverbindungen verschlüsseln und somit auch die eingegebenen Daten vor Mitlesern schützen. \parencite{globalsign_was_2023}
+
+Daher wird auch eine Basic-Auth-Authentifizierung als unsicher eingestuft, wenn kein SSL-Zertifikat vorhanden ist. Um die Sicherheitsbedenken von StudyMap auszuschließen, sollte in Zukunft die Authentifizierung über einen externen Authentifizierungsprovider der Hochschule erfolgen. Dadurch muss StudyMap keine Anmeldedaten speichern und es besteht kein Risiko mehr für einen Hackangriff.
+
+Nach Abschluss der Authentifizierung kann der Nutzer die Administrationsoberfläche nutzen. Die Web-App dient der Verwaltung der Anwendung und ihrer Daten. Hierfür werden HTTP-Anfragen genutzt, um die REST-API aufzurufen.
+
+\noindent
+Webschnittstelle: \code{/admin/*}
+
+\subsubsection{Backend-Komponenten}
+Das Backend der Softwarearchitektur besteht neben der bereits im \parencite{sec:frontend-komponenten} erläuterten Node.js Webschnittstelle aus drei weiteren Komponenten: \begin{enumerate}
+    \item PixiJS: WebGL-Renderer für StudyMap
+    \item API: Daten- und Administrationsschnittstelle
+    \item Python: Datengenerierung für StudyMap
+\end{enumerate}
+
+\paragraph*{PixiJS}
+Das PixiJS-Projekt ist ein eigenständiges JavaScript-Projekt, das die vorher erläuterte HTML-Datei \code{app.html} für die Frontend-Komponenten generiert und darin den WebGL-Renderer für StudyMap einbindet. Dieses Projekt enthält HTTP-Anfragen zur REST-API, um die Daten der Studiengänge abzurufen. Es ist jedoch wichtig zu beachten, dass diese Anfragen durch den Browser-Client bzw. die Frontend-Komponenten aufgerufen werden und somit streng genommen kein Teil der Backend-Komponente ist.
+
+\paragraph*{API}
+Die API (Application Programming Interface) bietet nicht nur die Lieferung von Positions- und Studiengangsdetailsdaten, sondern auch die Möglichkeit, die im Server gespeicherten Daten zu verwalten und zu ändern (siehe \autoref{sec:node-js-restapi}). Aus diesem Grund ist die Administrationsoberfläche sowie die StudyMap-App selbst mit der API verbunden.
+
+Wenn jemand in der Administrationsoberfläche neue Dateien hochlädt, wird eine Anfrage an die API gesendet. Diese speichert die Dateien an der richtigen Stelle und löst schließlich die Generierung neuer Positionsdaten durch eine Anfrage an die Python-Komponente aus. Die Python-Komponente ist folglich ebenfalls mit der API angebunden.
+
+\paragraph*{Python}
+Die Python-Komponente hat im Wesentlichen nur eine wirkliche Verbindung zu einer anderen Komponente, nämlich zur REST-API, die Python aufruft. Die Python-Komponente enthält die Logik für die Generierung der auszuliefernden Dateien sowie für die Datensicherung. Das Python-Skript implementiert den MDS-Algorithmus zur Berechnung der genauen Positionsdaten anhand der Ähnlichkeiten zwischen den Studiengängen. Beide Anwendungsfälle werden durch die Kommandozeile der REST-API getriggert.
+
+Es besteht eine weitere implizite Verbindung zwischen PixiJS und den Daten des Python-Skripts für die Anzeige der Bubbles. Die eigentliche Kommunikation zwischen den Komponenten erfolgt jedoch über die Programmierschnittstelle.
 
 \subsection{Deployment}\label{sec:deployment}
+
+% Continue here
