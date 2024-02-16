@@ -428,7 +428,7 @@ Mit dieser Testseite können neue Daten vor der Veröffentlichung getestet und o
 Webschnittstelle: \code{/staging.html}
 
 \paragraph*{Angular}\label{paragraph:angular-basic-auth}
-Die vierte und letzte Komponente ist die Angular-Administrationsoberfläche. Offensichtlich darf auch dieser Teil der Anwendung nur über eine authentifizierte VPN-Verbindung erreichbar sein. Der gesamte Administrationsbereich ist durch eine Basic-Auth-Middleware geschützt.
+Die vierte und letzte Komponente ist die Angular-Administrationsoberfläche. Offensichtlich darf auch dieser Teil der Anwendung nur über eine authentifizierte VPN-Verbindung erreichbar sein. Der gesamte Administrationsbereich ist außerdem durch eine Basic-Auth-Middleware geschützt.
 
 \begin{figure}[H]
     \centering
@@ -450,7 +450,7 @@ Nach Abschluss der Authentifizierung kann der Nutzer die Administrationsoberflä
 Webschnittstelle: \code{/admin/*}
 
 \subsubsection{Backend-Komponenten}
-Das Backend der Softwarearchitektur besteht neben der bereits im \parencite{sec:frontend-komponenten} erläuterten Node.js Webschnittstelle aus drei weiteren Komponenten: \begin{enumerate}
+Das Backend der Softwarearchitektur besteht neben der bereits im \autoref{sec:frontend-komponenten} erläuterten Node.js Webschnittstelle aus drei weiteren Komponenten: \begin{enumerate}
     \item PixiJS: WebGL-Renderer für StudyMap
     \item API: Daten- und Administrationsschnittstelle
     \item Python: Datengenerierung für StudyMap
@@ -469,6 +469,61 @@ Die Python-Komponente hat im Wesentlichen nur eine wirkliche Verbindung zu einer
 
 Es besteht eine weitere implizite Verbindung zwischen PixiJS und den Daten des Python-Skripts für die Anzeige der Bubbles. Die eigentliche Kommunikation zwischen den Komponenten erfolgt jedoch über die Programmierschnittstelle.
 
-\subsection{Deployment}\label{sec:deployment}
+\subsection{Software Deployment}\label{sec:deployment}
+Nachdem die Softwarearchitektur geklärt und implementiert wurde, folgt in diesem Abschnitt das Deployment. Software Deployment (Softwareverteilung) bezeichnet den Prozess der Konfiguration und Installation auf dem Zielserver. Dieser Prozess besteht in der Regel aus mehreren Schritten, wie Planung, Design, Testen, Terminplanung und Deployment. \parencite{atera_team_was_2023} Im Falle von StudyMap beschränkt sich der Prozess auf die Schritte: Planung, Testen und Bereitstellung.
 
+\subsubsection{Planung}
+Der erste Schritt des Softwareverteilungs Prozesses ist die Planung, welcher diverse W-Fragen beantwortet. Es ist beispielsweise wichtig zu berücksichtigen, wie viele Nutzer die Anwendung später haben werden, welche Risiken zu erwarten sind und wie eine Authentifizierung aussehen könnte. \parencite{atera_team_was_2023}
+
+Bei dieser Arbeit waren bereits einige Planungspunkte vorgegeben, da an der Hochschule Regensburg ein spezielles IT-Verfahren zum Schutz der Hochschule eingesetzt wird. Um das Projekt StudyMap auch nach der Übergabe der Masterarbeit weiterführen zu können, wurde eine gewisse Normbeschreibung erstellt. In der folgenden Liste sind einige ausformulierte Punkte und Details des Planungsschrittes aufgeführt.
+
+\paragraph*{Wer sind die Verantwortlichen für die Software?}
+Die Verfahrensverantwortliche Person ist Prof. Dr.-Ing. Birgit Rösel, Vizepräsidentin der OTH-Regensburg. Sie hat den Bedarf der Studienorientierung erkannt und das Projekt initiiert. Während der Entwicklung ist Andreas Huber, der Autor dieser Arbeit, die technisch verantwortliche Person.
+
+Die technisch Verantwortliche Person ist für die Wartung und das Patchmanagement zuständig. Es ist erforderlich, alle Pakete und Programme auf dem neuesten Stand zu halten, um die Wahrscheinlichkeit eines Hackerangriffs zu minimieren. Nach Abgabe dieser Arbeit wird das Amt an eine zum Zeitpunkt des Schreibens noch unbekannte Person übertragen.
+
+\paragraph*{Wie viele Benutzer wird die Anwendung haben?}
+Diese Frage ist insbesondere für die Leistung und die benötigten Serverressourcen von Bedeutung. Zum Zeitpunkt der Entwicklung liegen keine konkreten Besucherzahlen vor. Die Softwarearchitektur ist jedoch so geplant, dass die beschriebene REST-API lediglich .json-Dateien liest und zurückgibt - dies erfordert wenig Rechen- und Netzwerkleistung. Außerdem wird die interaktive Grafik clientseitig berechnet, also auf dem Gerät des Benutzers.
+
+Aus den genannten Gründen wird ein leistungsschwacher virtueller Server mit den folgenden Spezifikationen vom Rechenzentrum angefordert:
+\begin{itemize}
+    \item Prozessorkerne: 1 Kern
+    \item Arbeitsspeicher: 8 GB
+    \item Festplattenspeicher: 100 GB
+    \item Betriebssystem: Debian 12
+\end{itemize}
+
+\paragraph*{Werden personenbezogene Daten gespeichert?}
+Um rechtliche Fragen abzusichern, muss geklärt werden, ob im Falle eines Angriffs das Risiko besteht, persönliche Informationen zu verlieren. Daher ist es wichtig zu ermitteln, ob personenbezogene Daten gespeichert werden. StudyMap ist eine unabhängige Software, die Informationen über Studiengänge enthält, welche bereits veröffentlicht wurden. Das Hochladen und Speichern dieser Informationen in StudyMap durch eine verantwortliche Person ist ohne die Eingabe personenbezogener Daten möglich.
+
+Aus diesem Grund gehören die verarbeiteten Informationen zur Hochschul-Informationsklasse \glqq V0 - öffentlich\grqq{}. Dies bedeutet, dass keine der verarbeiteten oder gespeicherten Informationen im Falle eines Diebstahls als kritisch eingestuft werden würde.
+
+\paragraph*{Wie wird sichergestellt, dass gewisse Bereiche nur per VPN zugänglich sind?}
+
+\paragraph*{Wie wird die Authentifizierung sichergestellt?}
+Wie bereits in \autoref{paragraph:angular-basic-auth} erläutert, wird die Authentifizierung mittels einer Middleware im Webserver sichergestellt. Zudem wird vom Rechenzentrum eine separate IP-Adresse angefordert, um den Zugriff auf bestimmte Bereiche, wie beispielsweise den Administrationsbereich, nur mit aktiver VPN-Verbindung zu ermöglichen. % TODO: Wirklich so?
+
+\paragraph*{Welche Rollen sind vorgesehen?}
+In engem Zusammenhang mit der Frage der Authentifizierung steht die Frage, welche Rollen in der Anwendung vorgesehen sind. Im Studiengangsfinder gibt es lediglich zwei Rollen:
+\begin{enumerate}
+    \item Administrator
+    \item Besucher
+\end{enumerate}
+Die Besucher-Identität hat ausschließlich Zugriff auf die Frontend-Komponente \code{app.html}, welche die interaktive Grafik enthält. Eine Authentifizierung ist nicht erforderlich. Die Administrator-Identität hingegen hat Zugriff auf alle weiteren Frontend-Komponenten und kann somit die gespeicherten Daten verwalten.
+
+\paragraph*{Wer kümmert sich um die Aktualität der Daten?}
+Frau Rösel ist für die Aktualität der Daten verantwortlich, während der Entwicklung und nach der Übergabe des Projekts für einen unbestimmten Zeitraum. Nach Abgabe dieser Arbeit wird Andreas Huber, der technische Verantwortliche, Sie unverzüglich über den Prozess der Datenverwaltung durch die Administrationsoberfläche instruieren. Wer die Daten langfristig pflegt bleibt noch offen.
+
+\paragraph*{Werden regelmäßige System- und Datensicherungen duchgeführt?}
+Der Server von StudyMap befindet sich im zentralen Serverraum des Rechenzentrums der OTH-Regensburg. Dadurch wird sichergestellt, dass die Organisation täglich eine Systemsicherung durchführt.
+
+Eine Datensicherung erfolgt nur beim Überführen eines Datenstands von Staging in die Produktivumgebung. Wie bereits beschrieben, speichert StudyMap immer die letzten 10 Produktivstände, um im Falle von korrupten Daten eine Datensicherung wiederherstellen zu können. Es gibt keine zeitgesteuerten Intervall-Datensicherungen.
+
+\paragraph*{Was ist der Ablauf bei einem eintretenden Sicherheitsvorfall?}
+Sollte es zu einer Kompromittierung des Servers kommen, muss die verantwortliche Person sofort Kontakt mit security@oth-regensburg.de aufnehmen und diese über den Vorfall informieren.
+
+\paragraph*{Wer stellt ein SSL-Zertifikat zur verschlüsselten Übertragung der Daten?}
 % Continue here
+
+\subsubsection{Testen}
+\subsubsection{Bereitstellung}
