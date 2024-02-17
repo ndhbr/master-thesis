@@ -493,12 +493,16 @@ Aus den genannten Gründen wird ein leistungsschwacher virtueller Server mit den
     \item Betriebssystem: Debian 12
 \end{itemize}
 
+\paragraph*{Wie kritisch ist ein Ausfall des Systems?}
+Ein Ausfall des Projekts ist weniger schwerwiegend, da es sich nur um ein optionales Feature der Hochschulwebsite handelt. Aus diesem Grund reicht es, das System innerhalb einer Wochenfrist wiederherzustellen. Darüber hinaus wird die Gesamtfunktion nicht ständig überwacht.
+
 \paragraph*{Werden personenbezogene Daten gespeichert?}
 Um rechtliche Fragen abzusichern, muss geklärt werden, ob im Falle eines Angriffs das Risiko besteht, persönliche Informationen zu verlieren. Daher ist es wichtig zu ermitteln, ob personenbezogene Daten gespeichert werden. StudyMap ist eine unabhängige Software, die Informationen über Studiengänge enthält, welche bereits veröffentlicht wurden. Das Hochladen und Speichern dieser Informationen in StudyMap durch eine verantwortliche Person ist ohne die Eingabe personenbezogener Daten möglich.
 
 Aus diesem Grund gehören die verarbeiteten Informationen zur Hochschul-Informationsklasse \glqq V0 - öffentlich\grqq{}. Dies bedeutet, dass keine der verarbeiteten oder gespeicherten Informationen im Falle eines Diebstahls als kritisch eingestuft werden würde.
 
 \paragraph*{Wie wird sichergestellt, dass gewisse Bereiche nur per VPN zugänglich sind?}
+% TODO
 
 \paragraph*{Wie wird die Authentifizierung sichergestellt?}
 Wie bereits in \autoref{paragraph:angular-basic-auth} erläutert, wird die Authentifizierung mittels einer Middleware im Webserver sichergestellt. Zudem wird vom Rechenzentrum eine separate IP-Adresse angefordert, um den Zugriff auf bestimmte Bereiche, wie beispielsweise den Administrationsbereich, nur mit aktiver VPN-Verbindung zu ermöglichen. % TODO: Wirklich so?
@@ -523,7 +527,68 @@ Eine Datensicherung erfolgt nur beim Überführen eines Datenstands von Staging 
 Sollte es zu einer Kompromittierung des Servers kommen, muss die verantwortliche Person sofort Kontakt mit security@oth-regensburg.de aufnehmen und diese über den Vorfall informieren.
 
 \paragraph*{Wer stellt ein SSL-Zertifikat zur verschlüsselten Übertragung der Daten?}
-% Continue here
+Damit die Verbindung zu StudyMap funktioniert, wird ein SSL-Zertifikat sowohl für die internen (VPN-Bereich) als auch für die externen Anfragen benötigt.
+
+Wenn kein SSL-Zertifikat auf dem Webserver installiert ist, werden die Login-Anfragen unverschlüsselt verschickt. Ein Angreifer könnte dadurch die Zugangsdaten mitlesen und daraus einen weiteren Hackangriff starten.
+
+Obwohl keine sicherheitsrelevanten Informationen beim Öffnen der Besucheransicht geteilt werden, benötigt StudyMap auch für den öffentlichen Bereich ein SSL-Zertifikat. Der Grund dafür ist, dass die Hochschulwebsite eine https-Verbindung erzwingt. Moderne Browser erlauben es nicht, einen iFrame mit einer unverschlüsselten Website auf einer verschlüsselten Website einzubinden. \parencite{vyas_mixed_2013}
 
 \subsubsection{Testen}
+In dieser Phase des Deployment-Prozesses wird eine Testumgebung erstellt, um zu überprüfen, ob alles wie vorgesehen funktioniert. Ziel ist die Schaffung einer möglichst realitätsnahen Umgebung, damit der endgültige Prozess der Bereitstellung auf dem Server der Universität mit möglichst wenigen unvorhersehbaren Komplikationen verbunden ist.
+
+\paragraph*{Verwendung von Docker zur Auslieferung}
+StudyMap wird auf dem Produktivserver in einem Docker-Container gehostet. Docker ist eine Open-Source-Plattform zur Erstellung und Bereitstellung von Anwendungen. Docker arbeitet mit sogenannten Containern, die alle Pakete, benötigten Abhängigkeiten, Werkzeuge und Code enthalten, die für die Ausführung der Software notwendig sind. \parencite{amazon_web_services_inc_was_2023}
+
+Docker-Container visualisieren das Betriebssystem eines Servers. Jeder Container basiert auf einem Image, wie zum Beispiel einem Linux-Derivat. Auf diesem werden alle benötigten Pakete installiert. Docker-Images sind leichtgewichtige und dennoch effiziente eigenständige Pakete, da sie denselben System-Kernel verwenden und somit nicht für jede Anwendung ein vollständiges Betriebssystem benötigen. \parencite{docker_inc_what_2024}
+
+Neben der Effizienz ist Sicherheit ein weiterer Vorteil. Anwendungen, die in Containern ausgeführt werden, sind voneinander isoliert und erlauben nur die Kommunikation, die durch die Konfiguration erlaubt ist. \parencite{docker_inc_what_2024}
+
+Ein weiterer Vorteil ist die Möglichkeit, Docker-Container schnell von einem Server auf einen anderen zu übertragen, ohne den Server für die neue Anwendung konfigurieren zu müssen. Der Docker Container enthält alle notwendigen Netzwerk- und Software-Konfigurationen, die auf dem Zielserver unter Umständen nicht vorhanden sind. Dadurch können Probleme durch beispielsweise unterschiedliche Softwareversionen vermieden werden. Unterschiedliche Anwendungen benötigen oft unterschiedliche Paketversionen, wie zum Beispiel Python oder Python3. Solche Situationen können zu aufwendigen Konfigurationsprozessen führen, während mit Docker alles isoliert in einem Container genau für die Anwendung enthalten ist. \parencite{amazon_web_services_inc_was_2023}
+
+\paragraph*{Docker-Image für StudyMap}
+Um StudyMap in einem Docker-Container auszuführen, wird ein Docker-Image benötigt, das alle Komponenten der Softwarearchitektur enthält. Für die Entwicklung dieses Images wird als Basisimage ein Node.js-Image verwendet. Auf diesem Basisimage werden alle Konfigurationen und zusätzlichen Komponenten festgelegt, die dann beim Starten des Containers automatisch installiert werden. Da Node.js als Webschnittstelle für den Studiengangsfinder dient, bildet es die ideale Basis für das Docker-Image. Nachfolgend ist das für StudyMap entwickelte Dockerfile abgebildet:
+
+\begin{lstlisting}[style=Python]
+# Node version 18 as base image
+FROM node:18
+
+# Install python
+RUN apt-get update && apt-get install -y python3 python3-pip
+
+# Set work directory
+WORKDIR /app
+
+# Copy dir
+COPY . .
+
+# Install dependencies
+RUN npm install
+WORKDIR /app/admin
+RUN npm install
+RUN npm run build
+WORKDIR /app/frontend
+RUN npm install
+RUN npm run build:prod
+WORKDIR /app/backend/generator
+RUN pip3 install -r requirements.txt --break-system-packages
+WORKDIR /app
+
+# Expose ports
+EXPOSE 8080
+
+# Launch
+CMD ["npm", "start"]
+\end{lstlisting}
+
+Docker kann mithilfe einer Dockerfile in Form eines Textdokuments ein Image erstellen. In der Dockerfile befinden sich alle Befehle, um ein Image zusammenzustellen. \parencite{docker_inc_dockerfile_2024} Das für StudyMap entwickelte Dockerfile beginnt mit dem Befehl \code{FROM node:18}. Dies bedeutet, dass das Base Image \code{node} in Version 18 als Grundlage für dieses Image verwendet wird. Eine Dockerfile, die lediglich die erste Zeile zur Festlegung des Base Images enthält, würde dementsprechend ein bestehendes Image ohne Veränderung 1:1 kopieren. \parencite{the_nodejs_docker_team_node_2024}
+
+In Zeile fünf wird die Anweisung gegeben, die Paketlisten des Systems zu aktualisieren und \code{python3} sowie \code{python3-pip} zu installieren, den offiziellen Paketmanager der Programmiersprache Python. \parencite{the_pip_developers_pip_2024} Mit dem RUN-Befehl in Dockerfiles kann der Container angewiesen werden, diese Anweisung in der Befehlszeile des Containers auszuführen. Das Node-Image basiert auf dem Alpine-Linux-Image, welches das Linux-Paketverwaltungswerkzeug APT (Advanced Packaging Tool) enthält. \parencite{the_nodejs_docker_team_node_2024} Dieses Werkzeug ermöglicht es, Pakete, wie z.B. \code{python3}, auf einfache Art und Weise per Kommandozeile mit dem Befehl \code{apt-get install} zu installieren. \parencite{canonical_ltd_ubuntu_package_2024}
+
+In Zeile acht wird das Arbeitsverzeichnis des Containers auf den Pfad \code{/app} gesetzt, indem der Befehl \code{WORKDIR} verwendet wird. Alle folgenden Befehle werden relativ zu diesem Ordner ausgeführt. Falls der angegebene Pfad nicht vorhanden ist, wird Docker ihn im Dateisystem des Containers erstellen. \parencite{docker_inc_dockerfile_2024}
+
+Mit dem \code{COPY}-Befehl wird der gesamte Inhalt des Ordners, in dem sich die Dockerfile befindet, in den Ordner kopiert, in dem sich der Container gerade befindet. \parencite{docker_inc_dockerfile_2024} Die Dockerfile befindet sich im äußersten Verzeichnis des StudyMap-Git-Repositorys. Das bedeutet, dass alle Dateien und Unterordner des Studiengangsfinders in den Container kopiert werden. Nachdem das \code{WORKDIR} auf \code{/app} gesetzt wurde, werden alle Dateien dementsprechend nach \code{/app} kopiert.
+
+Zeilen 14 bis 23 installieren alle Abhängigkeiten der einzelnen Subprojekte und kompilieren die Dateien zu ausführbaren Anwendungen. In Zeile 14 wird eine Version der Node.js-Webschnittstelle und REST-API erstellt. Anschließend wird in Zeile 15 das Arbeitsverzeichnis auf den Subordner der Administrationsoberfläche gesetzt und mit \code{RUN npm install} und \code{RUN npm build} dessen Abhängigkeiten installiert und kompiliert. Schließlich werden in den Zeilen 18 bis 20 des PixiJS-Projekts dieselben Schritte durchgeführt. Abschließend werden die Python-Abhängigkeiten mithilfe des zuvor vorgestellten Paketmanagers pip3 und einer im Unterordner liegenden Abhängigkeitsliste \code{requirements.txt} installiert. Python benötigt keinen Build-Prozess, da das Skript zur Laufzeit von der Python-Engine gelesen und ausgeführt wird. Zum Schluss wird in Zeile 23 das Arbeitsverzeichnis auf \code{/app} zurückgesetzt.
+
+% Continue here - explain Dockerfile
 \subsubsection{Bereitstellung}
