@@ -590,5 +590,97 @@ Mit dem \code{COPY}-Befehl wird der gesamte Inhalt des Ordners, in dem sich die 
 
 Zeilen 14 bis 23 installieren alle Abhängigkeiten der einzelnen Subprojekte und kompilieren die Dateien zu ausführbaren Anwendungen. In Zeile 14 wird eine Version der Node.js-Webschnittstelle und REST-API erstellt. Anschließend wird in Zeile 15 das Arbeitsverzeichnis auf den Subordner der Administrationsoberfläche gesetzt und mit \code{RUN npm install} und \code{RUN npm build} dessen Abhängigkeiten installiert und kompiliert. Schließlich werden in den Zeilen 18 bis 20 des PixiJS-Projekts dieselben Schritte durchgeführt. Abschließend werden die Python-Abhängigkeiten mithilfe des zuvor vorgestellten Paketmanagers pip3 und einer im Unterordner liegenden Abhängigkeitsliste \code{requirements.txt} installiert. Python benötigt keinen Build-Prozess, da das Skript zur Laufzeit von der Python-Engine gelesen und ausgeführt wird. Zum Schluss wird in Zeile 23 das Arbeitsverzeichnis auf \code{/app} zurückgesetzt.
 
-% Continue here - explain Dockerfile
+In Zeile 26 wird mithilfe des Kommandos \code{EXPOSE 8080} Docker darüber informiert, dass der Netzwerkport 8080 der zu hörende Port ist. Ein Netzwerkport ist eine definierte Nummer, die die Kommunikation für einen bestimmten Dienst empfängt oder überträgt. \parencite{wright_was_2022} Ein Beispiel aus dem Alltag wäre die Wohnungsnummer in einem Mehrparteienhaus, damit die Post den Brief zur richtigen Wohnung innerhalb des Hauses zustellen kann. Der \code{EXPOSE}-Befehl informiert lediglich über den Port, schaltet ihn jedoch nicht frei. Um den Port freizugeben, muss beim Start des Containers der Parameter \code{-p} für Port angegeben werden. \parencite{docker_inc_dockerfile_2024}
+
+Die letzte Zeile enthält lediglich den Startbefehl für das Node.js Projekt, welches anschließend alle weiteren Projekte hostet. Wenn der Container gestartet wird, wird der Kommandozeilenbefehl ausgeführt, der mit dem CMD-Befehl definiert wurde. Aus diesem Grund darf es im Dockerfile auch nur einen CMD-Befehl geben. \parencite{docker_inc_dockerfile_2024}
+
+Um das Docker-Image mithilfe des Dockerfiles zu bauen und auszuführen, müssen nun folgende zwei Befehle in der Kommandozeile ausgeführt werden:
+\begin{lstlisting}[style=Python]
+docker build -t studymap .
+docker run -p 8080:8080 studymap
+\end{lstlisting}
+
+Der erste Befehl führt den Build-Prozess anhand der Dockerfile im aktuellen Verzeichnis aus und benennt das Image als \code{studymap}. Der zweite Befehl erstellt einen Container mit dem gerade erstellten Image und leitet den Port 8080 aus dem Container auf den Port 8080 des Betriebssystems des Servers weiter.
+
+\paragraph*{Persistierung der Daten durch Docker Volumes und Docker Compose}
+Wie bereits erläutert, werden in StudyMap Dateien von außen in den Container hochgeladen und verarbeitet. Wenn ein Docker-Container jedoch neu gestartet wird, wird sein Zustand zurückgesetzt. Das bedeutet, dass alle veränderten Dateien wieder im Originalzustand sind und alle neu hinzugefügten Dateien gelöscht werden. Aus diesem Grund ist die Verwendung von Docker Volumes zur Persistenz über einen Neustart hinaus notwendig.
+
+Docker Volumes ermöglichen es, Daten von Containern betriebssystemunabhängig zu persistieren. Sie ermöglichen die Erstellung von Container-übergreifendem Speicher und sind dabei deutlich effizienter und performanter als Bind-Mounts eines Betriebssystems. \parencite{docker_inc_volumes_0000}
+
+Für die Verwendung von Docker-Volumes muss der Kommandozeilenbefehl zum Starten des Containers angepasst werden. Eine Alternative hierzu ist die Verwendung von Docker Compose. Docker Compose wurde entwickelt, um mehrere Container effizient zu steuern und eine klare Struktur von vielen Containern zu ermöglichen. Hier gibt es neben den Dockerfiles auch eine \code{docker-compose.yml}-Datei, die alle Informationen zu den Containern bezüglich Netzwerk, Speicher und freizugebenden Ports enthält. Da der Kommandozeilenbefehl zum Starten des StudyMap-Docker-Containers aufgrund der Ports und Volumes dokumentiert werden müsste, bietet sich die Verwendung von Docker Compose an. Die benötigten Volumes sowie der freizugebende Port 8080 werden in einer Datei festgehalten. \parencite{docker_inc_docker_0000} Der Administrator kann die StudyMap-Anwendung mit folgenden konsistenten Befehlen verwalten:
+
+\begin{lstlisting}[style=Python]
+docker-compose up -d        # Startet den Container im Hintergrund (-d)
+docker-compose down         # Stoppt den Container
+docker-compose restart      # Startet den Container neu
+\end{lstlisting}
+
+Die im vorherigen Abschnitt erwähnte Datei docker-compose.yml sieht für den Studiengangsfinder folgendermaßen aus:
+\begin{lstlisting}[style=Python]
+version: '3.8'
+
+services:
+  studymap:
+    build: .
+    ports:
+      - "80:8080"
+    volumes:
+      - generated-data:/app/gdata
+      - input-files:/app/backend/input
+    command: ["npm", "start"]
+
+volumes:
+  generated-data:
+  input-files:
+\end{lstlisting}
+
+Die Container-Definition für den Studiengangsfinder befindet sich in den Zeilen vier bis elf. In Zeile vier wird der Name des Containers angegeben und in Zeile fünf das Image, das der Container verwenden soll. In diesem Fall ist das ein wichtiger Punkt, denn die \code{docker-compose.yml}-Datei liegt im selben Verzeichnis wie die Dockerfile. Das bedeutet, dass Docker Compose automatisch die Dockerfile sucht, das Image baut und als Grundlage für den Container verwendet. In Zeile sieben wird der freizugebende Port festgelegt. Der Container gibt den Port 8080 frei, welcher dann auf den Systemport 80 geleitet wird. In Zeile acht bis zehn werden die Volumes festgelegt. Hierbei handelt es sich um zwei Verzeichnisse. Einmal das Verzeichnis, in dem die hochgeladenen Dateien des Benutzers landen und die Datensicherungen angelegt werden, und das zweite Volume, welches die durch den Algorithmus generierten Dateien enthält. Zeile elf ist äquivalent zum \code{CMD}-Befehl aus der bereits erläuterten Dockerfile. In den Zeilen 13 bis 15 werden abschließend die verwendeten Volumes definiert.
+
+Mithilfe der genannten Docker-Dateien kann die Anwendung und das Deployment nun entweder lokal auf dem Entwicklungsrechner oder auf Testservern getestet werden. Nachdem der Container erfolgreich gestartet werden kann, kann mit dem letzten Schritt des Deployments der eigentlichen Bereitstellung begonnen werden.
+
 \subsubsection{Bereitstellung}
+Die Bereitstellung von StudyMap auf dem Hochschul-Server muss einer genauen Struktur folgen:
+\begin{enumerate}
+    \item Server aktualisieren
+    \item Speicherort für StudyMap festlegen
+    \item Docker und Docker Compose installieren
+    \item StudyMap auf den Server kopieren
+    \item Docker Compose ausführen
+\end{enumerate}
+
+\paragraph*{1. Server aktualisieren}
+Zuerst müssen der Server und seine Paketlisten aktualisiert werden. In Debian kann dies mit den folgenden Befehlen durchgeführt werden:
+\begin{lstlisting}[style=Python]
+apt-get update
+apt-get upgrade
+\end{lstlisting}
+
+\paragraph*{2. Speicherort für StudyMap festlegen}
+% TODO: Quelle
+Es muss anschließend der Speicherort für StudyMap festgelegt werden. Der Standardordner für Docker-Container unter Linux ist \code{/var/lib/docker}. Da die Partition auf dem vom Rechenzentrum bereitgestellten Server nur 3,9 Gigabyte Speicherplatz hat, muss auf das Home-Verzeichnis mit 13 Gigabyte ausgewichen werden. Für diese Änderung ist eine Anpassung der Datei \code{/etc/docker/daemon.json} erforderlich:
+\begin{lstlisting}[style=Python]
+{
+    "data-root": "/home/docker-data"
+}
+\end{lstlisting}
+
+\paragraph*{3. Docker und Docker Compose installieren}
+Der nächste Schritt besteht in der Installation der Docker Engine und dem Plugin Docker Compose. Die Pakete hierfür sind nicht in den Standard-Paketlisten von APT enthalten. Aus diesem Grund wird auf der Docker Installationswebsite die Step-by-Step-Anleitung befolgt, um die Paketlisten zu erweitern und Docker schließlich per Paketmanager zu installieren.
+
+\noindent
+Offizielle Installationsanleitung für Debian: \url{https://docs.docker.com/engine/install/debian/}
+
+\paragraph*{4. StudyMap auf den Server kopieren}
+% TODO: Quelle
+Um das Projekt auf den Server zu übertragen, wird das gesamte Git-Repository, einschließlich des Dockerfiles und der docker-compose.yml-Datei, per SCP auf den Server kopiert. Der Quellcode befindet sich derzeit auf der Plattform GitHub. Es ist möglich, Repositories direkt als .zip-Datei herunterzuladen. Falls es nicht möglich ist, das Repository als .zip-Datei herunterzuladen, kann alternativ das lokale Entwicklungsprojekt als Zip-Datei komprimiert und übertragen werden. In diesem Fall ist es jedoch wichtig, alle Build-Dateien, Bibliotheken und Abhängigkeiten zu entfernen, die sowieso nachinstalliert werden müssen, um unnötig große Datentransfers zu vermeiden.
+
+Anschließend genügt ein Kommandozeilenbefehl, um die Anwendung sicher auf den Server zu übertragen:
+\begin{lstlisting}[style=Python]
+scp studymap.zip root@im-studiengangfinder:/home
+\end{lstlisting}
+
+Der Befehl lädt die Datei \code{studymap.zip} auf den Server mit dem Hostnamen \code{im-studien\-gang\-finder} hoch und verwendet als Login-Username den Benutzer \code{root}. Das Zielverzeichnis ist \code{/home}. Dieser Prozess erfordert eine aktive VPN-Verbindung zur Hochschule und einen autorisierten SSH-Key. % TODO: SSH Key erklären?
+
+\paragraph*{5. Docker Compose ausführen}
+Nachdem die Datei hochgeladen und entpackt wurde, kann das Docker-Image und der Docker-Container mithilfe des zuvor erklärten Docker-Compose-Befehls über eine SSH-Verbindung zur Kommandozeile des Servers erstellt und gestartet werden.
+
