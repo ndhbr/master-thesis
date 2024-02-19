@@ -57,6 +57,7 @@ größere und aktivere Entwicklergemeinschaft hin, was wiederum auf
 kontinuierliche Weiterentwicklung und Wartung schließen lässt.
 \parencite{batista_github_2023}
 
+\newpage
 \subsubsection{Python - Berechnung der Positionen}
 Die Berechnung der Positionen für die Studiengänge basiert, wie im Abschnitt
 \ref{sec:MDS} erläutert, auf dem Multidimensionalen Skalierungsalgorithmus
@@ -69,63 +70,64 @@ Raum.
 Hierzu wird ein Python-Skript entwickelt, welches die CSV-Datei einliest und
 schließlich den MDS-Algorithmus auf den Daten anwendet. Im Verlauf der
 Arbeit wurde eine anfängliche Eigenimplementierung des MDS-Algorithmus in
-Betracht gezogen. Folgender Ausschnitt eines Quellcodes beinhaltet die für diese
-Arbeit entwickelte Eigenimplementierung, basierend auf dem im Abschnitt
-\ref{sec:MDS} genau erläuterten Ablauf:
+Betracht gezogen.
 
-\begin{lstlisting}[style=Python]
-    import numpy as np
-
-    def calculate_distance_matrix(X):
-        ...
-
-    def read_data_from_csv():
-        ...
-
-    def mds(self):
-        # Reads data from CSV file and transforms it to number rows
-        X = self.read_data_from_csv()
-
-        # Calculates distance matrix
-        M = self.calculate_distance_matrix(X)
-
-        # Double centered matrix
-        n = 11 # Number of subjects
-        I = np.identity(n) # Identity matrix
-        Jn = np.ones((n, n)) # Matrix Jn of all ones
-        C = I - (1/n) * Jn # Calculate centering matrix C
-        B = -0.5 * np.dot(np.dot(C, np.array(M)), C) # Calculate the double centered matrix B
-
-        # Eigenvalues, Eigenvectors
-        m = 2  # number of dimensions (2D)
-        eigenvalues, eigenvectors = np.linalg.eig(B) # Perform eigenvalue decomposition
-
-        # Sort eigenvalues and corresponding eigenvectors in descending order
-        sorted_indices = np.argsort(eigenvalues)[::-1]
-        eigenvalues = eigenvalues[sorted_indices]
-        eigenvectors = eigenvectors[:, sorted_indices]
-
-        # Select the top m eigenvalues and corresponding eigenvectors
-        top_m_eigenvalues = eigenvalues[:m]
-        top_m_eigenvectors = eigenvectors[:, :m]
-
-        # Calculate the square root of the diagonal matrix
-        sqrt_Lambda_m = np.sqrt(np.diag(top_m_eigenvalues))
-
-        # Compute the matrix X using the formula
-        X_transformed = np.dot(top_m_eigenvectors, sqrt_Lambda_m)
-
-        return X_transformed
-\end{lstlisting}
+Zu diesem Zweck wurde eine Python-Klasse erstellt, die drei Methoden enthält:
+\begin{enumerate}
+    \item calculate\_distance\_matrix(X)
+    \item read\_data\_from\_csv()
+    \item mds(self)
+\end{enumerate}
 
 Die Methode \code{calculate\_distance\_matrix} berechnet die Distanzmatrix,
 welche für den Ablauf des Programms essenziell ist. Der Code dazu wird an
 dieser Stelle ausgespart, da er bereits in Abschnitt \ref{sec:distanzmatrix}
 vollständig spezifiziert wurde. Außerdem ausgespart ist die Methode
 \code{read\_data\_from\_csv()}, welche die Eingabedatei einliest, analysiert und
-schließlich die zur Berechnung benötigten Zahlen-Arrays zurückgibt. Wie in Zeile
-1 des Quellcodes ersichtlich, wird zur Berechnung der mathematischen Gleichungen
-die Programmbibliothek NumPy verwendet. \parencite{team_numpy_2023}
+schließlich die zur Berechnung benötigten Zahlen-Arrays zurückgibt. Für die Berechnung der mathematischen Gleichungen wird die Programmbibliothek NumPy verwendet. \parencite{team_numpy_2023}
+
+\noindent
+\begin{minipage}{\linewidth}
+Folgender Ausschnitt eines Quellcodes beinhaltet die für diese
+Arbeit entwickelte Eigenimplementierung des MDS-Algorithmus, basierend auf dem im Abschnitt
+\ref{sec:MDS} genau erläuterten Ablauf:
+\begin{lstlisting}[style=Python]
+def mds(self):
+    # Reads data from CSV file and transforms it to number rows
+    X = self.read_data_from_csv()
+
+    # Calculates distance matrix
+    M = self.calculate_distance_matrix(X)
+
+    # Double centered matrix
+    n = 11 # Number of subjects
+    I = np.identity(n) # Identity matrix
+    Jn = np.ones((n, n)) # Matrix Jn of all ones
+    C = I - (1/n) * Jn # Calculate centering matrix C
+    B = -0.5 * np.dot(np.dot(C, np.array(M)), C) # Calculate the double centered matrix B
+
+    # Eigenvalues, Eigenvectors
+    m = 2  # number of dimensions (2D)
+    eigenvalues, eigenvectors = np.linalg.eig(B) # Perform eigenvalue decomposition
+
+    # Sort eigenvalues and corresponding eigenvectors in descending order
+    sorted_indices = np.argsort(eigenvalues)[::-1]
+    eigenvalues = eigenvalues[sorted_indices]
+    eigenvectors = eigenvectors[:, sorted_indices]
+
+    # Select the top m eigenvalues and corresponding eigenvectors
+    top_m_eigenvalues = eigenvalues[:m]
+    top_m_eigenvectors = eigenvectors[:, :m]
+
+    # Calculate the square root of the diagonal matrix
+    sqrt_Lambda_m = np.sqrt(np.diag(top_m_eigenvalues))
+
+    # Compute the matrix X using the formula
+    X_transformed = np.dot(top_m_eigenvectors, sqrt_Lambda_m)
+
+    return X_transformed
+\end{lstlisting}
+\end{minipage}
 
 Die Entwicklung und Umsetzung dieser eigenen Lösung erwies
 sich jedoch als äußerst anspruchsvoll, da sie zahlreiche subtile mathematische
@@ -159,6 +161,7 @@ Inhalten von Studiengängen, oder beim Hinzufügen bzw. Entfernen eines
 Studiengangs ausgelöst. Dies wiederum passiere meist insgesamt nur einmal pro
 Jahr.
 
+\newpage
 \subsubsection{Node.js - REST-API}\label{sec:node-js-restapi}
 Wie im vorherigen Abschnitt erläutert, ist neben dem Python-Programm auch eine Webschnittstelle erforderlich. In diesem Fall wird hierfür Node.js in Kombination mit der Bibliothek Express verwendet. Node.js ist eine JavaScript-Runtime-Umgebung, die auf der V8 JavaScript Engine von Google basiert und eine serverseitige Ausführung von JavaScript ermöglicht. \parencite{foundation_nodejs_2023} Express wiederum ist ein quelloffenes Webanwendungs-Framework für Node.js. Es erleichtert die Erstellung von Webanwendungen und APIs, indem es eine Reihe von Funktionen und Tools für den Aufbau von Webanwendungen bereitstellt.
 \parencite{foundation_express_2023}
@@ -317,12 +320,14 @@ Erstellt anhand der bereits hochgeladenen Dateien eine neue Version und erzeugt 
 Queryparameter: \code{:mode} $\in$ {'staging', 'production'}
 
 \noindent
+\begin{minipage}{\linewidth}
 Beispielausgabe bei Generierung einer Produktivversion (HTTP-Statuscode 200):
 \begin{lstlisting}[style=Python, mathescape=true]
 {
     "message": "Starte Bearbeitung: $\textbf{staging -> production}$\nBubbles wurden neu generiert.\nFolgende .JSON-Vorlagen wurden nicht gefunden: B, ID, HK, PA, IE, LP, SA, IW, EB, ISE, UI, MS, IR, REE, EI, ME, BE, MB, PT, ICS\nEs wurden insgesamt 4 Studiengangsvorlagen bearbeitet.\nProzess erfolgreich beendet.\n"
 }
 \end{lstlisting}
+\end{minipage}
 
 \noindent
 Beispielausgabe bei Fehlerfall beim Upload von neuen Daten (HTTP-Statuscode 400):
@@ -373,6 +378,8 @@ HTML steht für HyperText Markup Language und ist die Sprache des Internets. HTM
 CSS wiederum steht für Cascading Style Sheets und definiert Darstellungsregeln für HTML-Elemente. CSS-Regeln enthalten Definitionen zu Größe, Form, Farbe, Animation und Layout der einzelnen HTML-Elemente einer Website. \parencite{mozilla_corporation_what_2024}
 
 Im Fall von StudyMap wird Angular Material UI verwendet. Angular Material UI ist ein von Google entwickeltes CSS-Framework. Die Entscheidung für dieses Framework beruht darauf, dass es ebenso wie das Angular Framework von Google LLC entwickelt wurde und daher sehr gut parallel kombiniert werden kann. \parencite{google_llc_angular_2024}
+
+\newpage
 \subsection{Softwarearchitektur}
 Das Gesamtbild StudyMap setzt sich aus den vorher genauer erläuterten Komponenten REST-API, PixiJS, Python-Backend und Node.js als Webserver für alle Dienste zusammen. Dieses Kapitel beschäftigt sich mit der Architektur und der Kommunikation der einzelnen Komponenten untereinander.
 
@@ -469,6 +476,7 @@ Die Python-Komponente hat im Wesentlichen nur eine wirkliche Verbindung zu einer
 
 Es besteht eine weitere implizite Verbindung zwischen PixiJS und den Daten des Python-Skripts für die Anzeige der Bubbles. Die eigentliche Kommunikation zwischen den Komponenten erfolgt jedoch über die Programmierschnittstelle.
 
+\newpage
 \subsection{Software Deployment}\label{sec:deployment}
 Nachdem die Softwarearchitektur geklärt und implementiert wurde, folgt in diesem Abschnitt das Deployment. Software Deployment (Softwareverteilung) bezeichnet den Prozess der Konfiguration und Installation auf dem Zielserver. Dieser Prozess besteht in der Regel aus mehreren Schritten, wie Planung, Design, Testen, Terminplanung und Deployment. \parencite{atera_team_was_2023} Im Falle von StudyMap beschränkt sich der Prozess auf die Schritte: Planung, Testen und Bereitstellung.
 
@@ -548,6 +556,8 @@ Ein weiterer Vorteil ist die Möglichkeit, Docker-Container schnell von einem Se
 \paragraph*{Docker-Image für StudyMap}
 Um StudyMap in einem Docker-Container auszuführen, wird ein Docker-Image benötigt, das alle Komponenten der Softwarearchitektur enthält. Für die Entwicklung dieses Images wird als Basisimage ein Node.js-Image verwendet. Auf diesem Basisimage werden alle Konfigurationen und zusätzlichen Komponenten festgelegt, die dann beim Starten des Containers automatisch installiert werden. Da Node.js als Webschnittstelle für den Studiengangsfinder dient, bildet es die ideale Basis für das Docker-Image. Nachfolgend ist das für StudyMap entwickelte Dockerfile abgebildet:
 
+\noindent
+\begin{minipage}{\linewidth}
 \begin{lstlisting}[style=Python]
 # Node version 18 as base image
 FROM node:18
@@ -579,6 +589,8 @@ EXPOSE 8080
 # Launch
 CMD ["npm", "start"]
 \end{lstlisting}
+\end{minipage}
+
 
 Docker kann mithilfe einer Dockerfile in Form eines Textdokuments ein Image erstellen. In der Dockerfile befinden sich alle Befehle, um ein Image zusammenzustellen. \parencite{docker_inc_dockerfile_2024} Das für StudyMap entwickelte Dockerfile beginnt mit dem Befehl \code{FROM node:18}. Dies bedeutet, dass das Base Image \code{node} in Version 18 als Grundlage für dieses Image verwendet wird. Eine Dockerfile, die lediglich die erste Zeile zur Festlegung des Base Images enthält, würde dementsprechend ein bestehendes Image ohne Veränderung 1:1 kopieren. \parencite{the_nodejs_docker_team_node_2024}
 
@@ -609,11 +621,14 @@ Docker Volumes ermöglichen es, Daten von Containern betriebssystemunabhängig z
 
 Für die Verwendung von Docker-Volumes muss der Kommandozeilenbefehl zum Starten des Containers angepasst werden. Eine Alternative hierzu ist die Verwendung von Docker Compose. Docker Compose wurde entwickelt, um mehrere Container effizient zu steuern und eine klare Struktur von vielen Containern zu ermöglichen. Hier gibt es neben den Dockerfiles auch eine \code{docker-compose.yml}-Datei, die alle Informationen zu den Containern bezüglich Netzwerk, Speicher und freizugebenden Ports enthält. Da der Kommandozeilenbefehl zum Starten des StudyMap-Docker-Containers aufgrund der Ports und Volumes dokumentiert werden müsste, bietet sich die Verwendung von Docker Compose an. Die benötigten Volumes sowie der freizugebende Port 8080 werden in einer Datei festgehalten. \parencite{docker_inc_docker_0000} Der Administrator kann die StudyMap-Anwendung mit folgenden konsistenten Befehlen verwalten:
 
+\noindent
+\begin{minipage}{\linewidth}
 \begin{lstlisting}[style=Python]
 docker-compose up -d        # Startet den Container im Hintergrund (-d)
 docker-compose down         # Stoppt den Container
 docker-compose restart      # Startet den Container neu
 \end{lstlisting}
+\end{minipage}
 
 Die im vorherigen Abschnitt erwähnte Datei docker-compose.yml sieht für den Studiengangsfinder folgendermaßen aus:
 \begin{lstlisting}[style=Python]
@@ -639,7 +654,7 @@ Die Container-Definition für den Studiengangsfinder befindet sich in den Zeilen
 Mithilfe der genannten Docker-Dateien kann die Anwendung und das Deployment nun entweder lokal auf dem Entwicklungsrechner oder auf Testservern getestet werden. Nachdem der Container erfolgreich gestartet werden kann, kann mit dem letzten Schritt des Deployments der eigentlichen Bereitstellung begonnen werden.
 
 \subsubsection{Bereitstellung}
-Die Bereitstellung von StudyMap auf dem Hochschul-Server muss einer genauen Struktur folgen:
+Für eine reibungslose und fehlerfreie Bereitstellung auf dem Hochschulserver ist eine sorgfältige Planung erforderlich. Die folgenden Schritte geben eine Reihenfolge und eine Struktur für die Durchführung des Deployments vor:
 \begin{enumerate}
     \item Server aktualisieren
     \item Speicherort für StudyMap festlegen
