@@ -1,5 +1,5 @@
 \section{Implementierung und Deployment}
-\subsection{Auswahl der Technologien}
+\subsection{Technologieauswahl und Implementierungsdetails}
 Die Auswahl der geeigneten Technologien für die Entwicklung des innovativen 
 Studiengangsfinders wurde so gewählt, um eine effiziente und interaktive Lösung
 zu gewährleisten. Besonders wichtig ist die Nutzbarkeit auf
@@ -72,6 +72,7 @@ schließlich den MDS-Algorithmus auf den Daten anwendet. Im Verlauf der
 Arbeit wurde eine anfängliche Eigenimplementierung des MDS-Algorithmus in
 Betracht gezogen.
 
+\noindent
 Zu diesem Zweck wurde eine Python-Klasse erstellt, die drei Methoden enthält:
 \begin{enumerate}
     \item calculate\_distance\_matrix(X)
@@ -138,7 +139,7 @@ Implementierung ermöglicht eine präzise und effiziente Lösung, wobei der Foku
 auf den zentralen Fragestellungen der Masterarbeit liegt. Außerdem gewährleistet
 die Einbindung von SciKit-Learn neben der Robustheit der MDS-Umsetzung, auch die
 Reduktion der Entwicklungskomplexität im Hinblick auf die
-Algorithmusimplementierung. \parencite{developers_scikit}
+Algorithmusimplementierung. \parencite{developers_scikit-learn_2023}
 
 Das Ergebnis des Skripts sind Koordinaten für jeden Studiengang im
 zweidimensionalen Raum. Diese Koordinaten werden anschließend zusammen mit den
@@ -160,6 +161,43 @@ Frau Rösel (Vizepräsidentin der OTH-Regensburg) nur bei größeren Änderungen
 Inhalten von Studiengängen, oder beim Hinzufügen bzw. Entfernen eines 
 Studiengangs ausgelöst. Dies wiederum passiere meist insgesamt nur einmal pro
 Jahr.
+
+Das Python-Skript hat neben der Berechnung und Speicherung der Koordinaten der Studiengänge noch eine weitere Aufgabe. Sobald der Benutzer auf der StudyMap eine Bubble anklickt, öffnet sich ein Popup mit Details zum entsprechenden Studiengang (siehe Konzept \autoref{fig:mockup-bubbles-popup}). Wie im weiteren Verlauf der Arbeit noch erläutert wird, können diese Details über die Administrationsoberfläche bearbeitet werden. Es ist jedoch notwendig, dass die Dateien mit diesen Informationen bereits angelegt werden und sowohl die Werte der Inhaltskategorien für die Darstellung mit den Balken als auch die ähnlichen Studiengänge bereits in diese Dateien geschrieben werden. Diese Funktion übernimmt das Python-Skript.
+
+Bei der Berechnung neuer Koordinaten wird für jeden eingelesenen Studiengang eine .json-Datei mit einem leeren Template erstellt. Wenn bereits eine Datei für den Studiengang aus einer vorherigen Datenquelle existiert, wird diese geöffnet und bearbeitet. Zur späteren Darstellung der Inhaltskategorien werden anschließend die Originalwerte aus der Datenquelle in die .json-Datei kopiert (siehe folgendes Beispiel-JSON-Objekt \code{contents}).
+
+Um ähnliche Studiengänge zu ermitteln, wird für jeden Studiengang anhand der zuvor berechneten Koordinaten der euklidische Abstand zu allen anderen Studiengängen ermittelt. Alle Studiengänge, die innerhalb einer bestimmten Grenze liegen, werden in eine Liste aufgenommen und schließlich in die .json-Datei des jeweiligen Studiengangs geschrieben (siehe folgendes Beispiel-JSON-Objekt \code{related\_studies}).
+
+\noindent
+Beispiel: Leeres Template des Studiengangs Architektur mit Inhalten und ähnlichen Studiengängen:
+\begin{lstlisting}[style=Python]
+{
+    "name": "Architektur",
+    "abb": "A",
+    "supergroup": "",
+    "length": 0,
+    "course_url": "",
+    "starting_salary": "",
+    "description": "",
+    "local_companies": [],
+    "related_studies": [
+        { "name": "Bauklimatik", "abb": "GK" },
+        { "name": "Bauingenieurwesen", "abb": "B" }
+    ],
+    "contents": [
+        { "name": "Architektur", "score": 0.43 },
+        { "name": "Bau", "score": 0.25 },
+        { "name": "Design", "score": 0.09 },
+        { "name": "Digitalität", "score": 0.06 },
+        { "name": "Elektrotechnik", "score": 0.06 },
+        { "name": "Erneuerbare Energien", "score": 0.0 },
+        { "name": "Future Skills", "score": 0.03 },
+        ...
+    ]
+}
+\end{lstlisting}
+
+Falls sich im Ordner weitere .json-Dateien befinden, die von Studiengängen stammen, die in der aktuellen Datenquelle nicht mehr aufgeführt sind, werden diese automatisch gelöscht.
 
 \newpage
 \subsubsection{Node.js - REST-API}\label{sec:node-js-restapi}
@@ -194,6 +232,7 @@ In der folgenden \autoref{table:rest-api} werden die REST-Endpunkte von StudyMap
 
 Bestimmte Endpunkte enthalten so genannte Query-Parameter. Query-Parameter sind Key-Value-Paare, die an das Ende einer URL angehängt werden können, um dem Webserver zusätzliche Informationen mitzuteilen. \parencite{branch_query_2024} \autoref{table:rest-api} zeigt einige Endpunkte mit dem Query-Parameter \code{mode}.
 
+
 \noindent
 \begin{minipage}{\linewidth}
 Beispiel für eine Anfrage:
@@ -214,8 +253,8 @@ Gibt alle gespeicherten Bachelor-Studiengänge in einem JSON-Positions-Array aus
 Queryparameter: \code{:mode} $\in$ {'staging', 'production'}
 
 \noindent
+\begin{minipage}{\linewidth}
 Beispielausgabe:
-
 \begin{lstlisting}[style=Python]
 {
     "positions": [
@@ -229,20 +268,11 @@ Beispielausgabe:
                 1.0
             ]
         ],
-        [
-            "Bauingenieurwesen",
-            "B",
-            "Architektur und Bau",
-            "#A0CCCC",
-            [
-                0.2742689117831777,
-                0.8832423039306634
-            ]
-        ],
         ...
     ],
 }
 \end{lstlisting}
+\end{minipage}
 
 \paragraph*{GET /details/:abb?mode=:mode}
 \vspace{-1.0em}
@@ -288,10 +318,12 @@ Beispielausgabe:
 Gibt alle existierenden (maximal zehn) Datensicherungen in einem Array aus IDs aus.
 
 \noindent
+\begin{minipage}{\linewidth}
 Beispielausgabe:
 \begin{lstlisting}[style=Python]
     ["1708014679710","1708014600777"]
 \end{lstlisting}
+\end{minipage}
 
 \paragraph*{PATCH /admin/data/history/restore/:id}
 \vspace{-1.0em}
@@ -402,13 +434,70 @@ Ein Webframework ist eine Sammlung von Bibliotheken, Tools und Technologien und 
 
 Für die Entwicklung der Administrationsoberfläche wurde Angular als Webframework gewählt. Der Grund für die Wahl des Frameworks liegt in seiner Verbreitung, da Angular neben dem React-Framework und Vue.js eines der meistgenutzten Frontend-Frameworks ist. \parencite{greif_state_2022}
 
-Angular ist ein komponentenbasiertes Framework zur Erstellung von skalierbaren Webanwendungen auf Basis der Programmiersprache TypeScript. Es enthält unter anderem Bibliotheken für das Routing zwischen Seiten, dynamische Formulare, Client-Server-Kommunikation und mehr \parencite{google_inc_angular_2023}. Zusätzlich zum Angular-Framework wird ein CSS-Framework benötigt, um vordefinierte Styles und wiederverwendbare Komponenten wie z.B. Dialoge zu erhalten.
+Angular ist ein komponentenbasiertes Framework zur Erstellung von skalierbaren Webanwendungen auf Basis der Programmiersprache TypeScript. Es enthält unter anderem Bibliotheken für das Routing zwischen Seiten, dynamische Formulare, Client-Server-Kommunikation und mehr \parencite{google_inc_angular_2023}. 
 
-HTML steht für HyperText Markup Language und ist die Sprache des Internets. HTML ist eine Dokumentenbeschreibungssprache, mit der die Struktur von Webseiten definiert wird. Mithilfe von CSS wird dann das Layout und Aussehen der in HTML definierten Elemente (z.B. Schaltflächen) festgelegt. \parencite{mozilla_corporation_html_2023}
+Zusätzlich zum Angular-Framework wird ein CSS-Framework benötigt, um vordefinierte Styles und wiederverwendbare Komponenten wie z.B. Dialoge zu erhalten.
 
-CSS wiederum steht für Cascading Style Sheets und definiert Darstellungsregeln für HTML-Elemente. CSS-Regeln enthalten Definitionen zu Größe, Form, Farbe, Animation und Layout der einzelnen HTML-Elemente einer Website. \parencite{mozilla_corporation_what_2024}
+HTML steht für HyperText Markup Language und ist die Sprache des Internets. HTML ist eine Dokumentenbeschreibungssprache, mit der die Struktur von Webseiten definiert wird. Mithilfe von CSS wird dann das Layout und Aussehen der in HTML definierten Elemente (z.B. Schaltflächen) festgelegt. \parencite{mozilla_corporation_html_2023} CSS wiederum steht für Cascading Style Sheets und definiert Darstellungsregeln für HTML-Elemente. CSS-Regeln enthalten Definitionen zu Größe, Form, Farbe, Animation und Layout der einzelnen HTML-Elemente einer Website. \parencite{mozilla_corporation_what_2024}
 
 Im Fall von StudyMap wird Angular Material UI verwendet. Angular Material UI ist ein von Google entwickeltes CSS-Framework. Die Entscheidung für dieses Framework beruht darauf, dass es ebenso wie das Angular Framework von Google LLC entwickelt wurde und daher sehr gut parallel kombiniert werden kann. \parencite{google_llc_angular_2024}
+
+Die Implementierung der Authentifizierung in Angular ist vorerst nicht erforderlich, da diese bereits durch die Authentifizierungs-Middleware der Node.js-API abgedeckt ist.
+
+\noindent
+Die Verwaltungssoftware hat in ihrer ersten Version fünf Seiten:
+\begin{itemize}
+    \item Überblick
+    \item Neue Daten einpflegen
+    \item Studiengangsdetails
+    \item Versionsverlauf
+    \item Vorlagen
+\end{itemize}
+
+\paragraph*{Überblick}
+Die Seite \glqq Überblick\grqq{} bietet einen Überblick über das Gesamtsystem. Wie in \autoref{fig:adminui-overview-1} zu sehen ist, enthält die Seite einen Link zur Vorschau der Staging-Umgebung sowie einen Link zur Vorschau der Produktivumgebung. Des Weiteren verfügt die Seite über einen roten Knopf. Bei Bestätigung wird die Staging-Version in die Produktivumgebung überführt und somit der Öffentlichkeit freigeschaltet.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{adminui-overview-1}
+    \caption{Admin UI: Überblick}
+    \bildquelle{Eigene Darstellung}
+    \label{fig:adminui-overview-1}
+\end{figure}
+
+Direkt unterhalb befinden sich auf der Übersichtsseite außerdem zwei Architekturgrafiken, die dem Benutzer die Struktur von StudyMap und die damit verbundene Datensicherung über die Versionshistorie verdeutlichen sollen.
+
+\paragraph*{Neue Daten einpflegen}
+Auf der Seite zur Eingabe neuer Daten gibt es die Möglichkeit, zwei CSV-Dateien vom Computer auszuwählen (siehe \autoref{fig:adminui-new-data-1}). Dies ist die Datenquelle, die in Kapitel X beschrieben wurde. Sie enthält alle Studiengänge und die dazugehörigen Werte der Inhaltskategorien. Die zweite Datei enthält die Abkürzungen der Fakultäten und den entsprechenden Farbcodes, um die Bubbles entsprechend den Fakultäten einzufärben.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{adminui-new-data-1}
+    \caption{Admin UI: Neue Daten einpflegen}
+    \bildquelle{Eigene Darstellung}
+    \label{fig:adminui-new-data-1}
+\end{figure}
+
+Nach der Auswahl der beiden Dateien können diese mithilfe der Schaltfläche \glqq Hochladen\grqq{} hochgeladen und verarbeitet werden. Sobald das Hochladen abgeschlossen ist, beginnt die Verarbeitung der Dateien. Anschließend erscheint ein Dialogfeld mit der Antwort des Servers (siehe \autoref{fig:adminui-new-data-2}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{adminui-new-data-2}
+    \caption{Admin UI: Neue Daten einpflegen - Ergebnisdialog}
+    \bildquelle{Eigene Darstellung}
+    \label{fig:adminui-new-data-2}
+\end{figure}
+
+\paragraph*{Neue Daten einpflegen}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{adminui-details-1}
+    \caption{Admin UI: Studiengangsdetails verwalten (Ausschnitt)}
+    \bildquelle{Eigene Darstellung}
+    \label{fig:adminui-details-1}
+\end{figure}
+
+Sobald die Dateien hochgeladen wurden, wird für jeden Studiengang eine Studiengangsdetails-Datei angelegt. Diese kann mithilfe eines grafischen Formulars in der Administrationsoberfläche bearbeitet werden. \autoref{fig:adminui-details-1} zeigt einen Ausschnitt dieses Formulars. Zunächst muss der zu bearbeitende Studiengang oben im Auswahlfenster ausgewählt werden. Anschließend können alle statischen Inhalte des Popups, das sich beim Klick auf eine Bubble in der StudyMap öffnet, bearbeitet werden. Die Liste der lokalen Unternehmen ist ebenfalls Teil davon.
 
 % TODO: CONTINUE HERE!
 
