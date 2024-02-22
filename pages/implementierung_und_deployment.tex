@@ -179,11 +179,13 @@ In der folgenden \autoref{table:rest-api} werden die REST-Endpunkte von StudyMap
     \textbf{Methode} & \textbf{Pfad}                & \textbf{Rückgabewert} & \multicolumn{1}{l|}{\textbf{Auth.}} \\ \hline
     \textbf{GET}     & /bubbles/bachelor?mode=:mode & application/json      &                                     \\ \hline
     \textbf{GET}     & /details/:abb?mode=:mode     & application/json      &                                     \\ \hline
-    \textbf{GET}     & /admin/data/history                & application/json      & x                                   \\ \hline
-    \textbf{PATCH}   & /admin/data/history/restore/:id    & application/json      & x                                   \\ \hline
-    \textbf{GET}     & /admin/data/generate?mode=:mode    & application/json      & x                                   \\ \hline
-    \textbf{GET}     & /admin/data/download/:version      & application/zip       & x                                   \\ \hline
-    \textbf{POST}    & /admin/data/upload                 & application/json      & x                                   \\ \hline
+    \textbf{GET}     & /data/history                & application/json      & x                                   \\ \hline
+    \textbf{PATCH}   & /data/history/restore/:id    & application/json      & x                                   \\ \hline
+    \textbf{GET}     & /data/generate?mode=:mode    & application/json      & x                                   \\ \hline
+    \textbf{GET}     & /data/download/:version      & application/zip       & x                                   \\ \hline
+    \textbf{POST}    & /data/upload                 & application/json      & x                                   \\ \hline
+    \textbf{GET}     & /data/details                & application/json      & x                                   \\ \hline
+    \textbf{PATCH}   & /data/details/:filename      & application/json      & x                                   \\ \hline
     \end{tabular}
 
     \caption{StudyMap-API: REST-Endpunkte}
@@ -193,19 +195,18 @@ In der folgenden \autoref{table:rest-api} werden die REST-Endpunkte von StudyMap
 Bestimmte Endpunkte enthalten so genannte Query-Parameter. Query-Parameter sind Key-Value-Paare, die an das Ende einer URL angehängt werden können, um dem Webserver zusätzliche Informationen mitzuteilen. \parencite{branch_query_2024} \autoref{table:rest-api} zeigt einige Endpunkte mit dem Query-Parameter \code{mode}.
 
 \noindent
+\begin{minipage}{\linewidth}
 Beispiel für eine Anfrage:
 \begin{lstlisting}[style=Python, mathescape=true]
     GET /bubbles/bachelor$\textbf{?mode=staging}$ HTTP/1.1
     Host: ...
 \end{lstlisting}
-
-% TODO: QUERY PARAMETER ERKLÄREN und danach Beispielausgaben zu den anderen
-% API Dingern auch machen
+\end{minipage}
 
 \noindent
 Beschreibung der in \autoref{table:rest-api} aufgezählten Endpunkte:
 
-\paragraph*{/bubbles/bachelor?mode=:mode}
+\paragraph*{GET /bubbles/bachelor?mode=:mode}
 \vspace{-1.0em}
 Gibt alle gespeicherten Bachelor-Studiengänge in einem JSON-Positions-Array aus. Darin befindet sich der Name des Studiengangs, sein Kürzel, die zugehörige Supergruppe und die Farbe der Fakultät, um die Bubble entsprechend einzufärben. Außerdem enthält jeder Studiengang die relative Position in der StudyMap, die vom Algorithmus berechnet und auf 1 normiert wurde.
 
@@ -216,34 +217,34 @@ Queryparameter: \code{:mode} $\in$ {'staging', 'production'}
 Beispielausgabe:
 
 \begin{lstlisting}[style=Python]
-    {
-        "positions": [
+{
+    "positions": [
+        [
+            "Architektur",
+            "AT",
+            "Architektur und Bau",
+            "#A0CCCC",
             [
-                "Architektur",
-                "AT",
-                "Architektur und Bau",
-                "#A0CCCC",
-                [
-                    0.4013795552124245,
-                    1.0
-                ]
-            ],
-            [
-                "Bauingenieurwesen",
-                "B",
-                "Architektur und Bau",
-                "#A0CCCC",
-                [
-                    0.2742689117831777,
-                    0.8832423039306634
-                ]
-            ],
-            ...
+                0.4013795552124245,
+                1.0
+            ]
         ],
-    }
+        [
+            "Bauingenieurwesen",
+            "B",
+            "Architektur und Bau",
+            "#A0CCCC",
+            [
+                0.2742689117831777,
+                0.8832423039306634
+            ]
+        ],
+        ...
+    ],
+}
 \end{lstlisting}
 
-\paragraph*{/details/:abb?mode=:mode}
+\paragraph*{GET /details/:abb?mode=:mode}
 \vspace{-1.0em}
 Sobald alle Studiengänge abgerufen wurden und der Benutzer auf eine der Bubbles klickt, öffnet sich ein Popup mit Details über den Studiengang. Der Klick ruft den Befehl \code{/details/:abb} auf, wobei \code{:abb} für das Kürzel des Studiengangs steht. Die Ausgabe ist erneut ein JSON und enthält die Details des Studiengangs.
 
@@ -254,35 +255,35 @@ Queryparameter: \code{:mode} $\in$ {'staging', 'production'}
 Beispielausgabe:
 
 \begin{lstlisting}[style=Python]
-    {
-        "name": "Informatik",
-        "abb": "IN",
-        "supergroup": "Bachelor of Science (B.Sc.)",
-        "length": 7,
-        "course_url": "https://www.oth-regensburg.de/studieren/...",
-        "starting_salary": "Überdurchschnittlich",
-        "description": "Sie möchten mit Informatik die Zukunft gestalten? Informatik ist in allen Branchen ...",
-        "local_companies": [
-            { "name": "Vector", "url": "https://www.vector.com/" },
-            ...
-        ],
-        "related_studies": [
-            { "name": "International Computer Science", "abb": "ICS" },
-            ...
-        ],
-        "contents": [
-            { "name": "Architektur", "score": 0.0 },
-            { "name": "Bau", "score": 0.0 },
-            { "name": "Design", "score": 0.3 },
-            { "name": "Gesundheit", "score": 0.0 },
-            { "name": "Informatik", "score": 1.0 },
-            { "name": "Internationales", "score": 0.2 },
-            ...
-        ]
-    }
+{
+    "name": "Informatik",
+    "abb": "IN",
+    "supergroup": "Bachelor of Science (B.Sc.)",
+    "length": 7,
+    "course_url": "https://www.oth-regensburg.de/studieren/...",
+    "starting_salary": "Überdurchschnittlich",
+    "description": "Sie möchten mit Informatik die Zukunft gestalten? Informatik ist in allen Branchen ...",
+    "local_companies": [
+        { "name": "Vector", "url": "https://www.vector.com/" },
+        ...
+    ],
+    "related_studies": [
+        { "name": "International Computer Science", "abb": "ICS" },
+        ...
+    ],
+    "contents": [
+        { "name": "Architektur", "score": 0.0 },
+        { "name": "Bau", "score": 0.0 },
+        { "name": "Design", "score": 0.3 },
+        { "name": "Gesundheit", "score": 0.0 },
+        { "name": "Informatik", "score": 1.0 },
+        { "name": "Internationales", "score": 0.2 },
+        ...
+    ]
+}
 \end{lstlisting}
 
-\paragraph*{/admin/data/history}
+\paragraph*{GET /admin/data/history}
 \vspace{-1.0em}
 Gibt alle existierenden (maximal zehn) Datensicherungen in einem Array aus IDs aus.
 
@@ -292,7 +293,7 @@ Beispielausgabe:
     ["1708014679710","1708014600777"]
 \end{lstlisting}
 
-\paragraph*{/admin/data/history/restore/:id}
+\paragraph*{PATCH /admin/data/history/restore/:id}
 \vspace{-1.0em}
 Stellt Datensicherung mit der ID :id wieder in die Staging-Umgebung her. :id ist ein Pfadparameter.
 
@@ -312,7 +313,7 @@ Beispielausgabe bei Fehlerfall (HTTP-Statuscode 500):
 }
 \end{lstlisting}
 
-\paragraph*{/admin/data/generate?mode=:mode}
+\paragraph*{GET /admin/data/generate?mode=:mode}
 \vspace{-1.0em}
 Erstellt anhand der bereits hochgeladenen Dateien eine neue Version und erzeugt im Falle einer Produktivversion eine Datensicherung.
 
@@ -337,11 +338,11 @@ Beispielausgabe bei Fehlerfall beim Upload von neuen Daten (HTTP-Statuscode 400)
 }
 \end{lstlisting}
 
-\paragraph*{/admin/data/download/:version}
+\paragraph*{GET /admin/data/download/:version}
 \vspace{-1.0em}
 Erstellt aus der Version :version eine .zip-Datei und erstellt daraus einen Download-Stream. Für den Pfadparameter :version gilt :version $\in$ {'staging', 'production', 'template'}.
 
-\paragraph*{/admin/data/upload}
+\paragraph*{POST /admin/data/upload}
 \vspace{-1.0em}
 Nimmt mehrere Dateien entgegen und speichert diese im Input des StudyMap-Algorithmus. Die zu hochladenden Dateien müssen im Body der HTTP-Anfrage enthalten sein. Dabei gibt es die Regeln: dataset (1 Datei), faculties (1 Datei) und details (maximal 50 Dateien). Die hochgeladenen Dateien können anschließend per Aufruf von \code{/admin/data/generate} verarbeitet werden.
 
@@ -363,6 +364,36 @@ Beispielausgabe bei fehlerhaften Download (HTTP-Statuscode 500):
 
 Durch die in diesem Unterkapitel beschriebene Web-Schnittstelle kann das PixiJS-Frontend in Echtzeit die benötigten Informationen abrufen, um die interaktive Grafik der Studiengänge zu erstellen. Die klare Trennung von Backend und Frontend gewährleistet eine effiziente Datenübertragung und ermöglicht eine dynamische Aktualisierung der Grafik bei Änderungen im Datensatz.
 
+\paragraph*{GET /admin/data/details}
+\vspace{-1.0em}
+Dieser Endpunkt ruft die Dateinamen aller gespeicherten Studiengangsdetails ab und gibt sie aus. Wenn die Inhalte per .csv-Datei hochgeladen werden, wird für jeden Studiengang, sofern noch nicht vorhanden, eine .json-Datei mit den Studiengangsdetails erstellt. Mithilfe dieses Endpunkts können die Dateinamen dieser Dateien abgerufen werden.
+
+\noindent
+Beispielausgabe nach erfolgtem Upload von Studiengängen (HTTP-Statuscode 200):
+\begin{lstlisting}[style=Python]
+[
+    "A.json","B.json","BE.json","BM.json","DBM.json","EI.json","GK.json",
+    "I.json","IBM.json","ICS.json","ID.json","IR.json","ISE.json","IT.json",
+    "IW.json","KI.json","MB.json","ME.json","MS.json","PA.json","RE.json",
+    "SC.json","UI.json"
+]
+\end{lstlisting}
+
+\paragraph*{PATCH /admin/data/details/:filename}
+\vspace{-1.0em}
+Nachdem alle verfügbaren Studiengänge mit /admin/data/details abgerufen wurden, können mithilfe von \code{/details/:abb} die Details zu einem einzelnen Studiengang abgefragt werden. Anschließend kann der Benutzer die Informationen in der Administrationsoberfläche bearbeiten und die Änderungen mit diesem Endpunkt der API persistieren.
+
+Der Request Body dieser Anfrage muss das bearbeitete JSON-Objekt der Studiengangsdetails sein. Der Request Body enthält die zu sendenden Daten der HTTP-Anfrage. \parencite{parthiban_essential_2023}
+
+Bei erfolgreicher Speicherung der Studiengangsdetails wird zusammen mit dem Statuscode 200 der neue Inhalt der Datei zurückgegeben. Ein Beispiel dazu befindet sich in der Schnittstellenbeschreibung für \code{GET /details/:abb}.
+
+\noindent
+Wenn der Prozess fehlschlägt, gibt es zwei Arten von Fehlermeldungen zu unterscheiden:
+\begin{itemize}
+    \item \textbf{Der Speicherprozess ist fehlgeschlagen:} In diesem Fall wird der Statuscode 500 zusammen mit der Fehlerbeschreibung als JSON ausgegeben: \lstinline[style=python]|{"message": "Fehler bei der Aktualisierung der Studiengangsdetails."}|.
+    \item \textbf{Die angeforderte Datei \code{:filename} existiert nicht:} Der Statuscode 404 wird mit dem JSON \lstinline[style=python]|{"message": "Studiengangsdetails nicht gefunden."}| zurückgegeben. 
+\end{itemize}
+
 \subsubsection{Angular - Administrationsoberfläche}
 Um den im \autoref{sec:verwaltungssoftware} aufgeführten Anforderungen wie Datensicherung und Trennung von Staging- und Produktivumgebung gerecht zu werden, ist die Implementierung einer Verwaltungssoftware notwendig. Um die Entwicklung möglichst zukunftssicher, d.h. leicht erweiterbar zu gestalten, wird ein sogenanntes Webframework eingesetzt.
 
@@ -380,7 +411,6 @@ CSS wiederum steht für Cascading Style Sheets und definiert Darstellungsregeln 
 Im Fall von StudyMap wird Angular Material UI verwendet. Angular Material UI ist ein von Google entwickeltes CSS-Framework. Die Entscheidung für dieses Framework beruht darauf, dass es ebenso wie das Angular Framework von Google LLC entwickelt wurde und daher sehr gut parallel kombiniert werden kann. \parencite{google_llc_angular_2024}
 
 % TODO: CONTINUE HERE!
-% + ADD NEW API ENDPOINTS TO LIST AND DESCRIPTION
 
 \newpage
 \subsection{Softwarearchitektur}
@@ -627,9 +657,9 @@ Für die Verwendung von Docker-Volumes muss der Kommandozeilenbefehl zum Starten
 \noindent
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[style=Python]
-docker-compose up -d        # Startet den Container im Hintergrund (-d)
-docker-compose down         # Stoppt den Container
-docker-compose restart      # Startet den Container neu
+docker compose up -d        # Startet den Container im Hintergrund (-d)
+docker compose down         # Stoppt den Container
+docker compose restart      # Startet den Container neu
 \end{lstlisting}
 \end{minipage}
 
