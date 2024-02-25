@@ -57,6 +57,119 @@ größere und aktivere Entwicklergemeinschaft hin, was wiederum auf
 kontinuierliche Weiterentwicklung und Wartung schließen lässt.
 \parencite{batista_github_2023}
 
+Mit Hilfe der in den folgenden Kapiteln vorgestellten Webschnittstelle werden Daten für die Visualisierung der Studiengänge vom PixiJS-Projekt abgerufen. Anschließend werden die Studiengänge auf einer Canvas-Fläche in Form von Bubbles platziert, die sich hinsichtlich ihrer Nähe durch die Ergebnisse des MDS-Algorithmus unterscheiden:
+
+\begin{lstlisting}[style=Python]
+const x = ((renderedSize.width * 0.75) * data[i][4][0]) + renderedSize.width * 0.125;
+const y = ((renderedSize.height * 0.8) * (1 - data[i][4][1])) + renderedSize.height * 0.10;
+\end{lstlisting}
+
+Die vorliegende Implementierung berechnet die x- und y-Positionen für die jeweiligen Bubbles der Studiengänge. In diesem Fall enthält die Variable \code{renderedSize} die Breite des Canvas in Relation zur physischen Pixeldichte. Die Variablen \code{data[i][4][0]} und \code{data[i][4][1]} enthalten die vom Algorithmus berechneten auf eins normierte Koordinaten. Durch Multiplikation der Breite und Höhe der gezeichneten Fläche mit einem Pufferwert (z.B. 0.75) werden die Bubbles zentriert und nicht bis zum Rand gezeichnet. Ansonsten könnte es passieren, dass Bubbles genau am Rand stehen und dadurch aufgrund des zentrierten Ankerpunkts des Kreises nur zur Hälfte sichtbar sind.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{pixijs-tooltip-1}
+    \caption{StudyMap: Tooltip über Bubble}
+    \bildquelle{Eigene Darstellung}
+    \label{fig:pixijs-tooltip-1}
+\end{figure}
+
+Die Implementierung beinhaltet außerdem die Funktionalität, dass ein Tooltip erscheint, wenn man mit der Maus über die Bubble fährt (siehe \autoref{fig:pixijs-tooltip-1}). In der Entwicklung treten jedoch zwei große Herausforderungen auf: Wie funktioniert dieses Feature auf einem Smartphone ohne Maus? Was passiert, wenn das Tooltip außerhalb des Bildschirms gezeichnet wird?
+
+% TODO: Bei Bedienung muss noch die Hitarea beim Hovern dazukommen.
+\paragraph*{Herausforderung 1: Bedienung}
+PixiJS verfügt über ein ereignisbasiertes System zur Verfolgung von Interaktionen mit der Zeichenfläche. Es gibt verschiedene Eventtypen, wie zum Beispiel \code{.click()}. Dieses Event wird ausgelöst, wenn auf das Objekt geklickt wird, auf dem der sogenannte Eventlistener aktiviert wurde. \parencite{pixijs_interaction_2024}
+
+Für das Tracking, ob der Benutzer mit der Maus über der Bubble ist, wird der Eventtyp \code{.onmouseover()} verwendet. Die Studiengänge werden, wie im Konzept vorgestellt, in Supergruppen eingeteilt. Alle Studiengänge, die zur gleichen Supergruppe gehören, werden durch ein Label mit dem Namen der Supergruppe und einen leichten Hintergrundnebel gekennzeichnet, um ihre Zugehörigkeit zu zeigen. Wenn der Benutzer keine Interaktion mit dem Canvas durchführt, wird kein Studiengang mit einem Label versehen, sondern lediglich als farbiger Kreis dargestellt (siehe \autoref{fig:pixijs-canvas-2}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{pixijs-canvas-2}
+    \caption{StudyMap: Supergruppe mit Label}
+    \bildquelle{Eigene Darstellung}
+    \label{fig:pixijs-canvas-2}
+\end{figure}
+
+Beim Berechnen des Nebels der Supergruppen werden gleichzeitig die Minima und Maxima der X- und Y-Koordinaten berechnet. Das Ergebnis ist ein unsichtbares Rechteck, das alle Studiengänge in dieser Inhaltskategorie umfasst; dieses Rechteck hat die Funktion einer Hitarea. Auf dieser Hitarea wird ein \code{.onmouseover()}-Eventlistener platziert, der ausgelöst wird, sobald der Benutzer mit der Maus in die Nähe eines Studiengangs dieser Kategorie kommt.
+
+Sobald dieser Fall eintritt, wird das Label der Supergruppe deaktiviert und alle Studiengangs-Bubbles erhalten als Label das Kürzel des jeweiligen Studiengangs (siehe \autoref{fig:pixijs-canvas-3}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{pixijs-canvas-3}
+    \caption{StudyMap: Supergruppe ohne Label - Hitarea}
+    \bildquelle{Eigene Darstellung}
+    \label{fig:pixijs-canvas-3}
+\end{figure}
+
+Schließlich besitzt jede Bubble einen zusätzlichen \code{.onmouseover()}-Eventlistener. Wenn dieses Event ausgelöst wird, wird die Bubble vergrößert und immer gegenüber eventuell überschneidenden Bubbles in den Vordergrund gestellt. Die Labels der anderen Studiengänge in allen anderen Supergruppen werden deaktiviert, um den Fokus auf diese Inhaltskategorie und explizit diese Bubble zu legen. Daraufhin erscheint darüber das Tooltip, das in \autoref{fig:pixijs-tooltip-1} zu sehen ist.
+
+Da ein Smartphone in der Regel keine Maus angeschlossen hat, wird anstelle des für Desktop-Benutzer verwendete \code{.onmouseover()}-Event das \code{.ontap()}-Event verwendet. Dieses Ereignis wird ausgelöst, wenn der Benutzer auf die Bubble des Studiengangs tippt. Die Hitarea des Supergruppen-Nebels wird dabei ignoriert.
+
+Auch hier muss erneut differenziert werden. Wenn ein Desktop-Nutzer auf eine Bubble klickt, öffnet sich der Dialog mit den Studiengangsdetails gemäß dem Konzept. Wenn ein Smartphone-Nutzer auf die Bubble tippt, sollte sich das Popup nicht direkt öffnen. Es ist wichtig, dass der Nutzer zuvor das Tooltip gesehen hat, um zu wissen, welchen Studiengang er öffnet.
+
+Aus diesem Grund wird beim \code{.ontap()}-Event auf eine Bubble zwischen drei Zuständen unterschieden:
+
+\begin{enumerate}
+    \item \textbf{Bisher noch nichts anderes angetippt:} Dann wird der gleiche Hover-Effekt ausgeführt, den auch ein Desktop-Endgerät beim \code{.onmouseover()}-Event über eine Bubble auslösen würde.
+    \item \textbf{Es wurde bereits eine andere Bubble angeklickt:} In diesem Fall wird der Hover-Effekt für die bereits angeklickte Bubble deaktiviert und für diese Bubble aktiviert.
+    \item \textbf{Diese Bubble wurde bereits angeklickt:} Daraufhin wird das Tooltip entfernt und das Popup mit den Details zum Studiengang geöffnet. Dies ist das Äquivalent zu einem Doppelklick auf die Bubble.
+\end{enumerate}
+
+Zur Implementierung dieser Funktionalität ist die Zwischenspeicherung eines Active-State erforderlich, der immer die zuletzt angeklickte Bubble enthält.
+
+\paragraph*{Herausforderung 2: Was passiert, wenn das Tooltip außerhalb des Bildschirms gezeichnet wird?}
+Die Zeichenoberfläche von PixiJS enthält keine vorgefertigten Anzeigeelemente oder Komponenten zur Erstellung einer Benutzeroberfläche. Das bedeutet, dass Elemente wie z.B. das Tooltip in Abbildung X selbst mit Hilfe von Polygonen gezeichnet werden müssen.
+
+Das gezeigte Tooltip besteht aus einem abgerundeten Rechteck, das den Text darüber enthält, und einem Dreieck, das anzeigt, für welche Bubble das Tooltip geöffnet wurde. Das Rechteck und das dazugehörige Dreieck werden in Schwarz aneinander gesetzt, so dass das kleine Fenster wie eine Sprechblase aussieht.
+
+Bei der Entwicklung der Klasse Tooltip wurde festgelegt, dass die Standardrichtung zum Öffnen des Tooltips nach oben zeigt. Der folgende Codeausschnitt zeigt, wie die Richtung festgelegt wird:
+
+\begin{lstlisting}[style=Python]
+this.direction = 'top';
+if (this.rootObjectYPosition - this.distance - this.container.height < 0) {
+    // if object is too high to display the tooltip, it will be drawn to the bottom
+    this.direction = 'bottom';
+} else if (this.rootObjectXPosition - this.container.width / 2 < 0) {
+    // if object overlaps left world border, it will be drawn to the right        
+    this.direction = 'right';
+} else if (this.rootObjectXPosition + this.container.width / 2 > this.worldWidth) {
+    // if object overlaps right world border, it will be drawn to the left
+    this.direction = 'left';
+}
+\end{lstlisting}
+
+Die Variablen \code{this.rootObjectXPosition} und \code{this.rootObjectYPosition} enthalten die x- und y-Koordinaten des Elements, an dem der Tooltip erscheinen soll. In diesem Fall sind dies die Koordinaten der jeweiligen Bubble. Die Variable \code{this.distance} enthält den vordefinierten Abstand, um den der Tooltip vom Element entfernt sein soll. Im vorliegendem Fall handelt es sich mindestens um den Radius des Studiengangskreises. Die Größe des Tooltips wird wiederum in den Variablen \code{this.container.height} und \code{this.container.width} gespeichert.
+
+Die Richtung des Tooltip-Fensters wird nach dem Ausschlussverfahren festgelegt. Wenn das Tooltip mit der Standardrichtung \code{'top'} (nach oben) aus der Zeichenfläche hinausragt, wird die Richtung nach unten (\code{'bottom'}) festgelegt. Anschließend wird überprüft, ob das Element die linke Fenstergrenze überschreitet. Falls dies der Fall ist, wird die Richtung auf \code{'rechts'} gesetzt. In diesem Fall wird die Richtung auf \code{'links'} gesetzt. Analog dazu wird geprüft, ob das Objekt die rechte Grenze überschreitet.
+
+Sobald die Ausrichtung des Tooltips festgelegt wurde, müssen die Elemente einzeln verschoben und gedreht werden. Führt die vorangegangene if-Bedingung dazu, dass die Richtungsvariable \code{direction} auf \code{'left'} gesetzt wird, muss das Tooltip wie in der folgenden \autoref{fig:pixijs-tooltip-2} dargestellt links neben der Bubble erscheinen.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{pixijs-tooltip-2}
+    \caption{StudyMap: Tooltip links neben Bubble}
+    \bildquelle{Eigene Darstellung}
+    \label{fig:pixijs-tooltip-2}
+\end{figure}
+
+Der unten dargestellte Codeauszug zeigt die Platzierung des Tooltip-Containers auf der linken Seite. Zunächst wird die Rotation des Dreiecks geändert, sodass es sich um 90 Grad nach links dreht. Anschließend werden die x- und y-Koordinaten des Dreiecks so angepasst, dass es an der rechten Seite des abgerundeten Rechtecks anliegt. Schließlich wird der gesamte Container mithilfe der Zeilen sechs und sieben linksbündig und gleichzeitig vertikal zentriert neben der Bubble platziert. Sowohl das Dreieck als auch das abgerundete Rechteck und der Text sind im Container enthalten.
+
+\noindent
+Platzierung des Tooltips auf der linken Seite:
+\begin{lstlisting}[style=Python]
+if (this.direction == 'left') {
+    triangle.rotation = -Math.PI / 2;
+    triangle.y = this.container.height / 2 - triangleHeight / 2;
+    triangle.x = this.container.width;
+
+    this.container.x = -this.container.width - this.distance;
+    this.container.y = -background.height / 2;
+}
+\end{lstlisting}
+
+Dieser Ansatz funktioniert jedoch nur bis zu einem gewissen Grad. Wenn das Tooltip breiter ist als die x-Achse des Endgeräts, wird es immer über die Seiten des Endgeräts hinausragen, da auf keiner der beiden Seiten genügend Platz für das Tooltip zur Verfügung steht. % TODO: In Zukunftsaussichten aufnehmen
+
 \newpage
 \subsubsection{Python - Berechnung der Positionen}
 Die Berechnung der Positionen für die Studiengänge basiert, wie im Abschnitt
