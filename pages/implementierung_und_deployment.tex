@@ -102,7 +102,7 @@ Sobald dieser Fall eintritt, wird das Label der Supergruppe deaktiviert und alle
     \label{fig:pixijs-canvas-3}
 \end{figure}
 
-Schließlich besitzt jede Bubble einen zusätzlichen \code{.onmouseover()}-Eventlistener. Wenn dieses Event ausgelöst wird, wird die Bubble vergrößert und immer gegenüber eventuell überschneidenden Bubbles in den Vordergrund gestellt. Die Labels der anderen Studiengänge in allen anderen Supergruppen werden deaktiviert, um den Fokus auf diese Inhaltskategorie und explizit diese Bubble zu legen. Daraufhin erscheint darüber das Tooltip, das in \autoref{fig:pixijs-tooltip-1} zu sehen ist.
+Schließlich besitzt jede Bubble einen zusätzlichen \code{.onmouseover()}-Eventlistener. Wenn dieses Event ausgelöst wird, wird die Bubble vergrößert und immer gegenüber eventuell überschneidenden Bubbles in den Vordergrund gestellt. Die Labels der anderen Studiengänge in allen anderen Supergruppen werden deaktiviert, um den Fokus auf diese Inhaltskategorie und explizit diese Bubble zu legen. Daraufhin erscheint darüber das Tooltip, das in \autoref{fig:pixijs-tooltip-1} zu sehen ist. Ein Klick auf die fokussierte Bubble oder den dargestellten Tooltip öffnet das Popup mit den Details zum Studiengang.
 
 Da ein Smartphone in der Regel keine Maus angeschlossen hat, wird anstelle des für Desktop-Benutzer verwendete \code{.onmouseover()}-Event das \code{.ontap()}-Event verwendet. Dieses Ereignis wird ausgelöst, wenn der Benutzer auf die Bubble des Studiengangs tippt. Die Hitarea des Supergruppen-Nebels wird dabei ignoriert.
 
@@ -170,7 +170,107 @@ if (this.direction == 'left') {
 
 Dieser Ansatz funktioniert jedoch nur bis zu einem gewissen Grad. Wenn das Tooltip breiter ist als die x-Achse des Endgeräts, wird es immer über die Seiten des Endgeräts hinausragen, da auf keiner der beiden Seiten genügend Platz für das Tooltip zur Verfügung steht. % TODO: In Zukunftsaussichten aufnehmen
 
-\newpage
+\paragraph*{Popup-Dialog mit Studiengangsdetails}
+Sobald das im vorigen Abschnitt beschriebene Ereignis zum Öffnen des Popups ausgelöst wird, werden die benötigten Studiengangsdetails von der später beschriebenen Webschnittstelle abgerufen und angezeigt. Zur Darstellung der Dialog-Komponente wird eine weitere Programmibliothek verwendet: Bootstrap.
+
+Bootstrap ist ein Open-Source-Frontend-Framework für die Entwicklung von responsiven Websites und Webanwendungen. Es enthält eine Vielzahl von vordefinierten CSS-Klassen und JavaScript-Plugins, die eine Integration von Designelementen wie Buttons, Formularen und Navigationen ermöglichen. \parencite{otto_bootstrap_2024} Mit seinem integrierten Grid-System kann Bootstrap schnell an verschiedene Bildschirmgrößen angepasst werden, was den Designprozess vereinfacht und die Browserkompatibilität verbessert. \parencite{otto_browsers_2024}
+
+Bootstrap beinhaltet eine Modal-Komponente, die als Grundlage für das Details-Popup verwendet wird. \parencite{otto_modal_2024} Diese Basis kann dann mit Hilfe von CSS-Regeln so angepasst werden, dass der endgültige Dialog in Bezug auf das Design dem Konzept von StudyMap entspricht.
+
+Eine Herausforderung bei diesem Modal war, dass ursprünglich geplant war, dass beim Öffnen des Popups der gesamte Bildschirminhalt etwas dunkler wird und der Inhalt des Popups den Großteil des Bildschirms einnimmt. Dadurch hätte man beispielsweise an einem größeren Endgerät ein zweispaltiges Layout anstreben können. Da es sich beim iFrame um einen geschlossenen Container handelt, ist es jedoch nicht möglich, Inhalte aus dem iFrame heraus auf der einbindenden Seite darzustellen. Die mittels iFrame eingebettete Webseite kann nur innerhalb dieses iFrames wirken. % Todo: Quelle
+
+Wegen dieser Herausforderung wird das Popup als Vollbildanzeige entwickelt, so dass es die gesamte Breite des iFrames einnimmt und nur vertikales Scrollen erlaubt (siehe \autoref{fig:popup-1} - roter Pfeil 1).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{popup-1}
+    \caption{StudyMap: Popup-Implementierung 1}
+    \bildquelle{Eigene Darstellung}
+    \label{fig:popup-1}
+\end{figure}
+
+Außerdem wird in der Werkzeugleiste oben bei kleinen Anzeigegrößen auf die Beschriftung verzichtet. Anstelle von Beschriftungen werden aussagekräftige Icons verwendet und ähnlich wie bei den Studiengangsbubbles Tooltips eingesetzt, sobald die Maus darüber bewegt wird (siehe \autoref{fig:popup-1} - Pfeil 2).
+
+In der oberen Werkzeugleiste befindet sich die Funktion zum Vergleichen der Studiengänge, wie in der UCD-Studie beschrieben. Die Aktivierung dieser Funktion erfolgt durch einen Klick auf die Lupe rechts neben dem roten Pfeil 2, wie in \autoref{fig:popup-1} dargestellt.
+
+Das Icon links daneben enthält eine bisher noch nicht beschriebene Funktion zum Teilen des Studiengangs. Hintergrund ist, dass eine Person, die an einem Studium interessiert ist, einen passenden Studiengang finden und diesen entweder speichern oder mit engen Bekannten teilen kann. Die technische Umsetzung dieses Features wird mittels der Web Share API und der Zwischenablage des Endgerätes realisiert.
+
+Die Web Share API ist eine browserbasierte Schnittstelle, die es Webentwicklern ermöglicht, die native Teilen-Funktionalität von Geräten zu nutzen. Sie erleichtert das direkte Teilen von Webinhalten über Messaging-Apps oder per E-Mail, ohne zusätzliche Plugins. Diese Standard-API verbessert die Benutzerfreundlichkeit und erlaubt die einfache Integration in Web-Applikationen auf verschiedenen Plattformen und OS. \parencite{mozilla_corporation_web_2023}
+
+Wenn der Benutzer auf die Teilen-Schaltfläche tippt, wird überprüft, ob der Browser die Web Share API unterstützt. Wenn dies der Fall ist, wird ein Datenpaket mit einem eindeutigen Link zu diesem Studiengang an das Betriebssystem gesendet. Das Datenpaket enthält folgende Informationen:
+\begin{itemize}
+    \item \textbf{Titel:} Name des Studiengangs
+    \item \textbf{Beschreibung:} \glqq An der OTH-Regensburg studieren\grqq{}
+    \item \textbf{URL:} Link zum Studiengangsfinder + Queryparameter mit Kürzel des ausgewählten Studiengangs
+\end{itemize}
+
+Anschließend öffnet sich ein Fenster des Betriebssystems, um den übergebenen Link zu teilen. Das Aussehen und der Dialog können von Betriebssystem zu Betriebssystem variieren, die folgende \autoref{fig:popup-3} zeigt ein Beispiel unter macOS:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{popup-3}
+    \caption{StudyMap: Web Share API}
+    \bildquelle{Eigene Darstellung}
+    \label{fig:popup-3}
+\end{figure}
+
+Falls der Browser die Web Share API nicht unterstützt, muss eine Ausweichlösung bereitgestellt werden. Um zu überprüfen, ob der Browser diese API unterstützt, gibt es mit der Methode \code{navigator.canShare()} folgende Möglichkeit zur Abfrage: \parencite{mozilla_corporation_web_2023}
+\begin{lstlisting}[style=Python]
+if (navigator.canShare && navigator.canShare(shareData)) {
+    // Browser supports Web Share API
+} else {
+    // Browser does not support Web Share API
+}
+\end{lstlisting}
+
+Falls die API nicht unterstützt wird, verwendet StudyMap als Ausweichlösung die Zwischenablage in Verbindung mit einer kleinen Meldung auf dem Bildschirm. Sobald der Benutzer auf den Share-Button klickt, prüft StudyMap, ob der Browser in der Lage ist, die Daten über das System zu teilen. Wenn dies nicht der Fall ist, speichert StudyMap den Link zum Teilen in der Zwischenablage des Endgeräts und benachrichtigt den Benutzer darüber mit einer Nachricht, wie in \autoref{fig:popup-4} dargestellt.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{popup-4}
+    \caption{StudyMap: Studiengang teilen (ohne Web Share API)}
+    \bildquelle{Eigene Darstellung}
+    \label{fig:popup-4}
+\end{figure}
+
+Neben der Erzeugung des Freigabelinks muss StudyMap auch in der Lage sein, den Link zu interpretieren, damit beim Öffnen des Links das richtige Studienprogramm als Popup geöffnet wird. Da StudyMap in einem iFrame ausgeführt wird, holt sich StudyMap die URL (Uniform Resource Locator) des übergeordneten Fensters und fügt dem Link einen Queryparameter hinzu. Die URL ist eine Webadresse, die es ermöglicht, eine spezifische Ressource im Internet zu lokalisieren und darauf zuzugreifen - in diesem Fall entspricht sie dem Link der jeweiligen Website \parencite{mozilla_corporation_url_2023}.
+
+
+\noindent
+\textbf{Fiktives Beispiel:}\newline
+URL StudyMap: \code{app.studymap.de}\newline
+URL OTH-Regensburg mit StudyMap als iFrame: \code{oth-regensburg.de/studienorientierung}\newline
+Freigabelink: \code{oth-regensburg.de/studienorientierung?s=<Studienkürzel>}\newline
+
+Mithilfe des Befehls \code{window.parent.location.href} kann StudyMap die URL der Eltern-Seite abrufen. In diesem fiktiven Beispiel handelt es sich bei der URL um die URL der Website der Hochschule Regensburg, die das Canvas als iFrame eingebunden hat. An diese URL wird der Queryparameter \code{s} mit dem Wert des Studiengangskürzels gehängt. Wenn der Knopf beispielsweise im Popup für Informatik gedrückt wird, entspricht dieser Wert \code{I}, also insgesamt \code{?s=I}.
+
+Die Übermittlung des Parameters an den iFrame stellt die eigentliche Schwierigkeit dar. Wird die URL mit dem Queryparameter geteilt und der Benutzer ruft diese Seite auf, erhält der iFrame auf der betreffenden Seite diesen Parameter nicht automatisch. Damit der Studiengangsfinder innerhalb des iFrames den Parameter erhält, muss dieser von der einbindenden Seite (in diesem Fall die Hochschulwebseite) mithilfe von JavaScript extrahiert und an die Quelladresse der StudyMap-App angehängt werden. Im Folgenden ein Beispiel für einen HTML- und JavaScript-Code zur Extrahierung des Queryparameters \code{s} und anschließender Anpassung der iFrame-Quelle mit dem übergebenen Parameter:
+\begin{lstlisting}[style=Python]
+<iframe src="app.html" frameborder="0" allow="web-share"
+    scrolling="no" onload="resizeIframe(this)" id="studymap"></iframe>
+
+<script>
+const shareParam = new URLSearchParams(window.location.search).get('s');
+if (shareParam != null) {
+    document.querySelector('#studymap').setAttribute('src', `app.html?s=${shareParam}`);
+}
+
+...
+</script>
+\end{lstlisting}
+
+Analog dazu ist StudyMap in der Lage, den nun übergebenen Parameter zu extrahieren und unter Verwendung des Studienkürzels beim Start der Anwendung das entsprechende Studiengangs-Popup zu öffnen. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{popup-2}
+    \caption{StudyMap: Popup-Implementierung 2}
+    \bildquelle{Eigene Darstellung}
+    \label{fig:popup-2}
+\end{figure}
+
+Abschließend zum Popup zeigt \autoref{fig:popup-2} den unteren Teil des Popups. Dort finden sich weitere Informationen zum Studiengang, wie z.B. Beschreibung, Dauer und Einstiegsgehalt. Darüber hinaus enthält dieser Teil des Dialogs eine Liste von Unternehmen in der Region, die Stellenangebote für den gewählten Studiengang anbieten, wie bereits im Konzept ausgeführt. Ganz unten befindet sich eine Liste mit ähnlichen Studiengängen. Diese Liste wird mithilfe des im nächsten Kapitel erläuterten Python-Skripts erzeugt.
+
 \subsubsection{Python - Berechnung der Positionen}
 Die Berechnung der Positionen für die Studiengänge basiert, wie im Abschnitt
 \ref{sec:MDS} erläutert, auf dem Multidimensionalen Skalierungsalgorithmus
