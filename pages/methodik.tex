@@ -1,32 +1,21 @@
 \section{Methodik}\label{sec:methodik}
 \subsection{Beschreibung der Algorithmen}
-Der Studiengangsfinder soll Studieninteressierten einen schnellen Überblick über
+StudyMap soll Studieninteressierten einen schnellen Überblick über
 alle in Frage kommenden Studiengänge ermöglichen.  Dabei soll dem Nutzer eine
 interaktive Grafik präsentiert werden, mit der er anhand von Studieninhalten
 (z.B. \glqq Gesundheit und Soziales\grqq{}) sofort alle relevanten Studiengänge
 findet. Dazu ist es notwendig, die Studiengänge nach ihren Inhalten zu
 gruppieren (Clustering) und schließlich visuell ästhetisch aufzubereiten.
 
-Bei der Festlegung des Clustering-Algorithmus für den Studiengangfinder wurden
+Bei der Festlegung des Clustering-Algorithmus für den Studiengangsfinder wurden
 verschiedene Optionen in Betracht gezogen, darunter K-Means Clustering,
-Force-Directed Layouts und Multidimensionale Skalierung (MDS). Nach einer
+Force-Directed Layouts und Multidimensionale Skalierung. Nach einer
 gründlichen Abwägung der Vor- und Nachteile fiel die Wahl auf MDS. Die Gründe
 für diese Entscheidung und eine Erläuterung der jeweiligen Algorithmen werden in
 den folgenden Kapiteln gegeben.
 
 \subsubsection{Force-Directed-Graphs}
-Force-Directed Graph Drawing ist eine Methode zur Visualisierung von Graphen,
-bei der die Positionen der Knoten und Kanten aufgrund von Kräften bestimmt
-werden. Das Vorgehen hierbei ist vereinfacht inspiriert von Modellen der
-Teilchenphysik und wird häufig mit dem Verhalten von Federn verglichen. Ziel des
-Algorithmus ist es durch Kanten verbundene Knoten nah beinander zu platzieren
-und somit eine ästhetisch ansprechende Visualisierung eines Graphen zu
-berechnen. In \autoref{fig:force-directed-layouts} erkennt man ausgehend von
-einer zufälligen Positionierung (Zustand 0), eine schrittweise Optimierung der
-Darstellung. Wie stark oder schwach sich die Knoten jeweils
-\glqq anziehen\grqq{} bzw. \glqq abstoßen\grqq{} wird durch die Gleichmäßigkeit
-der Verteilung auf der sogenannten Zeichenfläche bestimmt.
-\parencite{force-directed-layouts}
+Force-Directed Graph Drawing ist eine Methode zur Visualisierung von Graphen, bei der die Positionen der Knoten und Kanten aufgrund von Kräften bestimmt werden. Das Vorgehen hierbei ist vereinfacht inspiriert von Modellen der Teilchenphysik und wird häufig mit dem Verhalten von Federn verglichen. Ziel des Algorithmus ist es durch Kanten verbundene Knoten nah beinander zu platzieren und somit eine ästhetisch ansprechende Visualisierung eines Graphen zu berechnen. In \autoref{fig:force-directed-layouts} erkennt man ausgehend von einer zufälligen Positionierung (Zustand 0), eine schrittweise Optimierung der Darstellung. Wie stark oder schwach sich die Knoten jeweils \glqq anziehen\grqq{} bzw. \glqq abstoßen\grqq{} wird durch die Gleichmäßigkeit der Verteilung auf der Zeichenfläche, auch Canvas genannt, bestimmt. \parencite{schonfeld_fruchtermanreingold_2019}
 
 \begin{figure}[H]
     \centering
@@ -38,7 +27,7 @@ der Verteilung auf der sogenannten Zeichenfläche bestimmt.
 
 Force-Directed Layouts sind besonders effektiv für die übersichtliche
 Darstellung von Netzwerken, in denen die Verbindungen zwischen den Elementen im
-Vordergrund stehen. \parencite{force-directed-layouts} Im Gegensatz dazu
+Vordergrund stehen. \parencite{schonfeld_fruchtermanreingold_2019} Im Gegensatz dazu
 erfordert der Studiengangsfinder eine kontinuierliche Positionierung der
 Studiengänge basierend auf inhaltlichen Ähnlichkeiten, was nicht unbedingt der
 Stärke von Force-Directed Layouts entspricht. Force-Directed Graph Drawing
@@ -49,11 +38,11 @@ den einzelnen Studiengängen ist jedoch wesentlicher Bestandteil dieser Arbeit,
 weshalb der Algorithmus nicht näher untersucht wurde.
 
 \subsubsection{K-Means Clustering Algorithmus}
-K-Means ist ein Clustering-Algorithmus, der Datenpunkte in k vordefinierte
-Gruppen oder Cluster einteilt. Die Wahl von K stellt die Anzahl der Cluster dar,
+K-Means ist ein Clustering-Algorithmus, der Datenpunkte in $k$ vordefinierte
+Gruppen oder Cluster einteilt. Die Wahl von $k$ stellt die Anzahl der Cluster dar,
 und der Algorithmus versucht, die Datenpunkte so zu gruppieren, dass die Varianz
 innerhalb der Cluster minimiert wird (siehe \autoref{fig:kmeans}).
-\parencite{kmeans}
+\parencite{jeffares_k-means_2019}
 
 \begin{figure}[H]
     \centering
@@ -63,22 +52,7 @@ innerhalb der Cluster minimiert wird (siehe \autoref{fig:kmeans}).
     \label{fig:kmeans}
 \end{figure}
 
-Die Entscheidung, den K-Means-Algorithmus nicht zu verwenden, basiert darauf,
-dass dieser hauptsächlich darauf abzielt, Datenpunkte zu gruppieren und weniger
-auf deren präzise Positionierung in einem zweidimensionalen Raum. Der
-Algorithmus fordert außerdem eine vordefinierte Clusteranzahl k. Das stellt im
-Falle des Studiengangsfinders jedoch keine Einschränkung dar, da jeder Cluster
-eine Inhaltskategorie, wie zum Beispiel \glqq Informatik\grqq{} repräsentieren
-würde. Trotzdem erweist sich der K-Means Clustering Algorithmus als unpassend,
-da er sehr empfindlich gegenüber Ausreißern ist, da er versucht, Clusterzentren
-zu finden, die die Gesamtvarianz minimieren. Wenn es Ausreißer in den
-Studienschwerpunkten gibt, könnten sie das Ergebnis beeinflussen.
-\parencite{kmeans-spikes}
-
-Insgesamt erfüllt der MDS-Algorithmus die spezifischen Anforderungen des
-Studiengangsfinders, indem er eine übersichtliche und interpretierbare
-Visualisierung der Studiengänge basierend auf inhaltlichen Ähnlichkeiten
-ermöglicht.
+Die Entscheidung, den K-Means-Algorithmus nicht zu verwenden, basiert darauf, dass dieser hauptsächlich darauf abzielt, Datenpunkte zu gruppieren und weniger auf deren präzise Positionierung in einem zweidimensionalen Raum. Der Algorithmus fordert außerdem eine vordefinierte Clusteranzahl $k$. Das stellt im Falle des Studiengangsfinders jedoch keine Einschränkung dar, da jeder Cluster eine Inhaltskategorie, wie zum Beispiel \glqq Informatik\grqq{} repräsentieren würde. Dennoch ist der K-Means-Clustering-Algorithmus aufgrund seiner Empfindlichkeit gegenüber Ausreißern ungeeignet. Der Algorithmus versucht, Clusterzentren zu finden, die die Gesamtvarianz minimieren. Wenn es Ausreißer in den Studienschwerpunkten gibt, könnten sie das Ergebnis beeinflussen. \parencite{roth_demonstration_2023}
 
 \subsubsection{Multidimensionale Skalierung (MDS)}\label{sec:MDS}
 MDS ermöglicht die Reduktion $n$-dimensionaler Daten auf $m$-Dimensionen,
@@ -133,10 +107,11 @@ Architektur steht. Die folgenden Spalten enthalten genormte Werte zwischen 0 und
 jeweiligen Studiengängen repräsentieren. Diese genormten Werte werden im
 n-dimensionalen Raum positioniert. Durch Anwendung des MDS-Algorithmus werden im
 Verlauf die $n$-Dimensionen auf zwei Dimensionen reduziert, um schließlich eine
-ästhetisch ansprechende Visualisierung in Form eines Diagramms zu generieren.
+ästhetisch ansprechende Visualisierung in Form eines 2D-Diagramms zu generieren.
 
+\noindent
 Der klassische MDS-Algorithmus besteht aus den folgenden vier Schritten
-\parencite{mds-for-dimensionality-reduction}:
+\parencite{imperial_multidimensional_2019}:
 
 % https://ceopedia.org/index.php/Multidimensional_scaling
 \paragraph*{1. Berechnung der Distanzmatrix $ D_{ij} $}\label{sec:distanzmatrix}
@@ -147,8 +122,8 @@ Abstand zwischen zwei Punkten $ P_{i} $ und $ P_{j} $ wird nach der Formel
 $$ d(P_i, P_j) = \sqrt{(x_i - x_j)^2 + (y_i - y_j)^2 + \ldots + (z_i - z_j)^2} $$
 
 berechnet, wobei $ x_{i} $, $ y_{i} $, ..., $ z_{i} $ die Koordinaten von Punkt
-$ P_{i} $ im n-dimensionalen Raum sind \parencite{mds-ceopedia}. Für die
-Studiengangsdaten bedeutet das, dass die n-Dimesionen die verschiedenen
+$ P_{i} $ im $n$-dimensionalen Raum sind \parencite{ceopedia_multidimensional_2018}. Für die
+Studiengangsdaten bedeutet das, dass die $n$-Dimensionen die verschiedenen
 Inhaltskategorien repräsentieren.
 
 Die euklidische Distanzmatrix $ D_{ij} $ enthält dann die euklidischen Abstände
@@ -177,16 +152,12 @@ def calculate_distance_matrix(X):
 % https://www.hongfeili.com/files/paper100/paper4.pdf
 \paragraph*{2. Anwendung der Centering Matrix $ C $ zur Normalisierung der
 Distanzen}
-Die Formel $ C = I - \frac{1}{n} \vec{e} * \vec{e}^T $ berechnet die
-sogenannte Centering Matrix. $ I $ ist die Einheitsmatrix, $ \frac{1}{n} $ ist
-der Kehrwert der Anzahl der Datenpunkte und $ \vec{e} $ ist ein Vektor gefüllt
-mit Einsen. Das Symbol $ \vec{e}^T $ bezeichnet wie üblich die Transposition
-des Vektors. \parencite{an-introduction-to-mds}
+Die Formel $ C = I - \frac{1}{n} \vec{e} * \vec{e}^T $ berechnet die sogenannte Centering Matrix. $ I $ ist die Einheitsmatrix, $ \frac{1}{n} $ ist der Kehrwert der Anzahl der Datenpunkte und $ \vec{e} $ ist ein Vektor gefüllt mit Einsen. Das Symbol $ \vec{e}^T $ bezeichnet wie in der Mathematik üblich die Transposition des Vektors. \parencite{wickelmaier_introduction_2003}
 
 Die Centering Matrix $ C $ wird verwendet, um die Distanzmatrix $ D $ zu
 zentrieren. Das Zentrieren ist wichtig, um die Distanzen zwischen den Punkten
-in der n-dimensionalen Raummatrix zu normieren und somit den Schwerpunkt der
-Daten im Raum zu korrigieren. \parencite{an-introduction-to-mds}
+in der $n$-dimensionalen Raummatrix zu normieren und somit den Schwerpunkt der
+Daten im Raum zu korrigieren. \parencite{wickelmaier_introduction_2003}
 
 Schließlich wird diese eingesetzt um die Zentriermatrix $ B $ aus der
 Distanzmatrix zu berechnen:
@@ -200,19 +171,19 @@ Hierbei ist $ W $ die Matrix der Eigenvektoren und $ \Lambda $ ist eine
 Diagonalmatrix mit den Eigenwerten auf der Hauptdiagonale. Die Eigenvektoren
 werden anschließend sortiert und die größten positiven Eigenwerte
 $ \lambda_{1} ... \lambda{m} $ mit dazugehörigen Eigenvektoren
-$ v_{1} ... v_{m} $ aus B extrahiert. \parencite{an-introduction-to-mds}
+$ v_{1} ... v_{m} $ aus B extrahiert. \parencite{wickelmaier_introduction_2003}
 
 \paragraph*{4. Projektion der Datenpunkte}
 Um nun die Datenpunkte von einem höherdimensionalen Raum (basierend auf den
 Beziehungen in der Distanzmatrix $ D $) auf einen niedrigdimensionalen Raum,
 der durch die Eigenvektoren und Eigenwerte repräsentiert wird, abzubilden,
-benötigt man folgende Projektion \parencite{intro-to-multidimensional-scaling}:
+benötigt man folgende Projektion \parencite{he_classical_2018}:
 $$ X = V_m \Lambda^{1/2}_m $$
 Die Variable $ m $ steht für die Anzahl der gewünschten Dimensionen. Im Falle
 von StudyMap entspricht $ m = 2 $, um das Ergebnis in einem 2D-Diagramm zu
 visualisieren. $ V_{m} $ steht für die Eigenvektoren und $ \Lambda $ wie bereits
 im vorherigen Absatz beschrieben für die Diagonalmatrix mit den Eigenwerten.
-\parencite{an-introduction-to-mds}
+\parencite{wickelmaier_introduction_2003}
 
 Abschließend enthält $ X $ die Matrix mit den auf $ m $-Dimensionen reduzierten
 Koordinaten, welche dann z.B. in einem Diagramm visualisiert werden können.
@@ -221,6 +192,11 @@ ermöglicht, dass innerhalb einer 2D-Darstellung, ähnliche Studiengänge aufgru
 ihrer inhaltlichen Ähnlichkeiten nahe beinander positioniert werden. Diese
 räumliche Anordnung erleichtert die intuitive Analyse von Beziehungen zwischen
 den einzelnen Bachelor- und Masterstudiengängen.
+
+Insgesamt erfüllt der MDS-Algorithmus die spezifischen Anforderungen des
+Studiengangsfinders, indem er eine übersichtliche und interpretierbare
+Visualisierung der Studiengänge basierend auf inhaltlichen Ähnlichkeiten
+ermöglicht.
 
 \subsection{Beschreibung der Datenquelle und -beschaffung}
 \subsubsection{Herkunft der Daten}\label{sec:herkunft-der-daten}
