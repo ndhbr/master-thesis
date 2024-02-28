@@ -99,15 +99,7 @@ effektive Positionierung im Diagramm (siehe \autoref{table:input-mds}).
     \label{table:input-mds}
 \end{table}
 
-\autoref{table:input-mds} stellt eine stark vereinfachte Eingabetabelle für den
-MDS-Algorithmus dar. Die erste Spalte enthält die Kürzel der verschiedenen
-Studiengänge, wobei beispielsweise \textit{AT} für den Bachelor-Studiengang
-Architektur steht. Die folgenden Spalten enthalten genormte Werte zwischen 0 und
-1, die die prozentualen Anteile verschiedener Inhaltskategorien in den
-jeweiligen Studiengängen repräsentieren. Diese genormten Werte werden im
-n-dimensionalen Raum positioniert. Durch Anwendung des MDS-Algorithmus werden im
-Verlauf die $n$-Dimensionen auf zwei Dimensionen reduziert, um schließlich eine
-ästhetisch ansprechende Visualisierung in Form eines 2D-Diagramms zu generieren.
+\autoref{table:input-mds} stellt eine stark vereinfachte Eingabetabelle für den MDS-Algorithmus dar. Die erste Spalte enthält die Kürzel der verschiedenen Studiengänge, wobei beispielsweise \textit{AT} für den Bachelor-Studiengang Architektur steht. Die rechts folgenden Spalten enthalten genormte Werte zwischen 0 und 1, die die prozentualen Anteile verschiedener Inhaltskategorien in den jeweiligen Studiengängen repräsentieren. Diese genormten Werte werden im $n$-dimensionalen Raum positioniert. Durch Anwendung des MDS-Algorithmus werden im Verlauf die $n$-Dimensionen auf zwei Dimensionen reduziert, um schließlich eine ästhetisch ansprechende Visualisierung in Form eines 2D-Diagramms zu generieren.
 
 \noindent
 Der klassische MDS-Algorithmus besteht aus den folgenden vier Schritten
@@ -116,7 +108,7 @@ Der klassische MDS-Algorithmus besteht aus den folgenden vier Schritten
 % https://ceopedia.org/index.php/Multidimensional_scaling
 \paragraph*{1. Berechnung der Distanzmatrix $ D_{ij} $}\label{sec:distanzmatrix}
 Die Berechnung der Distanzmatrix $ D_{ij} $ erfolgt mithilfe des euklidischen
-Abstands zwischen den Studiengängen im n-dimensionalen Raum. Der euklidische
+Abstands zwischen den Studiengängen im $n$-dimensionalen Raum. Der euklidische
 Abstand zwischen zwei Punkten $ P_{i} $ und $ P_{j} $ wird nach der Formel
 
 $$ d(P_i, P_j) = \sqrt{(x_i - x_j)^2 + (y_i - y_j)^2 + \ldots + (z_i - z_j)^2} $$
@@ -164,14 +156,7 @@ Distanzmatrix zu berechnen:
 $$ B = - \frac{1}{2} * C * D_{ij} * C $$
 
 \paragraph*{3. Spektralzerlegung}
-Die Matrix $ B $ wird nun spektral zerlegt, um die Eigenwerte $ \lambda_{i} $
-und die zugehörigen Eigenvektoren $ v_{i} $ zu erhalten.
-$$ B = W * \Lambda * W^-1 $$
-Hierbei ist $ W $ die Matrix der Eigenvektoren und $ \Lambda $ ist eine
-Diagonalmatrix mit den Eigenwerten auf der Hauptdiagonale. Die Eigenvektoren
-werden anschließend sortiert und die größten positiven Eigenwerte
-$ \lambda_{1} ... \lambda{m} $ mit dazugehörigen Eigenvektoren
-$ v_{1} ... v_{m} $ aus B extrahiert. \parencite{wickelmaier_introduction_2003}
+Die Matrix $ B $ wird nun spektral zerlegt, um die Eigenwerte $ \lambda_{i} $ und die zugehörigen Eigenvektoren $ v_{i} $ zu erhalten. $$ B = W * \Lambda * W^-1 $$ Hierbei ist $ W $ die Matrix der Eigenvektoren und $ \Lambda $ ist eine Diagonalmatrix mit den Eigenwerten auf der Hauptdiagonale. Anschließend werden die Eigenvektoren sortiert und die größten positiven Eigenwerte $ \lambda_{1} ... \lambda{m} $ mit dazugehörigen Eigenvektoren $ v_{1} ... v_{m} $ aus B extrahiert. \parencite{wickelmaier_introduction_2003}
 
 \paragraph*{4. Projektion der Datenpunkte}
 Um nun die Datenpunkte von einem höherdimensionalen Raum (basierend auf den
@@ -200,11 +185,7 @@ ermöglicht.
 
 \subsection{Beschreibung der Datenquelle und -beschaffung}
 \subsubsection{Herkunft der Daten}\label{sec:herkunft-der-daten}
-Die Grundlage für den Studiengangsfinder wurde in enger Zusammenarbeit mit Frau
-Rösel, der Vizepräsidentin der Hochschule Regensburg, gelegt. Wir initiierten
-den Prozess durch die Definition klarer Anforderungen an die benötigten
-Informationen. Dazu gehört unter anderem die Definition der Inhaltskategorien
-der Studiengänge. Der erste Entwurf entsprach folgender Aufteilung:
+Die Grundlage für den Studiengangsfinder wurde in enger Zusammenarbeit mit Prof. Dr. Birgit Rösel, der Vizepräsidentin der Hochschule Regensburg, gelegt. Andreas Huber, der Autor dieser Arbeit, initiierte zusammen mit Frau Rösel und Prof. Dr. Markus Heckner den Prozess durch die Definition klarer Anforderungen an die benötigten Informationen. Dazu gehört unter anderem die Definition der Inhaltskategorien der Studiengänge. Der erste Entwurf entsprach folgender Aufteilung:
 
 \begin{enumerate}
     \item Architektur und Bau
@@ -218,10 +199,7 @@ der Studiengänge. Der erste Entwurf entsprach folgender Aufteilung:
     \item Internationales
 \end{enumerate}
 
-Diese Anforderungen wurden dann innerhalb der Hochschule kommuniziert und von
-einer Teilmenge der Studiendekane für vereinzelte Studiengänge ausgefüllt. Das
-heißt konkret, dass für 22 Studiengänge jeweils für alle dieser
-Inhaltskategorien ein Wert festgelegt wurde.
+Diese Anforderungen wurden dann innerhalb der Hochschule kommuniziert und von einer Teilmenge der Studiendekane für vereinzelte Studiengänge ausgefüllt. Für 22 Studiengänge wurde von den Studiendekanen jeweils ein subjektiver Wert für jede dieser inhaltlichen Kategorien festgelegt, und zwar in einem ersten Schritt unabhängig voneinander. % TODO: PASST NICHT
 
 Frau Rösel bleibt bis zur Übergabe der Arbeit weiterhin für die Beschaffung der Daten verantwortlich. Eine systematische Bewertung aller Studiengänge anhand des Modulplans und der jeweiligen ECTS pro Inhaltskategorie wird von Frau Rösel in Zusammenarbeit mit den Studiengangsverantwortlichen entwickelt.
 
@@ -262,13 +240,7 @@ zu normieren. Mit dieser Aufteilung, kann ein Studiengang sowohl in Informatik
 und Mathematik beispielsweise einen Wert von 0,8 haben, als auch in der
 Kategorie Internationales.
 
-Die anfängliche Kategorisierung der Studiengänge in neun allgemeine
-Inhaltskategorien stellte sich als unzureichend heraus, da nach der Anwendung
-des MDS-Algorithmus viele Studiengänge überlappend dargestellt wurden. Diese
-Herausforderung führte zu einer entscheidenden Überarbeitung des
-Kategorisierungssystems, um präzisere und differenzierte Bewertungen zu
-ermöglichen. Die Lösung bestand in der Einführung von sogenannten Supergruppen,
-die eine tiefere Bewertung der Studiengänge ermöglichten.
+Die anfängliche Kategorisierung der Studiengänge in neun allgemeine Inhaltskategorien stellte sich als unzureichend heraus, da nach der Anwendung des MDS-Algorithmus viele Studiengänge überlappend dargestellt wurden. Vor diesem Hintergrund wurde das Kategorisierungssystem grundlegend überarbeitet, um präzisere und differenziertere Auswertungen zu ermöglichen. Die Lösung bestand in der Einführung von sogenannten Supergruppen, die eine tiefere Bewertung der Studiengänge ermöglichten.
 
 Ursprünglich waren Studiengänge wie \textit{Architektur} und
 \textit{Bauingenieurwesen} in einer einzigen Kategorie
@@ -283,15 +255,7 @@ mehr \textit{Architektur} und weniger \textit{Bau} bewertet werden, während es
 bei \textit{Bauingenieurwesen} genau umgekehrt war. Vor dieser Anpassung konnte
 nur ein Wert für \textit{Architektur und Bau} festgelegt werden.
 
-Um die Benutzeroberfläche übersichtlich zu halten, wurden Supergruppen
-eingeführt. Diese ermöglichen eine aggregierte Darstellung mehrerer Kategorien,
-ohne die Benutzeroberfläche unnötig zu komplex zu gestalten. Frau Rösel brachte
-entscheidende Impulse in diesen Prozess ein. Durch ihre Rückmeldung wurden
-darüber hinaus neue Kategorien wie \textit{Sprachkompetenzen},
-\textit{Digitalität} und \textit{Future Skills} eingeführt. Diese dienen dazu,
-eine noch präzisere Differenzierung und Bewertung der Studiengänge zu
-ermöglichen. Folgende Liste zeigt die neuen Kategorien - jeder Listeneintrag
-enthält dabei eine Supergruppe mit einem oder mehrere Kategorien:
+Um die Benutzeroberfläche übersichtlich zu halten, wurden Supergruppen eingeführt. Supergruppen ermöglichen eine aggregierte Darstellung mehrerer Kategorien, ohne die Benutzeroberfläche unnötig zu verkomplizieren. Frau Rösel brachte entscheidende Impulse in diesen Prozess ein. Durch ihre Rückmeldung wurden darüber hinaus neue Kategorien wie \textit{Sprachkompetenzen}, \textit{Digitalität} und \textit{Future Skills} eingeführt. Damit soll eine noch genauere Differenzierung und Bewertung der Studiengänge ermöglicht werden. Folgende Liste zeigt die neuen Kategorien - jeder Listeneintrag enthält dabei eine Supergruppe mit einem oder mehrere Kategorien:
 
 \begin{enumerate}
     \item Architektur, Bau (Architektur und Bau)
@@ -310,8 +274,4 @@ enthält dabei eine Supergruppe mit einem oder mehrere Kategorien:
     \item Future Skills (Future Skills)
 \end{enumerate}
 
-Die neuen Kategorien, ergänzt durch die Einführung der Supergruppen, schaffen
-eine optimierte Grundlage für den MDS-Algorithmus. Dieser kann nun Studiengänge
-präziser positionieren, da die Unterscheidungen und Bewertungen auf einer
-feineren Ebene vorgenommen werden. Diese Anpassungen tragen entscheidend dazu
-bei, das Ziel einer verfeinerten Studienorientierung und -wahl zu erreichen.
+Die neuen Kategorien, ergänzt durch die Einführung der Supergruppen, schaffen eine optimierte Grundlage für den MDS-Algorithmus. Der Algorithmus ist nun in der Lage, die Studiengänge genauer zu positionieren, da die Unterscheidungen und Bewertungen auf einer feineren Ebene erfolgen. Diese Anpassungen tragen entscheidend dazu bei, das Ziel einer verfeinerten Studienorientierung und -wahl zu erreichen.
