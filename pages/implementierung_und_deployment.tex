@@ -34,10 +34,7 @@ führen. \parencite{bostock_d3js_2023}
 
 % d3js-trend, d3js-trend-2
 
-Aufgrund der festgestellten Einschränkungen in der Flexibilität von
-\textit{Chart.js} wurde gegen die Verwendung der Bibliothek entschieden. Obwohl
-Chart.js die Erstellung einer Vielzahl von Diagrammen ermöglicht, hat sich
-gezeigt, dass die Anpassbarkeit eingeschränkt ist. \parencite{etimberg_chartjs_2023}
+Aufgrund der festgestellten Einschränkungen in der Flexibilität von \textit{Chart.js} wurde gegen die Verwendung der Bibliothek entschieden. Auch wenn Chart.js die Erstellung einer Vielzahl von Diagrammen ermöglicht, hat sich gezeigt, dass die Anpassbarkeit begrenzt ist. \parencite{etimberg_chartjs_2023}
 
 Basierend auf der wahrgenommenen Inaktivität des Projekts und den festgestellten 
 Einschränkungen in Bezug auf Event-Handler wurde entschieden, \textit{Paper.js}
@@ -64,7 +61,7 @@ const x = ((renderedSize.width * 0.75) * data[i][4][0]) + renderedSize.width * 0
 const y = ((renderedSize.height * 0.8) * (1 - data[i][4][1])) + renderedSize.height * 0.10;
 \end{lstlisting}
 
-Die vorliegende Implementierung berechnet die x- und y-Positionen für die jeweiligen Bubbles der Studiengänge. In diesem Fall enthält die Variable \code{renderedSize} die Breite des Canvas in Relation zur physischen Pixeldichte. Die Variablen \code{data[i][4][0]} und \code{data[i][4][1]} enthalten die vom Algorithmus berechneten auf eins normierte Koordinaten. Durch Multiplikation der Breite und Höhe der gezeichneten Fläche mit einem Pufferwert (z.B. 0.75) werden die Bubbles zentriert und nicht bis zum Rand gezeichnet. Ansonsten könnte es passieren, dass Bubbles genau am Rand stehen und dadurch aufgrund des zentrierten Ankerpunkts des Kreises nur zur Hälfte sichtbar sind.
+Die vorliegende Implementierung berechnet die x- und y-Koordinaten für die jeweiligen Bubbles der Studiengänge. In diesem Fall enthält die Variable \code{renderedSize} die Breite des Canvas in Relation zur physischen Pixeldichte. Die Variablen \code{data[i][4][0]} und \code{data[i][4][1]} enthalten die vom Algorithmus berechneten auf eins normierte Koordinaten. Durch Multiplikation der Breite und Höhe der gezeichneten Fläche mit einem Pufferwert (z.B. 0.75) werden die Bubbles zentriert und nicht bis zum Rand gezeichnet. Ansonsten könnte es passieren, dass Bubbles genau am Rand stehen und dadurch aufgrund des zentrierten Ankerpunkts des Kreises nur zur Hälfte sichtbar sind.
 
 \begin{figure}[H]
     \centering
@@ -90,7 +87,7 @@ Für das Tracking, ob der Benutzer mit der Maus über der Bubble ist, wird der E
     \label{fig:pixijs-canvas-2}
 \end{figure}
 
-Beim Berechnen des Nebels der Supergruppen werden gleichzeitig die Minima und Maxima der X- und Y-Koordinaten berechnet. Das Ergebnis ist ein unsichtbares Rechteck, das alle Studiengänge in dieser Inhaltskategorie umfasst; dieses Rechteck hat die Funktion einer Hitarea. Auf dieser Hitarea wird ein \code{.onmouseover()}-Eventlistener platziert, der ausgelöst wird, sobald der Benutzer mit der Maus in die Nähe eines Studiengangs dieser Kategorie kommt.
+Beim Berechnen des Nebels der Supergruppen werden gleichzeitig die Minima und Maxima der x- und y-Koordinaten berechnet. Das Ergebnis ist ein unsichtbares Rechteck, das alle Studiengänge in dieser Inhaltskategorie umfasst; dieses Rechteck hat die Funktion einer Hitarea. Auf dieser Hitarea wird ein \code{.onmouseover()}-Eventlistener platziert, der ausgelöst wird, sobald der Benutzer mit der Maus in die Nähe eines Studiengangs dieser Kategorie kommt.
 
 Sobald dieser Fall eintritt, wird das Label der Supergruppe deaktiviert und alle Studiengangs-Bubbles erhalten als Label das Kürzel des jeweiligen Studiengangs (siehe \autoref{fig:pixijs-canvas-3}).
 
@@ -153,7 +150,7 @@ Sobald die Ausrichtung des Tooltips festgelegt wurde, müssen die Elemente einze
     \label{fig:pixijs-tooltip-2}
 \end{figure}
 
-Der unten dargestellte Codeauszug zeigt die Platzierung des Tooltip-Containers auf der linken Seite. Zunächst wird die Rotation des Dreiecks geändert, sodass es sich um 90 Grad nach links dreht. Anschließend werden die x- und y-Koordinaten des Dreiecks so angepasst, dass es an der rechten Seite des abgerundeten Rechtecks anliegt. Schließlich wird der gesamte Container mithilfe der Zeilen sechs und sieben linksbündig und gleichzeitig vertikal zentriert neben der Bubble platziert. Sowohl das Dreieck als auch das abgerundete Rechteck und der Text sind im Container enthalten.
+Der unten dargestellte Codeauszug zeigt die Platzierung des Tooltip-Containers auf der linken Seite. Zunächst wird mit der Zeile \code{triangle.rotation = -Math.PI / 2} die Rotation des Dreiecks geändert, sodass es sich um 90 Grad nach links dreht. Anschließend werden die x- und y-Koordinaten des Dreiecks so angepasst, dass es an der rechten Seite des abgerundeten Rechtecks anliegt. Schließlich wird der gesamte Container mithilfe der Zeilen sechs und sieben linksbündig und gleichzeitig vertikal zentriert neben der Bubble platziert. Sowohl das Dreieck als auch das abgerundete Rechteck und der Text sind im Container enthalten. % TODO: Quelle Pixi Container oben erklären
 
 \noindent
 Platzierung des Tooltips auf der linken Seite:
@@ -168,7 +165,7 @@ if (this.direction == 'left') {
 }
 \end{lstlisting}
 
-Dieser Ansatz funktioniert jedoch nur bis zu einem gewissen Grad. Wenn das Tooltip breiter ist als die x-Achse des Endgeräts, wird es immer über die Seiten des Endgeräts hinausragen, da auf keiner der beiden Seiten genügend Platz für das Tooltip zur Verfügung steht. % TODO: In Zukunftsaussichten aufnehmen
+Dieser Ansatz funktioniert jedoch nur bis zu einem gewissen Grad. Wenn das Tooltip breiter als die x-Achse des Endgeräts ist, wird es immer über die Ränder des Canvas hinausragen, da auf keiner der beiden Seiten genügend Platz für das Tooltip zur Verfügung steht. % TODO: In Zukunftsaussichten aufnehmen
 
 \paragraph*{Popup-Dialog mit Studiengangsdetails}
 Sobald das im vorigen Abschnitt beschriebene Ereignis zum Öffnen des Popups ausgelöst wird, werden die benötigten Studiengangsdetails von der später beschriebenen Webschnittstelle abgerufen und angezeigt. Zur Darstellung der Dialog-Komponente wird eine weitere Programmibliothek verwendet: Bootstrap.
@@ -460,7 +457,7 @@ Beschreibung der in \autoref{table:rest-api} aufgezählten Endpunkte:
 
 \paragraph*{GET /bubbles/bachelor?mode=:mode}
 \vspace{-1.0em}
-Gibt alle gespeicherten Bachelor-Studiengänge in einem JSON-Positions-Array aus. Darin befindet sich der Name des Studiengangs, sein Kürzel, die zugehörige Supergruppe und die Farbe der Fakultät, um die Bubble entsprechend einzufärben. Außerdem enthält jeder Studiengang die relative Position in der StudyMap, die vom Algorithmus berechnet und auf 1 normiert wurde.
+Gibt alle gespeicherten Bachelor-Studiengänge in einem JSON-Positions-Array aus. Darin befindet sich der Name des Studiengangs, sein Kürzel, die zugehörige Supergruppe und die Farbe der Fakultät, um die Bubble entsprechend einzufärben. Außerdem enthält jeder Studiengang die relative Position in der StudyMap, die vom Algorithmus berechnet und auf eins normiert wurde.
 
 \noindent
 Queryparameter: \code{:mode} $\in$ {'staging', 'production'}
@@ -489,7 +486,7 @@ Beispielausgabe:
 
 \paragraph*{GET /details/:abb?mode=:mode}
 \vspace{-1.0em}
-Sobald alle Studiengänge abgerufen wurden und der Benutzer auf eine der Bubbles klickt, öffnet sich ein Popup mit Details über den Studiengang. Der Klick ruft den Befehl \code{/details/:abb} auf, wobei \code{:abb} für das Kürzel des Studiengangs steht. Die Ausgabe ist erneut ein JSON und enthält die Details des Studiengangs.
+Sobald alle Studiengänge abgerufen wurden und der Benutzer auf eine der dargestellten Bubbles klickt, öffnet sich ein Popup mit Details über den Studiengang. Der Klick ruft den API-Endpunkt \code{/details/:abb} auf, wobei \code{:abb} für das Kürzel des Studiengangs steht. Die Ausgabe ist erneut ein JSON und enthält die Details des Studiengangs.
 
 \noindent
 Queryparameter: \code{:mode} $\in$ {'staging', 'production'}
@@ -576,7 +573,7 @@ Beispielausgabe bei Generierung einer Produktivversion (HTTP-Statuscode 200):
 \end{minipage}
 
 \noindent
-Beispielausgabe bei Fehlerfall beim Upload von neuen Daten (HTTP-Statuscode 400):
+Beispielausgabe bei Fehlerfall beim Upload von ungültigen Daten (HTTP-Statuscode 400):
 \begin{lstlisting}[style=Python]
 {
     "message": "    self.dataset = Dataset(input_path)\n  File '.../backend/generator/dataset.py', line 20, in __init__\n    for i, row in enumerate(csvreader):\n  File '.../lib/python3.9/codecs.py', line 322, in decode\n    (result, consumed) = self._buffer_decode(data, self.errors, final)\nUnicodeDecodeError: 'utf-8' codec can't decode byte 0x9f in position 14: invalid start byte\n"
@@ -585,11 +582,11 @@ Beispielausgabe bei Fehlerfall beim Upload von neuen Daten (HTTP-Statuscode 400)
 
 \paragraph*{GET /admin/data/download/:version}
 \vspace{-1.0em}
-Erstellt aus der Version :version eine .zip-Datei und erstellt daraus einen Download-Stream. Für den Pfadparameter :version gilt :version $\in$ {'staging', 'production', 'template'}.
+Erstellt aus der in der Anwendung gespeicherten Version :version eine .zip-Datei und erstellt daraus einen Download-Stream. Für den Pfadparameter :version gilt :version $\in$ {'staging', 'production', 'template'}.
 
 \paragraph*{POST /admin/data/upload}
 \vspace{-1.0em}
-Nimmt mehrere Dateien entgegen und speichert diese im Input des StudyMap-Algorithmus. Die zu hochladenden Dateien müssen im Body der HTTP-Anfrage enthalten sein. Dabei gibt es die Regeln: dataset (1 Datei), faculties (1 Datei) und details (maximal 50 Dateien). Die hochgeladenen Dateien können anschließend per Aufruf von \code{/admin/data/generate} verarbeitet werden.
+Nimmt mehrere Dateien entgegen und speichert diese im Input des StudyMap-Algorithmus. Die zu hochladenden Dateien müssen im Body der HTTP-Anfrage enthalten sein. Dabei gibt es die Regeln: dataset (1 Datei) und faculties (1 Datei). Die hochgeladenen Dateien können anschließend per Aufruf von \code{/admin/data/generate} verarbeitet werden.
 
 \noindent
 Beispielausgabe bei erfolgreichem Upload (HTTP-Statuscode 200):
@@ -626,7 +623,7 @@ Beispielausgabe nach erfolgtem Upload von Studiengängen (HTTP-Statuscode 200):
 
 \paragraph*{PATCH /admin/data/details/:filename}
 \vspace{-1.0em}
-Nachdem alle verfügbaren Studiengänge mit /admin/data/details abgerufen wurden, können mithilfe von \code{/details/:abb} die Details zu einem einzelnen Studiengang abgefragt werden. Anschließend kann der Benutzer die Informationen in der Administrationsoberfläche bearbeiten und die Änderungen mit diesem Endpunkt der API persistieren.
+Nachdem alle verfügbaren Studiengänge mit \code{/admin/data/details} abgerufen wurden, können mithilfe von \code{/details/:abb} die vollständigen Details zu einem einzelnen Studiengang abgefragt werden. Anschließend kann der Benutzer die abgerufenen Details in der Administrationsoberfläche bearbeiten und die Änderungen mit diesem Endpunkt der API persistieren.
 
 Der Request Body dieser Anfrage muss das bearbeitete JSON-Objekt der Studiengangsdetails sein. Der Request Body enthält die zu sendenden Daten der HTTP-Anfrage. \parencite{parthiban_essential_2023}
 
@@ -635,19 +632,19 @@ Bei erfolgreicher Speicherung der Studiengangsdetails wird zusammen mit dem Stat
 \noindent
 Wenn der Prozess fehlschlägt, gibt es zwei Arten von Fehlermeldungen zu unterscheiden:
 \begin{itemize}
-    \item \textbf{Der Speicherprozess ist fehlgeschlagen:} In diesem Fall wird der Statuscode 500 zusammen mit der Fehlerbeschreibung als JSON ausgegeben: \lstinline[style=python]|{"message": "Fehler bei der Aktualisierung der Studiengangsdetails."}|.
+    \item \textbf{Der Speicherprozess ist fehlgeschlagen:} In diesem Fall wird der Statuscode 500 zusammen mit einer Fehlerbeschreibung als JSON ausgegeben: \lstinline[style=python]|{"message": "Fehler bei der Aktualisierung der Studiengangsdetails."}|.
     \item \textbf{Die angeforderte Datei \code{:filename} existiert nicht:} Der Statuscode 404 wird mit dem JSON \lstinline[style=python]|{"message": "Studiengangsdetails nicht gefunden."}| zurückgegeben. 
 \end{itemize}
 
 \subsubsection{Angular - Administrationsoberfläche}
-Um den im \autoref{sec:verwaltungssoftware} aufgeführten Anforderungen wie Datensicherung und Trennung von Staging- und Produktivumgebung gerecht zu werden, ist die Implementierung einer Verwaltungssoftware notwendig. Um die Entwicklung möglichst zukunftssicher, d.h. leicht erweiterbar zu gestalten, wird ein sogenanntes Webframework eingesetzt.
+Um den im \autoref{sec:verwaltungssoftware} aufgeführten Anforderungen wie Datensicherung und Trennung von Staging- und Produktivumgebung gerecht zu werden, ist die Implementierung einer Verwaltungssoftware notwendig. Zur Gewährleistung einer zukunftssicheren Entwicklung ist dabei die Verwendung eines Webframeworks erforderlich.
 
-Ein Webframework ist eine Sammlung von Bibliotheken, Tools und Technologien und bietet Programmierern ein Grundgerüst für eine dynamische Webanwendung. Neben der Zeitersparnis durch die bereits vorhandenen Bausteine hat die Verwendung eines Webframeworks den Vorteil, dass es in der Regel eine standardisierte Struktur vorgibt, die es späteren Entwicklern erleichtert, an dem Projekt weiterzuarbeiten. Generell arbeiten die meisten Frameworks nach dem DRY-Prinzip (Don't repeat yourself), was den Code schlanker und damit weniger fehleranfällig macht.
+Ein Webframework ist eine Sammlung von Bibliotheken, Tools und Technologien und bietet Programmierern ein Grundgerüst für eine dynamische Webanwendung. Die Verwendung eines Webframeworks hat den Vorteil, dass es in der Regel eine standardisierte Struktur vorgibt. Dadurch wird es späteren Entwicklern erleichtert, an dem Projekt weiterzuarbeiten. Auch die Zeitersparnis durch die bereits vorhandenen Bausteine ist ein Vorteil. Generell arbeiten die meisten Frameworks nach dem DRY-Prinzip (Don't repeat yourself), was den Code schlanker und damit weniger fehleranfällig macht.
 \parencite{domainfactory_beliebtesten_2023}
 
 Für die Entwicklung der Administrationsoberfläche wurde Angular als Webframework gewählt. Der Grund für die Wahl des Frameworks liegt in seiner Verbreitung, da Angular neben dem React-Framework und Vue.js eines der meistgenutzten Frontend-Frameworks ist. \parencite{greif_state_2022}
 
-Angular ist ein komponentenbasiertes Framework zur Erstellung von skalierbaren Webanwendungen auf Basis der Programmiersprache TypeScript. Es enthält unter anderem Bibliotheken für das Routing zwischen Seiten, dynamische Formulare, Client-Server-Kommunikation und mehr \parencite{google_inc_angular_2023}. 
+Angular ist ein komponentenbasiertes Framework zur Erstellung von skalierbaren Webanwendungen auf Basis der Programmiersprache TypeScript. Es enthält unter anderem Bibliotheken für das Routing zwischen Seiten, dynamische Formulare, Client-Server-Kommunikation und mehr. \parencite{google_inc_angular_2023} 
 
 Zusätzlich zum Angular-Framework wird ein CSS-Framework benötigt, um vordefinierte Styles und wiederverwendbare Komponenten wie z.B. Dialoge zu erhalten.
 
@@ -668,7 +665,7 @@ Die Verwaltungssoftware hat in ihrer ersten Version fünf Seiten:
 \end{itemize}
 
 \paragraph*{Überblick}
-Die Seite \glqq Überblick\grqq{} bietet einen Überblick über das Gesamtsystem. Wie in \autoref{fig:adminui-overview-1} zu sehen ist, enthält die Seite einen Link zur Vorschau der Staging-Umgebung sowie einen Link zur Vorschau der Produktivumgebung. Des Weiteren verfügt die Seite über einen roten Knopf. Bei Bestätigung wird die Staging-Version in die Produktivumgebung überführt und somit der Öffentlichkeit freigeschaltet.
+Die Seite \glqq Überblick\grqq{} bietet einen Überblick über das Gesamtsystem. Wie in \autoref{fig:adminui-overview-1} zu sehen ist, enthält die Seite einen Link zur Vorschau der Staging-Umgebung sowie einen Link zur Vorschau der Produktivumgebung. Des Weiteren verfügt die Seite über eine rote Schaltfläche. Wird diese betätigt, öffnet sich ein Bestätigungsdialog, bei dessen Bestätigung die Staging Version in die Produktivumgebung überführt wird und somit für die Öffentlichkeit zugänglich ist.
 
 \begin{figure}[H]
     \centering
@@ -681,7 +678,7 @@ Die Seite \glqq Überblick\grqq{} bietet einen Überblick über das Gesamtsystem
 Direkt unterhalb befinden sich auf der Übersichtsseite außerdem zwei Architekturgrafiken, die dem Benutzer die Struktur von StudyMap und die damit verbundene Datensicherung über die Versionshistorie verdeutlichen sollen.
 
 \paragraph*{Neue Daten einpflegen}
-Auf der Seite zur Eingabe neuer Daten gibt es die Möglichkeit, zwei CSV-Dateien vom Computer auszuwählen (siehe \autoref{fig:adminui-new-data-1}). Dies ist die Datenquelle, die in Kapitel X beschrieben wurde. Sie enthält alle Studiengänge und die dazugehörigen Werte der Inhaltskategorien. Die zweite Datei enthält die Abkürzungen der Fakultäten und den entsprechenden Farbcodes, um die Bubbles entsprechend den Fakultäten einzufärben.
+Auf der Seite zur Eingabe neuer Daten gibt es die Möglichkeit, zwei CSV-Dateien vom Computer auszuwählen (siehe \autoref{fig:adminui-new-data-1}). Dies ist die Datenquelle, die in \autoref{sec:datenquelle} beschrieben wurde. Sie enthält alle Studiengänge und die dazugehörigen Werte der Inhaltskategorien. Die zweite Datei enthält die Abkürzungen der Fakultäten und den entsprechenden Farbcodes, um die Bubbles entsprechend den Fakultäten einzufärben.
 
 \begin{figure}[H]
     \centering
@@ -731,7 +728,7 @@ Für StudyMap ist eine Darstellung der Softwarearchitektur aus mehreren Gründen
 Die Komplexität der Software wird übersichtlicher dargestellt. Da bei der Verwendung mehrerer Programmiersprachen wie JavaScript, TypeScript und Python schnell die Übersicht über die einzelnen Komponenten verloren gehen kann, besteht die Gefahr, ineffizienten oder im schlimmsten Fall fehlerhaften Code zu produzieren. Ein weiterer Grund ist die Einarbeitung zukünftiger Entwickler.
 
 \paragraph*{Grund 2: Einarbeitung}
-Da StudyMap im Rahmen dieser Masterarbeit entsteht, ist es abzusehen, dass es immer wieder wechselnde Stakeholder und Weiterentwickler für das Projekt geben wird. Diese müssen zwangsläufig eingearbeitet werden und das Gesamtprojekt verstehen. Ein Entwickler, dem der gesamte Workspace ohne Strukturgrafik mit vier miteinander kommunizierenden Projekten präsentiert wird, könnte überfordert sein. Deshalb dient die Softwarearchitektur der effizienten Einarbeitung.
+Da StudyMap im Rahmen dieser Masterarbeit entsteht, ist es abzusehen, dass es immer wieder wechselnde Stakeholder und Weiterentwickler für das Projekt geben wird. Diese müssen zwangsläufig eingearbeitet werden und das Gesamtprojekt verstehen. Ein Entwickler, dem der gesamte Workspace ohne Strukturgrafik mit vier miteinander kommunizierenden Projekten präsentiert wird, könnte anfangs überfordert sein. Deshalb dient die Softwarearchitektur der effizienten Einarbeitung.
 
 \paragraph*{Grund 3: Sicherheit}
 Schließlich ist die Strukturgrafik für die Sicherheit der Hochschule von Bedeutung. StudyMap enthält einen geschützten Administrationsbereich. Es sollte im Vorfeld genau festgelegt werden, dass z.B. der Administrationsbereich nur über das VPN der Hochschule erreichbar ist, um die Wahrscheinlichkeit eines Hackerangriffs zu reduzieren. Solche Beziehungen lassen sich mithilfe der Definition einer Softwarearchitektur präzise festlegen. Außerdem benötigt man diese Darstellung explizit an der OTH-Regensburg, um einen Server vom Rechenzentrum für das Hosting von StudyMap zu erhalten. Weitere Informationen dazu finden Sie im \autoref{sec:deployment}.
@@ -786,7 +783,7 @@ In \autoref{fig:basic-auth} fehlt ein SSL-Zertifikat, wodurch keine verschlüsse
 
 Daher wird auch eine Basic-Auth-Authentifizierung als unsicher eingestuft, wenn kein SSL-Zertifikat vorhanden ist. Um die Sicherheitsbedenken von StudyMap auszuschließen, sollte in Zukunft die Authentifizierung über einen externen Authentifizierungsprovider der Hochschule erfolgen. Dadurch muss StudyMap keine Anmeldedaten speichern und es besteht kein Risiko mehr für einen Hackangriff.
 
-Nach Abschluss der Authentifizierung kann der Nutzer die Administrationsoberfläche nutzen. Die Web-App dient der Verwaltung der Anwendung und ihrer Daten. Hierfür werden HTTP-Anfragen genutzt, um die REST-API aufzurufen.
+Nach Abschluss der Authentifizierung kann der Nutzer die Administrationsoberfläche nutzen. Die Web-App dient der Verwaltung der Anwendung und ihrer Daten. Zu diesem Zweck werden verschiedene HTTP-Anfragen verwendet, mit denen die REST-API aufgerufen wird.
 
 \noindent
 Webschnittstelle: \code{/admin/*}
@@ -799,7 +796,7 @@ Das Backend der Softwarearchitektur besteht neben der bereits im \autoref{sec:fr
 \end{enumerate}
 
 \paragraph*{PixiJS}
-Das PixiJS-Projekt ist ein eigenständiges JavaScript-Projekt, das die vorher erläuterte HTML-Datei \code{app.html} für die Frontend-Komponenten generiert und darin den WebGL-Renderer für StudyMap einbindet. Dieses Projekt enthält HTTP-Anfragen zur REST-API, um die Daten der Studiengänge abzurufen. Es ist jedoch wichtig zu beachten, dass diese Anfragen durch den Browser-Client bzw. die Frontend-Komponenten aufgerufen werden und somit streng genommen kein Teil der Backend-Komponente ist.
+Das PixiJS-Projekt ist ein eigenständiges JavaScript-Projekt, das die vorher erläuterte HTML-Datei \code{app.html} für die Frontend-Komponenten generiert und darin den WebGL-Renderer für StudyMap einbindet. Dieses Projekt enthält ebenfalls HTTP-Anfragen zur REST-API, um die Daten der Studiengänge abzurufen. Es ist jedoch wichtig zu beachten, dass diese Anfragen durch den Browser-Client bzw. die Frontend-Komponenten aufgerufen werden und somit streng genommen kein Teil der Backend-Komponente ist.
 
 \paragraph*{API}
 Die API (Application Programming Interface) bietet nicht nur die Lieferung von Positions- und Studiengangsdetailsdaten, sondern auch die Möglichkeit, die im Server gespeicherten Daten zu verwalten und zu ändern (siehe \autoref{sec:node-js-restapi}). Aus diesem Grund ist die Administrationsoberfläche sowie die StudyMap-App selbst mit der API verbunden.
@@ -807,7 +804,7 @@ Die API (Application Programming Interface) bietet nicht nur die Lieferung von P
 Wenn jemand in der Administrationsoberfläche neue Dateien hochlädt, wird eine Anfrage an die API gesendet. Diese speichert die Dateien an der richtigen Stelle und löst schließlich die Generierung neuer Positionsdaten durch eine Anfrage an die Python-Komponente aus. Die Python-Komponente ist folglich ebenfalls mit der API angebunden.
 
 \paragraph*{Python}
-Die Python-Komponente hat im Wesentlichen nur eine wirkliche Verbindung zu einer anderen Komponente, nämlich zur REST-API, die Python aufruft. Die Python-Komponente enthält die Logik für die Generierung der auszuliefernden Dateien sowie für die Datensicherung. Das Python-Skript implementiert den MDS-Algorithmus zur Berechnung der genauen Positionsdaten anhand der Ähnlichkeiten zwischen den Studiengängen. Beide Anwendungsfälle werden durch die Kommandozeile der REST-API getriggert.
+Die Python-Komponente hat im Wesentlichen nur eine Verbindung zu einer anderen Komponente, nämlich zur REST-API, die Python aufruft. Die Python-Komponente enthält die Logik für die Generierung der auszuliefernden Dateien sowie für die Datensicherung. Das Python-Skript implementiert den MDS-Algorithmus zur Berechnung der genauen Positionsdaten anhand der Ähnlichkeiten zwischen den Studiengängen. Beide Anwendungsfälle werden durch die Kommandozeile der REST-API getriggert.
 
 Es besteht eine weitere implizite Verbindung zwischen PixiJS und den Daten des Python-Skripts für die Anzeige der Bubbles. Die eigentliche Kommunikation zwischen den Komponenten erfolgt jedoch über die Programmierschnittstelle.
 
@@ -816,7 +813,7 @@ Es besteht eine weitere implizite Verbindung zwischen PixiJS und den Daten des P
 Nachdem die Softwarearchitektur geklärt und implementiert wurde, folgt in diesem Abschnitt das Deployment. Software Deployment (Softwareverteilung) bezeichnet den Prozess der Konfiguration und Installation auf dem Zielserver. Dieser Prozess besteht in der Regel aus mehreren Schritten, wie Planung, Design, Testen, Terminplanung und Deployment. \parencite{atera_team_was_2023} Im Falle von StudyMap beschränkt sich der Prozess auf die Schritte: Planung, Testen und Bereitstellung.
 
 \subsubsection{Planung}
-Der erste Schritt des Softwareverteilungs Prozesses ist die Planung, welcher diverse W-Fragen beantwortet. Es ist beispielsweise wichtig zu berücksichtigen, wie viele Nutzer die Anwendung später haben werden, welche Risiken zu erwarten sind und wie eine Authentifizierung aussehen könnte. \parencite{atera_team_was_2023}
+Der erste Schritt des Softwareverteilungsprozesses ist die Planung, welcher diverse W-Fragen beantwortet. Es ist beispielsweise wichtig zu berücksichtigen, wie viele Nutzer die Anwendung später haben werden, welche Risiken zu erwarten sind und wie eine Authentifizierung aussehen könnte. \parencite{atera_team_was_2023}
 
 Bei dieser Arbeit waren bereits einige Planungspunkte vorgegeben, da an der Hochschule Regensburg ein spezielles IT-Verfahren zum Schutz der Hochschule eingesetzt wird. Um das Projekt StudyMap auch nach der Übergabe der Masterarbeit weiterführen zu können, wurde eine gewisse Normbeschreibung erstellt. In der folgenden Liste sind einige ausformulierte Punkte und Details des Planungsschrittes aufgeführt.
 
@@ -864,7 +861,7 @@ Frau Rösel ist für die Aktualität der Daten verantwortlich, während der Entw
 \paragraph*{Werden regelmäßige System- und Datensicherungen duchgeführt?}
 Der Server von StudyMap befindet sich im zentralen Serverraum des Rechenzentrums der OTH-Regensburg. Dadurch wird sichergestellt, dass die Organisation täglich eine Systemsicherung durchführt.
 
-Eine Datensicherung erfolgt nur beim Überführen eines Datenstands von Staging in die Produktivumgebung. Wie bereits beschrieben, speichert StudyMap immer die letzten 10 Produktivstände, um im Falle von korrupten Daten eine Datensicherung wiederherstellen zu können. Es gibt keine zeitgesteuerten Intervall-Datensicherungen.
+Eine Datensicherung erfolgt nur beim Überführen eines Datenstands von Staging in die Produktivumgebung. Wie bereits beschrieben, speichert StudyMap immer die letzten zehn Produktivstände, um im Falle von korrupten Daten eine Datensicherung wiederherstellen zu können. Es gibt keine zeitgesteuerten Intervall-Datensicherungen.
 
 \paragraph*{Was ist der Ablauf bei einem eintretenden Sicherheitsvorfall?}
 Sollte es zu einer Kompromittierung des Servers kommen, muss die verantwortliche Person sofort Kontakt mit security@oth-regensburg.de aufnehmen und diese über den Vorfall informieren.
@@ -880,16 +877,16 @@ Obwohl keine sicherheitsrelevanten Informationen beim Öffnen der Besucheransich
 In dieser Phase des Deployment-Prozesses wird eine Testumgebung erstellt, um zu überprüfen, ob alles wie vorgesehen funktioniert. Ziel ist die Schaffung einer möglichst realitätsnahen Umgebung, damit der endgültige Prozess der Bereitstellung auf dem Server der Universität mit möglichst wenigen unvorhersehbaren Komplikationen verbunden ist.
 
 \paragraph*{Verwendung von Docker zur Auslieferung}
-StudyMap wird auf dem Produktivserver in einem Docker-Container gehostet. Docker ist eine Open-Source-Plattform zur Erstellung und Bereitstellung von Anwendungen. Docker arbeitet mit sogenannten Containern, die alle Pakete, benötigten Abhängigkeiten, Werkzeuge und Code enthalten, die für die Ausführung der Software notwendig sind. \parencite{amazon_web_services_inc_was_2023}
+StudyMap wird auf dem Produktivserver in einem Docker Container gehostet. Docker ist eine Open-Source-Plattform zur Erstellung und Bereitstellung von Anwendungen. Docker arbeitet mit sogenannten Containern, die alle Pakete, benötigten Abhängigkeiten, Werkzeuge und Code enthalten, die für die Ausführung der Software notwendig sind. \parencite{amazon_web_services_inc_was_2023}
 
-Docker-Container visualisieren das Betriebssystem eines Servers. Jeder Container basiert auf einem Image, wie zum Beispiel einem Linux-Derivat. Auf diesem werden alle benötigten Pakete installiert. Docker-Images sind leichtgewichtige und dennoch effiziente eigenständige Pakete, da sie denselben System-Kernel verwenden und somit nicht für jede Anwendung ein vollständiges Betriebssystem benötigen. \parencite{docker_inc_what_2024}
+Docker Container visualisieren das Betriebssystem eines Servers. Jeder Container basiert auf einem Image, wie zum Beispiel einem Linux-Derivat. Auf diesem werden alle benötigten Pakete installiert. Docker-Images sind leichtgewichtige und dennoch effiziente eigenständige Pakete, da sie denselben System-Kernel verwenden und somit nicht für jede Anwendung ein vollständiges Betriebssystem benötigen. \parencite{docker_inc_what_2024}
 
-Neben der Effizienz ist Sicherheit ein weiterer Vorteil. Anwendungen, die in Containern ausgeführt werden, sind voneinander isoliert und erlauben nur die Kommunikation, die durch die Konfiguration erlaubt ist. \parencite{docker_inc_what_2024}
+Neben der Effizienz ist auch die Sicherheit ein zusätzlicher Pluspunkt. Anwendungen, die in Containern ausgeführt werden, sind voneinander isoliert und erlauben nur die Kommunikation, die durch die Konfiguration erlaubt ist. \parencite{docker_inc_what_2024}
 
-Ein weiterer Vorteil ist die Möglichkeit, Docker-Container schnell von einem Server auf einen anderen zu übertragen, ohne den Server für die neue Anwendung konfigurieren zu müssen. Der Docker Container enthält alle notwendigen Netzwerk- und Software-Konfigurationen, die auf dem Zielserver unter Umständen nicht vorhanden sind. Dadurch können Probleme durch beispielsweise unterschiedliche Softwareversionen vermieden werden. Unterschiedliche Anwendungen benötigen oft unterschiedliche Paketversionen, wie zum Beispiel Python oder Python3. Solche Situationen können zu aufwendigen Konfigurationsprozessen führen, während mit Docker alles isoliert in einem Container genau für die Anwendung enthalten ist. \parencite{amazon_web_services_inc_was_2023}
+Ein weiterer Vorteil ist die Möglichkeit, Docker Container schnell von einem Server auf einen anderen zu übertragen, ohne den Server für die neue Anwendung konfigurieren zu müssen. Der Docker Container enthält alle notwendigen Netzwerk- und Software-Konfigurationen, die auf dem Zielserver unter Umständen nicht vorhanden sind. Dadurch können Probleme durch beispielsweise unterschiedliche Softwareversionen vermieden werden. Unterschiedliche Anwendungen benötigen oft unterschiedliche Paketversionen, wie zum Beispiel Python oder Python3. Solche Situationen können zu aufwendigen Konfigurationsprozessen führen, während mit Docker alles isoliert in einem Container genau für die Anwendung enthalten ist. \parencite{amazon_web_services_inc_was_2023}
 
 \paragraph*{Docker-Image für StudyMap}
-Um StudyMap in einem Docker-Container auszuführen, wird ein Docker-Image benötigt, das alle Komponenten der Softwarearchitektur enthält. Für die Entwicklung dieses Images wird als Basisimage ein Node.js-Image verwendet. Auf diesem Basisimage werden alle Konfigurationen und zusätzlichen Komponenten festgelegt, die dann beim Starten des Containers automatisch installiert werden. Da Node.js als Webschnittstelle für den Studiengangsfinder dient, bildet es die ideale Basis für das Docker-Image. Nachfolgend ist das für StudyMap entwickelte Dockerfile abgebildet:
+Um StudyMap in einem Docker Container auszuführen, wird ein Docker-Image benötigt, das alle Komponenten der Softwarearchitektur enthält. Für die Entwicklung dieses Images wird als Basisimage ein Node.js-Image verwendet. Auf diesem Basisimage werden alle Konfigurationen und zusätzlichen Komponenten festgelegt, die dann beim Starten des Containers automatisch installiert werden. Da Node.js als Webschnittstelle für den Studiengangsfinder dient, bildet es die ideale Basis für das Docker-Image. Nachfolgend ist das für StudyMap entwickelte Dockerfile abgebildet:
 
 \noindent
 \begin{minipage}{\linewidth}
@@ -929,17 +926,17 @@ CMD ["npm", "start"]
 
 Docker kann mithilfe einer Dockerfile in Form eines Textdokuments ein Image erstellen. In der Dockerfile befinden sich alle Befehle, um ein Image zusammenzustellen. \parencite{docker_inc_dockerfile_2024} Das für StudyMap entwickelte Dockerfile beginnt mit dem Befehl \code{FROM node:18}. Dies bedeutet, dass das Base Image \code{node} in Version 18 als Grundlage für dieses Image verwendet wird. Eine Dockerfile, die lediglich die erste Zeile zur Festlegung des Base Images enthält, würde dementsprechend ein bestehendes Image ohne Veränderung 1:1 kopieren. \parencite{the_nodejs_docker_team_node_2024}
 
-In Zeile fünf wird die Anweisung gegeben, die Paketlisten des Systems zu aktualisieren und \code{python3} sowie \code{python3-pip} zu installieren, den offiziellen Paketmanager der Programmiersprache Python. \parencite{the_pip_developers_pip_2024} Mit dem RUN-Befehl in Dockerfiles kann der Container angewiesen werden, diese Anweisung in der Befehlszeile des Containers auszuführen. Das Node-Image basiert auf dem Alpine-Linux-Image, welches das Linux-Paketverwaltungswerkzeug APT (Advanced Packaging Tool) enthält. \parencite{the_nodejs_docker_team_node_2024} Dieses Werkzeug ermöglicht es, Pakete, wie z.B. \code{python3}, auf einfache Art und Weise per Kommandozeile mit dem Befehl \code{apt-get install} zu installieren. \parencite{canonical_ltd_ubuntu_package_2024}
+In Zeile fünf wird die Anweisung gegeben, die Paketlisten des Systems zu aktualisieren und \code{python3} sowie \code{python3-pip} zu installieren, den offiziellen Paketmanager der Programmiersprache Python. \parencite{the_pip_developers_pip_2024} Mit dem \code{RUN}-Befehl in Dockerfiles kann der Container angewiesen werden, diese Anweisung in der Befehlszeile des Containers auszuführen. Das Node-Image basiert auf dem Alpine-Linux-Image, welches das Linux-Paketverwaltungswerkzeug APT (Advanced Packaging Tool) enthält. \parencite{the_nodejs_docker_team_node_2024} Dieses Werkzeug ermöglicht es, Pakete, wie z.B. \code{python3}, auf einfache Art und Weise per Kommandozeile mit dem Befehl \code{apt-get install} zu installieren. \parencite{canonical_ltd_ubuntu_package_2024}
 
 In Zeile acht wird das Arbeitsverzeichnis des Containers auf den Pfad \code{/app} gesetzt, indem der Befehl \code{WORKDIR} verwendet wird. Alle folgenden Befehle werden relativ zu diesem Ordner ausgeführt. Falls der angegebene Pfad nicht vorhanden ist, wird Docker ihn im Dateisystem des Containers erstellen. \parencite{docker_inc_dockerfile_2024}
 
 Mit dem \code{COPY}-Befehl wird der gesamte Inhalt des Ordners, in dem sich die Dockerfile befindet, in den Ordner kopiert, in dem sich der Container gerade befindet. \parencite{docker_inc_dockerfile_2024} Die Dockerfile befindet sich im äußersten Verzeichnis des StudyMap-Git-Repositorys. Das bedeutet, dass alle Dateien und Unterordner des Studiengangsfinders in den Container kopiert werden. Nachdem das \code{WORKDIR} auf \code{/app} gesetzt wurde, werden alle Dateien dementsprechend nach \code{/app} kopiert.
 
-Zeilen 14 bis 23 installieren alle Abhängigkeiten der einzelnen Subprojekte und kompilieren die Dateien zu ausführbaren Anwendungen. In Zeile 14 wird eine Version der Node.js-Webschnittstelle und REST-API erstellt. Anschließend wird in Zeile 15 das Arbeitsverzeichnis auf den Subordner der Administrationsoberfläche gesetzt und mit \code{RUN npm install} und \code{RUN npm build} dessen Abhängigkeiten installiert und kompiliert. Schließlich werden in den Zeilen 18 bis 20 des PixiJS-Projekts dieselben Schritte durchgeführt. Abschließend werden die Python-Abhängigkeiten mithilfe des zuvor vorgestellten Paketmanagers pip3 und einer im Unterordner liegenden Abhängigkeitsliste \code{requirements.txt} installiert. Python benötigt keinen Build-Prozess, da das Skript zur Laufzeit von der Python-Engine gelesen und ausgeführt wird. Zum Schluss wird in Zeile 23 das Arbeitsverzeichnis auf \code{/app} zurückgesetzt.
+Zeilen 14 bis 23 installieren alle Abhängigkeiten der einzelnen Subprojekte und kompilieren die Dateien zu ausführbaren Anwendungen. In Zeile 14 wird eine Version der Node.js-Webschnittstelle und REST-API erstellt. Anschließend wird in Zeile 15 das Arbeitsverzeichnis auf den Subordner der Administrationsoberfläche gesetzt und mit \code{RUN npm install} und \code{RUN npm build} dessen Abhängigkeiten installiert und kompiliert. Schließlich werden in den Zeilen 18 bis 20 des PixiJS-Projekts dieselben Schritte durchgeführt. Abschließend werden die Python-Abhängigkeiten mit dem bereits vorgestellten Paketmanager pip3 und einer Abhängigkeitsliste im Unterordner \code{requirements.txt} installiert. Python benötigt keinen Build-Prozess, da das Skript zur Laufzeit von der Python-Engine gelesen und ausgeführt wird. Zum Schluss wird in Zeile 23 das Arbeitsverzeichnis auf \code{/app} zurückgesetzt.
 
-In Zeile 26 wird mithilfe des Kommandos \code{EXPOSE 8080} Docker darüber informiert, dass der Netzwerkport 8080 der zu hörende Port ist. Ein Netzwerkport ist eine definierte Nummer, die die Kommunikation für einen bestimmten Dienst empfängt oder überträgt. \parencite{wright_was_2022} Ein Beispiel aus dem Alltag wäre die Wohnungsnummer in einem Mehrparteienhaus, damit die Post den Brief zur richtigen Wohnung innerhalb des Hauses zustellen kann. Der \code{EXPOSE}-Befehl informiert lediglich über den Port, schaltet ihn jedoch nicht frei. Um den Port freizugeben, muss beim Start des Containers der Parameter \code{-p} für Port angegeben werden. \parencite{docker_inc_dockerfile_2024}
+In Zeile 26 wird mit dem Kommando \code{EXPOSE 8080} Docker darüber informiert, dass der Port 8080 für die Netzwerkkommunikation genutzt werden soll. Ein Netzwerkport ist eine definierte Nummer, die die Kommunikation für einen bestimmten Dienst empfängt oder überträgt. \parencite{wright_was_2022} Ein Beispiel aus dem Alltag wäre die Wohnungsnummer in einem Mehrparteienhaus, damit die Post den Brief zur richtigen Wohnung innerhalb des Hauses zustellen kann. Der \code{EXPOSE}-Befehl informiert lediglich über den Port, schaltet ihn jedoch nicht frei. Um den Port freizugeben, muss beim Start des Containers der Parameter \code{-p} für Port angegeben werden. \parencite{docker_inc_dockerfile_2024}
 
-Die letzte Zeile enthält lediglich den Startbefehl für das Node.js Projekt, welches anschließend alle weiteren Projekte hostet. Wenn der Container gestartet wird, wird der Kommandozeilenbefehl ausgeführt, der mit dem CMD-Befehl definiert wurde. Aus diesem Grund darf es im Dockerfile auch nur einen CMD-Befehl geben. \parencite{docker_inc_dockerfile_2024}
+Die letzte Zeile enthält lediglich den Startbefehl für das Node.js Projekt, welches anschließend alle weiteren Projekte hostet. Wenn der Container gestartet wird, wird der Kommandozeilenbefehl ausgeführt, der mit dem \code{CMD}-Befehl definiert wurde. Aus diesem Grund darf es im Dockerfile auch nur einen \code{CMD}-Befehl geben. \parencite{docker_inc_dockerfile_2024}
 
 Um das Docker-Image mithilfe des Dockerfiles zu bauen und auszuführen, müssen nun folgende zwei Befehle in der Kommandozeile ausgeführt werden:
 \begin{lstlisting}[style=Python]
@@ -950,11 +947,11 @@ docker run -p 8080:8080 studymap
 Der erste Befehl führt den Build-Prozess anhand der Dockerfile im aktuellen Verzeichnis aus und benennt das Image als \code{studymap}. Der zweite Befehl erstellt einen Container mit dem gerade erstellten Image und leitet den Port 8080 aus dem Container auf den Port 8080 des Betriebssystems des Servers weiter.
 
 \paragraph*{Persistierung der Daten durch Docker Volumes und Docker Compose}
-Wie bereits erläutert, werden in StudyMap Dateien von außen in den Container hochgeladen und verarbeitet. Wenn ein Docker-Container jedoch neu gestartet wird, wird sein Zustand zurückgesetzt. Das bedeutet, dass alle veränderten Dateien wieder im Originalzustand sind und alle neu hinzugefügten Dateien gelöscht werden. Aus diesem Grund ist die Verwendung von Docker Volumes zur Persistenz über einen Neustart hinaus notwendig.
+Wie bereits erläutert, werden in StudyMap Dateien von außen in den Container hochgeladen und verarbeitet. Wenn ein Docker Container jedoch neu gestartet wird, wird sein Zustand zurückgesetzt. Das bedeutet, dass alle veränderten Dateien wieder im Originalzustand sind und alle neu hinzugefügten Dateien gelöscht werden. Aus diesem Grund ist die Verwendung von Docker Volumes zur Persistenz über einen Neustart hinaus notwendig.
 
 Docker Volumes ermöglichen es, Daten von Containern betriebssystemunabhängig zu persistieren. Sie ermöglichen die Erstellung von Container-übergreifendem Speicher und sind dabei deutlich effizienter und performanter als Bind-Mounts eines Betriebssystems. \parencite{docker_inc_volumes_0000}
 
-Für die Verwendung von Docker-Volumes muss der Kommandozeilenbefehl zum Starten des Containers angepasst werden. Eine Alternative hierzu ist die Verwendung von Docker Compose. Docker Compose wurde entwickelt, um mehrere Container effizient zu steuern und eine klare Struktur von vielen Containern zu ermöglichen. Hier gibt es neben den Dockerfiles auch eine \code{docker-compose.yml}-Datei, die alle Informationen zu den Containern bezüglich Netzwerk, Speicher und freizugebenden Ports enthält. Da der Kommandozeilenbefehl zum Starten des StudyMap-Docker-Containers aufgrund der Ports und Volumes dokumentiert werden müsste, bietet sich die Verwendung von Docker Compose an. Die benötigten Volumes sowie der freizugebende Port 8080 werden in einer Datei festgehalten. \parencite{docker_inc_docker_0000} Der Administrator kann die StudyMap-Anwendung mit folgenden konsistenten Befehlen verwalten:
+Für die Verwendung von Docker Volumes muss der Kommandozeilenbefehl zum Starten des Containers angepasst werden. Eine Alternative hierzu ist die Verwendung von Docker Compose. Docker Compose wurde entwickelt, um mehrere Container effizient zu steuern und eine klare Struktur von vielen Containern zu ermöglichen. Hier gibt es neben den Dockerfiles auch eine \code{docker-compose.yml}-Datei, die alle Informationen zu den Containern bezüglich Netzwerk, Speicher und freizugebenden Ports enthält. Da der Kommandozeilenbefehl zum Starten des StudyMap-Docker Containers aufgrund der Ports und Volumes dokumentiert werden müsste, bietet sich die Verwendung von Docker Compose an. Die benötigten Volumes sowie der freizugebende Port 8080 werden in einer Datei festgehalten. \parencite{docker_inc_docker_0000} Der Administrator kann die StudyMap-Anwendung mit folgenden konsistenten Befehlen verwalten:
 
 \noindent
 \begin{minipage}{\linewidth}
@@ -965,7 +962,7 @@ docker compose restart      # Startet den Container neu
 \end{lstlisting}
 \end{minipage}
 
-Die im vorherigen Abschnitt erwähnte Datei docker-compose.yml sieht für den Studiengangsfinder folgendermaßen aus:
+Die im vorherigen Abschnitt erwähnte Datei \code{docker-compose.yml} sieht für den Studiengangsfinder folgendermaßen aus:
 \begin{lstlisting}[style=Python]
 version: '3.8'
 
@@ -1007,7 +1004,7 @@ apt-get upgrade
 
 \paragraph*{2. Speicherort für StudyMap festlegen}
 % TODO: Quelle
-Es muss anschließend der Speicherort für StudyMap festgelegt werden. Der Standardordner für Docker-Container unter Linux ist \code{/var/lib/docker}. Da die Partition auf dem vom Rechenzentrum bereitgestellten Server nur 3,9 Gigabyte Speicherplatz hat, muss auf das Home-Verzeichnis mit 13 Gigabyte ausgewichen werden. Für diese Änderung ist eine Anpassung der Datei \code{/etc/docker/daemon.json} erforderlich:
+Es muss anschließend der Speicherort für StudyMap festgelegt werden. Der Standardordner für Docker Container unter Linux ist \code{/var/lib/docker}. Da die Partition auf dem vom Rechenzentrum bereitgestellten Server nur 3,9 Gigabyte Speicherplatz hat, muss auf das Home-Verzeichnis mit 13 Gigabyte ausgewichen werden. Für diese Änderung ist eine Anpassung der Datei \code{/etc/docker/daemon.json} erforderlich:
 \begin{lstlisting}[style=Python]
 {
     "data-root": "/home/docker-data"
@@ -1022,7 +1019,7 @@ Offizielle Installationsanleitung für Debian: \url{https://docs.docker.com/engi
 
 \paragraph*{4. StudyMap auf den Server kopieren}
 % TODO: Quelle
-Um das Projekt auf den Server zu übertragen, wird das gesamte Git-Repository, einschließlich des Dockerfiles und der docker-compose.yml-Datei, per SCP auf den Server kopiert. Der Quellcode befindet sich derzeit auf der Plattform GitHub. Es ist möglich, Repositories direkt als .zip-Datei herunterzuladen. Falls es nicht möglich ist, das Repository als .zip-Datei herunterzuladen, kann alternativ das lokale Entwicklungsprojekt als Zip-Datei komprimiert und übertragen werden. In diesem Fall ist es jedoch wichtig, alle Build-Dateien, Bibliotheken und Abhängigkeiten zu entfernen, die sowieso nachinstalliert werden müssen, um unnötig große Datentransfers zu vermeiden.
+Um das Projekt auf den Server zu übertragen, wird das gesamte Git-Repository, einschließlich des Dockerfiles und der \code{docker-compose.yml}-Datei, per SCP auf den Server kopiert. Der Quellcode befindet sich derzeit auf der Plattform GitHub. Es ist möglich, Repositories direkt als .zip-Datei herunterzuladen. Falls es nicht möglich ist, das Repository als .zip-Datei herunterzuladen, kann alternativ das lokale Entwicklungsprojekt als Zip-Datei komprimiert und übertragen werden. In diesem Fall ist es jedoch wichtig, alle Build-Dateien, Bibliotheken und Abhängigkeiten zu entfernen, die sowieso nachinstalliert werden müssen, um unnötig große Datentransfers zu vermeiden.
 
 Anschließend genügt ein Kommandozeilenbefehl, um die Anwendung sicher auf den Server zu übertragen:
 \begin{lstlisting}[style=Python]
@@ -1032,5 +1029,5 @@ scp studymap.zip root@im-studiengangfinder:/home
 Der Befehl lädt die Datei \code{studymap.zip} auf den Server mit dem Hostnamen \code{im-studien\-gang\-finder} hoch und verwendet als Login-Username den Benutzer \code{root}. Das Zielverzeichnis ist \code{/home}. Dieser Prozess erfordert eine aktive VPN-Verbindung zur Hochschule und einen autorisierten SSH-Key. % TODO: SSH Key erklären?
 
 \paragraph*{5. Docker Compose ausführen}
-Nachdem die Datei hochgeladen und entpackt wurde, kann das Docker-Image und der Docker-Container mithilfe des zuvor erklärten Docker-Compose-Befehls über eine SSH-Verbindung zur Kommandozeile des Servers erstellt und gestartet werden.
+Nachdem die Datei hochgeladen und entpackt wurde, kann das Docker-Image und der Docker Container mithilfe des zuvor erklärten Docker-Compose-Befehls über eine SSH-Verbindung zur Kommandozeile des Servers erstellt und gestartet werden.
 
