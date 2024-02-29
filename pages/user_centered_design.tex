@@ -37,8 +37,7 @@ Die Studie wurde in Form von Einzelinterviews durchgeführt. Die Teilnehmer wurd
 Offene Fragen zu Designelementen, Verständlichkeit von Informationen und allgemeinen Nutzererfahrungen sollten Aufschluss über mögliche Stärken und Schwächen des Design-Proto\-typs geben. Ziel war es, frühzeitig wertvolles Feedback zu erhalten, um Optimierungen und Anpassungen vornehmen zu können, bevor die Umsetzung in die nächste Phase geht. Die lauten Gedanken der Teilnehmerinnen und Teilnehmer wurden von Herrn Huber in einem Freitextfeld dokumentiert.
 
 \subsubsection{Ergebnisse der Mockup-Studie}
-Die Rückmeldungen der Studienteilnehmenden lassen sich in folgende konsistente
-Muster zusammenfassen.
+Die Ergebnisse der Mockup-Konzeptstudie sind Gegenstand der Diskussion und Interpretation in den folgenden Unterabschnitten. Die Rückmeldungen der Teilnehmerinnen und Teilnehmer an der Studie lassen sich zu konsistenten Mustern zusammenfassen, die in Rückmeldungen zu Bild 1, zu Bild 2, zu Bild 3 und in generelle Anmerkungen gruppiert wurden.
 
 \paragraph{Bild 1: Visualisierung der Studiengänge}\label{sec:visualisierung-der-studiengänge}
 Die Übersichtskarte wurde von den Teilnehmenden als unübersichtlich und geclustert wahrgenommen. Besonders die Farbähnlichkeit der Studiengänge wurde als störend
@@ -167,18 +166,17 @@ In Aufgabe 1 sollten die Studienteilnehmer herausfinden, welcher Studiengang dem
 \end{figure}
 
 %% Aufgabe 2
+In der zweiten Aufgabe sollten die Studieninteressierten herausfinden, inwiefern sich die allgemeine Informatik vom Studiengang Medizinische Informatik unterscheidet. Testweise wurde ein Feature entwickelt und zum Prototyp hinzugefügt, das es ermöglicht, Studiengänge zu vergleichen, ohne das Popup mit den Studiengangdetails schließen und erneut öffnen zu müssen.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{prototyp_comparison_i_im}
+    \includegraphics[width=0.8\textwidth]{prototyp_comparison_i_im}
     \caption{Prototyp: Vergleichsfeature}
     \bildquelle{Eigene Darstellung}
     \label{fig:prototyp-comparison}
 \end{figure}
 
-In der zweiten Aufgabe sollten die Studieninteressierten herausfinden, inwiefern sich die allgemeine Informatik vom Studiengang Medizinische Informatik unterscheidet. Testweise wurde ein Feature entwickelt und zum Prototyp hinzugefügt, das es ermöglicht, Studiengänge zu vergleichen, ohne das Popup mit den Studiengangdetails schließen und erneut öffnen zu müssen.
-
-\autoref{fig:prototyp-comparison} zeigt den Vergleich der Studiengänge Informatik und Medizinische Informatik. Die farbigen Inhaltsbalken zeigen immer die Inhalte des ursprünglich ausgewählten Studiengangs an. Wenn ein Studiengang zum Vergleich hinzugefügt wird, werden dessen Inhalte mit grauen Balken über die anderen Inhalten gelegt. Es ist wichtig, dass die Inhalte klar und verständlich dargestellt werden, ohne dabei subjektive Bewertungen einzubeziehen. Der Vergleich kann über das X-Symbol im grauen Balken gelöscht und eingeklappt werden.
+\autoref{fig:prototyp-comparison} zeigt den Vergleich der Studiengänge Informatik und Medizinische Informatik. Die farbigen Inhaltsbalken zeigen die Inhalte des ursprünglich ausgewählten Studiengangs an. Jeder Studiengang hat die Farbe seiner zugehörigen Fakultät. Wenn ein Studiengang zum Vergleich hinzugefügt wird, werden dessen Inhalte mit grauen Balken über die anderen Inhalten gelegt. Es ist wichtig, dass die Inhalte klar und verständlich dargestellt werden, ohne dabei subjektive Bewertungen einzubeziehen. Der Vergleich kann über das X-Symbol im grauen Balken gelöscht und eingeklappt werden.
 
 \begin{figure}[H]
     \centering
@@ -201,7 +199,7 @@ Die Auswertung der Antworten auf Aufgabe 2 zeigt, dass die Mehrheit der Probande
 
 Eine Wordcloud ist eine grafische Darstellung von Textdaten. Dabei werden häufig vorkommende Wörter größer und prominenter dargestellt als seltener vorkommende Wörter. Sie bietet eine schnelle visuelle Zusammenfassung der wichtigsten Begriffe in einem Text oder einer Gruppe von Texten. Außerdem dient sie dazu, einen Überblick über die Antworten zu geben, ohne alle ausformulierten Antworten zu enthalten.
 
-Die Begriffe \textit{Gesundheit}, \textit{Informatik}, \textit{Mathematik}, \textit{Internationales} und \textit{Medien} sind sehr prominent (siehe \autoref{fig:prototyp-comparison-wordcloud}). Bei diesen Begriffen handelt es sich um inhaltliche Kategorien, die im Prototyp verwendet werden und sich in den beiden Studiengängen unterscheiden. Daher kann die anfänglich genannte These, dass das Konzept verstanden wurde, bestätigt werden. Die Antworten der Teilnehmenden sind im Anhang ausformuliert vorzufinden.
+Die Begriffe \textit{Gesundheit}, \textit{Informatik}, \textit{Mathematik}, \textit{Internationales} und \textit{Medien} sind sehr prominent (siehe \autoref{fig:prototyp-comparison-wordcloud}). Da diese Begriffe die inhaltlichen Kategorien im Prototyp repräsentieren und sich die Werte in den beiden Studiengängen unterscheiden, sind sie die richtigen Antworten für die Aufgabe. Daher kann die anfänglich genannte These, dass das Konzept verstanden wurde, bestätigt werden. Die Antworten der Teilnehmenden sind im Anhang ausformuliert vorzufinden.
 
 \begin{figure}[H]
     \centering
@@ -223,7 +221,7 @@ Anschließend an die beiden Aufgaben wurden die Teilnehmer nach ihrer Schwierigk
     \label{fig:prototyp-umfrage-aufgabe-1-schwierigkeit}
 \end{figure}
 
-77,5 \% (31/40) der Befragten gaben an, dass die Aufgabe leicht zu bewältigen war (Schwierigkeitsstufe 4 oder 5). Aufgabe 2 wurde erneut als deutlich schwieriger bewertet. Obwohl 70 \% angaben, dass die Aufgabe leicht zu bewältigen war, lag das Gewicht deutlich mehr auf Schwierigkeit 4 als auf Schwierigkeit 5 (siehe \autoref{fig:prototyp-umfrage-aufgabe-2-schwierigkeit}). Ferner ist der Anstieg bei der Schwierigkeitsstufe 2 (schwer) mit 15 \% signifikant. Bei dieser Einstufung hatte die vorherige Aufgabe im Vergleich nur einen Anteil von 2,5 \% mit einer Stimme. Im Verlauf wird diese Erkenntnis durch eine \autoref{table:prototyp-umfrage-aufgaben-schwierigkeit} mit den stochastischen Werten belegt.
+77,5 \% (31/40) der Befragten gaben an, dass die Aufgabe leicht zu bewältigen war (Schwierigkeitsstufe 4 oder 5). Aufgabe 2 war nach Einschätzung der Teilnehmenden wesentlich schwieriger als Aufgabe 1. Obwohl 70 \% angaben, dass die Aufgabe leicht zu bewältigen war, lag das Gewicht deutlich mehr auf Schwierigkeit 4 als auf Schwierigkeit 5 (siehe \autoref{fig:prototyp-umfrage-aufgabe-2-schwierigkeit}). Ferner ist der Anstieg bei der Schwierigkeitsstufe 2 (schwer) mit 15 \% signifikant. Bei dieser Einstufung hatte die vorherige Aufgabe im Vergleich nur einen Anteil von 2,5 \% mit einer Stimme. Im Verlauf wird diese Erkenntnis durch \autoref{table:prototyp-umfrage-aufgaben-schwierigkeit} mit den stochastischen Werten belegt.
 
 \begin{figure}[H]
     \centering
@@ -233,7 +231,7 @@ Anschließend an die beiden Aufgaben wurden die Teilnehmer nach ihrer Schwierigk
     \label{fig:prototyp-umfrage-aufgabe-2-schwierigkeit}
 \end{figure}
 
-Zusammenfassend zeigt die stochastische Analyse in \autoref{table:prototyp-umfrage-aufgaben-schwierigkeit} die bereits aus den Diagrammen ersichtlichen Tendenzen. Sowohl der Durchschnitt als auch der Median sind bei Aufgabe 2 niedriger, was darauf hindeutet, dass diese als schwieriger empfunden wurde. Minimum und Maximum sind in beiden Aufgaben gleich. Das bedeutet, dass es bei beiden Aufgaben Befragte gab, die die Aufgaben als sehr leicht und als eher schwer empfanden. Keiner fand die Aufgaben jedoch unlösbar. Die Standardabweichung ist bei Aufgabe 2 höher als bei Aufgabe 1. Dies könnte bedeuten, dass Aufgabe 1 so einfach war, dass es für viele selbstverständlich war, die richtige Lösung zu finden und deshalb der Großteil sehr einfach ankreuzen konnte. Bei Aufgabe 2 lag der Mittelwert eher in der Mitte der Skala, weshalb die Streuung höher ist und somit die Meinungen über die Schwierigkeit stärker differierten. 
+Zusammenfassend zeigt die stochastische Analyse in \autoref{table:prototyp-umfrage-aufgaben-schwierigkeit} die bereits aus den Diagrammen ersichtlichen Tendenzen. Sowohl der Durchschnitt als auch der Median sind bei Aufgabe 2 niedriger, was darauf hindeutet, dass diese als schwieriger empfunden wurde. Minimum und Maximum sind in beiden Aufgaben gleich. Das bedeutet, dass es bei beiden Aufgaben Befragte gab, die die Aufgaben als sehr leicht und als eher schwer empfanden. Keiner fand die Aufgaben jedoch unlösbar. Die Standardabweichung ist bei Aufgabe 2 höher als bei Aufgabe 1. Möglicherweise war Aufgabe 1 so einfach, dass viele Teilnehmer die richtige Lösung als selbstverständlich angesehen haben und deshalb der Großteil sehr einfach ankreuzen konnte. Bei Aufgabe 2 lag der Mittelwert eher in der Mitte der Skala, weshalb die Streuung höher ist und somit die Meinungen über die Schwierigkeit stärker differierten. 
 
 \begin{table}[H]
     \renewcommand*{\arraystretch}{1.6}
@@ -254,7 +252,7 @@ Zusammenfassend zeigt die stochastische Analyse in \autoref{table:prototyp-umfra
 
 \paragraph{Umfrage Teil 3: Aufgaben}
 
-Der dritte Teil der Studie beinhaltet drei Fragen, die von den Schülerinnen und Schülern in Freitextfeldern beantwortet werden konnten.  Aus diesem Grund werden auch diese Felder mithilfe von Wordclouds ausgewertet. So kann man schnell einen Überblick über die wichtigsten Punkte der Antworten erhalten.
+Der dritte Teil der Studie beinhaltet drei Fragen, die von den Schülerinnen und Schülern in Freitextfeldern beantwortet wurden.  Auch diese Felder werden mithilfe von Wordclouds ausgewertet, um schnell einen Überblick über die wichtigsten Punkte der Antworten zu erhalten.
 
 % Was findest du am Konzept gut?
 
@@ -280,7 +278,7 @@ Weitere Schlagwörter, die ins Auge fallen, sind \textit{schnell}, \textit{über
     \label{fig:prototyp-umfrage-aufgaben-3-2-wordcloud}
 \end{figure}
 
-Die zweite Frage lautete: \glqq Was findest du am Konzept schlecht?\grqq{}. Für diese Frage wurde ebenfalls eine Wordcloud erstellt (siehe \autoref{fig:prototyp-umfrage-aufgaben-3-2-wordcloud}). Um alle Punkte vollständig zu erfassen, wurde jedoch hauptsächlich mit den Original-Antworten gearbeitet. Der größte Begriff in Bezug auf die Zufriedenheit war \textit{nichts}, was bedeutet, dass der Großteil mit dem Prototyp bereits zufrieden war. Bei genauerer Betrachtung lassen sich jedoch einige Kritikpunkte feststellen:
+Die zweite Frage lautete: \glqq Was findest du am Konzept schlecht?\grqq{}. Für diese Frage wurde ebenfalls eine Wordcloud erstellt (siehe \autoref{fig:prototyp-umfrage-aufgaben-3-2-wordcloud}). Um alle Punkte vollständig zu erfassen, wurde jedoch hauptsächlich mit den Original-Antworten gearbeitet. Der am häufigsten genannte Begriff in Bezug auf die Zufriedenheit war \textit{nichts}. Das bedeutet, dass die Mehrheit bereits mit dem Prototyp zufrieden war. Allerdings lassen sich bei genauerer Betrachtung einige Kritikpunkte feststellen:
 
 \begin{itemize}
     \item Übersichtlichkeit bei vielen Bubbles
@@ -290,20 +288,20 @@ Die zweite Frage lautete: \glqq Was findest du am Konzept schlecht?\grqq{}. Für
     \item Legende für direkten Vergleich einfügen
     \item Die Vergleichsoption sollte auffälliger gestaltet werden
     \item Was passiert, wenn ein Studiengang inhaltlich in zwei übergeordnete Gruppen fällt?
-    \item Erforderliche Soft Skill mit angeben
+    \item Erforderliche Soft Skills mit angeben
     \item Button \glqq Mehr erfahren\grqq{} geht in der Übersicht unter
     \item Einstiegsgehalt in absoluten Zahlen
 \end{itemize}
 
-Zusammenfassend sollte die Platzierung der Bubbles erklärt werden. Diese erfolgt nicht willkürlich, sondern mithilfe des MDS-Algorithmus und der Inhalte des Studiengangs automatisch. Im finalen Produkt werden die Bubbles voraussichtlich durch einen besseren Datensatz auch geschickter platziert, wodurch sich dieser Kritikpunkt vermutlich erledigen sollte.
+Zusammenfassend sollte die Platzierung der Bubbles erklärt werden. Diese erfolgt nicht willkürlich, sondern mithilfe des MDS-Algorithmus und der Inhalte des Studiengangs automatisch. Im Endprodukt werden die Bubbles voraussichtlich durch einen bereinigten und vollständigen Datensatz besser platziert sein, wodurch sich dieser Kritikpunkt beheben lassen wird.
 
-Die Farbe des Vergleichsfeatures wurde mehrmals kritisiert. Im Moment werden die Inhaltsbalken des zu vergleichenden Studiengangs mit einem neutralen Grau über die des original angeklickten Studiengangs gelegt. Eine mögliche Verbesserung wäre die Verwendung einer Farbänderung, eines zusätzlichen Hilfe-Dialogs oder einer Legende. Um eine schnellere Suche zu ermöglichen, könnten die zu vergleichenden Studiengänge vor der Auslieferung ans Frontend durch das Backend alphabetisch sortiert werden.
+Die Farbe des Vergleichsfeatures wurde mehrmals kritisiert. Zum Zeitpunkt der Studie werden die Inhaltsbalken des zu vergleichenden Studiengangs mit einem neutralen Grau über die des original angeklickten Studiengangs gelegt. Eine mögliche Verbesserung wäre die Verwendung einer Farbänderung, eines zusätzlichen Hilfe-Dialogs oder einer Legende. Um eine schnellere Suche zu ermöglichen, könnten die zu vergleichenden Studiengänge vor der Auslieferung ans Frontend durch das Backend alphabetisch sortiert werden.
 
 Ferner ist es kein Hindernis, wenn ein Studiengang inhaltlich in zwei Gruppen fällt, da immer der höchste Wert zur Gruppenzugehörigkeit gewählt wird. Wenn zwei Kategorien denselben Wert haben und gleichzeitig die höchsten Werte sind, wird die erste Kategorie verwendet. Außerdem ist es kein Problem, da die Wahrscheinlichkeit hoch ist, dass die Bubbles nahe beieinander liegen, wenn der Algorithmus berechnet wird. Selbst wenn sie sich in verschiedenen Supergruppen befinden, werden sie aufgrund ihrer Koordinaten als ähnliche Studiengänge betrachtet.
 
-Es gestaltet sich eher schwierig, erforderliche Soft Skills für das Studium anzugeben, da es keine offizielle Dokumentation über die benötigten Soft Skills pro Studiengang gibt.
+Es gestaltet sich eher schwierig, erforderliche Soft Skills für das Studium anzugeben, da es keine offizielle und einheitliche Dokumentation über die benötigten Soft Skills pro Studiengang gibt.
 
-Der Button \glqq Mehr erfahren\grqq{} geht in der Übersicht unter. Dieser Punkt wurde nur von einer Person geschrieben und die Schaltfläche ist bereits sehr groß und deutlich sichtbar auf der Seite rechts oben platziert, weshalb dieser Punkt nicht weiter evaluiert wird.
+Der Button \glqq Mehr erfahren\grqq{} geht in der Übersicht unter. Dieser Punkt wurde von nur einer Person geschrieben und die Schaltfläche ist im Vergleich zu den anderen Elementen bereits sehr groß und deutlich sichtbar. Sie befindet sich auf der rechten Seite der Aktionsleiste. Aus diesem Grund wird der Kritikpunkt nicht weiter evaluiert.
 
 Es wurde zweimal nach dem Einstiegsgehalt in konkreten Zahlen gefragt. Ein Nachteil dieser Implementierung besteht darin, dass die Werte regelmäßig überprüft und gewartet werden müssen, im Gegensatz zur aktuellen Implementierung mit den einfachen Bewertungen \glqq Überdurchschnittlich\grqq{}, \glqq Durchschnittlich\grqq{} usw. Deshalb wird dieser Punkt auch nicht weiter untersucht.
 
@@ -333,7 +331,7 @@ Die in \autoref{fig:prototyp-umfrage-aufgaben-3-3-wordcloud} genannten Punkte ä
 \end{itemize}
 %% Punkte einfügen
 
-Die optische Gestaltung der Vergleichsfunktion wurde mehrmals erwähnt. Die Farben und die Gestaltung des Buttons zur Aktivierung der Vergleichsfunktion sowie der Inhaltsbalken sollten geändert werden. Außerdem wurde der Wunsch geäußert, dass man mehr als zwei Studiengänge gleichzeitig vergleichen kann. Es stellt sich jedoch die Frage, ob dies sinnvoll ist, da es auf mobilen Endgeräten schnell unübersichtlich werden könnte. Ein weiterer oft genannter Wunsch ist eine Suchfunktion innerhalb der Vergleichsfunktion. Dies könnte, wie bei der vorherigen Frage bereits beschrieben, entweder durch eine alphabetisch sortierte Liste oder durch ein Autocomplete-Textfeld gelöst werden. Ein Autocomplete-Textfeld schlägt Vorschläge vor, während Buchstaben eingegeben werden. Es ähnelt somit einem Suchfeld.
+Die optische Gestaltung der Vergleichsfunktion wurde mehrmals erwähnt. Die Farben und die Gestaltung des Buttons zur Aktivierung der Vergleichsfunktion sowie der Inhaltsbalken sollten geändert werden. Außerdem wurde der Wunsch geäußert, dass man mehr als zwei Studiengänge gleichzeitig vergleichen kann. Es stellt sich jedoch die Frage, ob dies sinnvoll ist, da es auf mobilen Endgeräten schnell unübersichtlich werden könnte. Ein weiterer oft genannter Wunsch ist eine Suchfunktion innerhalb der Vergleichsfunktion. Wie schon bei der vorhergehenden Frage beschrieben, könnte hier entweder eine alphabetisch sortierte Liste oder ein Textfeld mit automatischer Vervollständigung verwendet werden. Ein Autocomplete-Textfeld schlägt Vorschläge vor, während Buchstaben eingegeben werden. Es ähnelt somit einem Suchfeld.
 
 Außerdem wurde mehrfach ein Persönlichkeitstest gewünscht, der spezifische Fragen an den oder die Studieninteressierte stellt und daraus eine Empfehlung für das zu wählende Studium ableitet. Wie bereits in \autoref{sec:konzepte-von-studiengangsfindern} erwähnt, bringt dies jedoch auch einige Limitierungen mit sich. Eine Möglichkeit für die Zukunft wäre, eine optionale Online-Umfrage anzubieten. Diese könnte die Ergebnisse aufgrund der eingegebenen Daten in StudyMap als eine Art Heatmap darstellen und die Zugehörigkeit zu einer bestimmten Position und somit zu einer Supergruppe bzw. Studiengang markieren. Eine Heatmap ist eine grafische Darstellung von Daten, bei der Werte in einer Matrix durch Farben codiert werden. Intensivere Farben repräsentieren höhere Werte, um Muster oder Trends visuell hervorzuheben. In diesem Fall werden die Zugehörigkeiten zur Kategorie \glqq Wirtschaft\grqq{} dargestellt. 
 
