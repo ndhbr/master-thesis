@@ -1,11 +1,6 @@
 \section{Implementierung und Deployment}\label{sec:implementierung-und-deployment}
 \subsection{Technologieauswahl und Implementierungsdetails}
-Die Auswahl der geeigneten Technologien für die Entwicklung des innovativen 
-Studiengangsfinders wurde so gewählt, um eine effiziente und interaktive Lösung
-zu gewährleisten. Besonders wichtig ist die Nutzbarkeit auf
-Smartphones und Desktop-Geräten, wodurch sich außerdem neue Herausforderungen
-hinsichtlich der Bedienung ergeben. Im Folgenden werden die Hauptkomponenten des
-Technologiestacks und ihre jeweiligen Funktionen erläutert.
+Die Auswahl der geeigneten Technologien für die Entwicklung des innovativen Studiengangsfinders wurde so getroffen, dass eine effiziente und interaktive Lösung gewährleistet ist. Besonders wichtig ist die Nutzbarkeit auf Smartphones und Desktop-Geräten, wodurch sich außerdem neue Herausforderungen hinsichtlich der Bedienung ergeben. Im Folgenden werden die Hauptkomponenten des Technologiestacks und ihre jeweiligen Funktionen erläutert.
 
 \subsubsection{PixiJS - Interaktive Grafik}
 Für die Darstellung der interaktiven Grafik wurde PixiJS gewählt. PixiJS ist ein leistungsstarkes WebGL-Rendering-Framework, das eine schnelle und reibungslose Darstellung von Grafiken ermöglicht. \parencite{pixijs_pixijs_2023} WebGL (Web Graphics Library) ist eine JavaScript-Schnittstelle zur Berechnung hochperformanter, interaktiver 2D- und 3D-Grafiken zur Anzeige im Browser. \parencite{mozilla_corporation_webgl_2023} Da nicht jeder Browser WebGL unterstützt, verwendet PixiJS als Ausweichlösung immer das klassische HTML5 Canvas ohne Hardwareunterstützung. \parencite{pixijs_pixijs_2024}
@@ -43,16 +38,7 @@ die Interaktionsmöglichkeiten ein, was im Kontext des Studiengangsfinders, der
 eine umfassende Benutzerinteraktion für Smartphone und Desktop-Gerät erfordert,
 als unzureichend erachtet wurde. \parencite{etimberg_paperjs_2023}
 
-Obwohl \textit{Fabric.js} als vielversprechende Alternative erschien, wurde
-PixiJS aufgrund mehrerer Faktoren bevorzugt \parencite{zaytsev_fabricjs_2023}. Der
-professionellere Website-Auftritt von PixiJS trug dazu bei, das Vertrauen in
-die Zuverlässigkeit und Wartbarkeit des Frameworks zu stärken. Ein weiterer
-bedeutender Punkt ist die Anzahl der GitHub-Sterne in Relation zu der Anzahl an
-\textit{offenen Issues}, die PixiJS aufweist. Eine höhere Anzahl an
-GitHub-Sternen mit gleichzeitig weniger offenen Issues, deutet oft auf eine
-größere und aktivere Entwicklergemeinschaft hin, was wiederum auf
-kontinuierliche Weiterentwicklung und Wartung schließen lässt.
-\parencite{batista_github_2023}
+Obwohl \textit{Fabric.js} als vielversprechende Alternative erschien, wurde PixiJS aufgrund mehrerer Faktoren bevorzugt \parencite{zaytsev_fabricjs_2023}. Der Auftritt der PixiJS-Website vermittelte den Eindruck einer etablierten und professionellen Plattform, was das Vertrauen in die Stabilität und Wartbarkeit des Frameworks stärkte. Ein weiterer bedeutender Punkt ist die Anzahl der GitHub-Sterne in Relation zu der Anzahl an \textit{offenen Issues}, die PixiJS aufweist. Eine höhere Anzahl an GitHub-Sternen mit gleichzeitig weniger offenen Issues, deutet oft auf eine größere und aktivere Entwicklergemeinschaft hin, was wiederum auf kontinuierliche Weiterentwicklung und Wartung schließen lässt. \parencite{batista_github_2023}
 
 Mit Hilfe der in den folgenden Kapiteln vorgestellten Webschnittstelle werden Daten für die Visualisierung der Studiengänge vom PixiJS-Projekt abgerufen. Anschließend werden die Studiengänge auf einer Canvas-Fläche in Form von Bubbles platziert, die sich hinsichtlich ihrer Nähe durch die Ergebnisse des MDS-Algorithmus unterscheiden:
 
@@ -61,7 +47,7 @@ const x = ((renderedSize.width * 0.75) * data[i][4][0]) + renderedSize.width * 0
 const y = ((renderedSize.height * 0.8) * (1 - data[i][4][1])) + renderedSize.height * 0.10;
 \end{lstlisting}
 
-Die vorliegende Implementierung berechnet die x- und y-Koordinaten für die jeweiligen Bubbles der Studiengänge. In diesem Fall enthält die Variable \code{renderedSize} die Breite des Canvas in Relation zur physischen Pixeldichte. Die Variablen \code{data[i][4][0]} und \code{data[i][4][1]} enthalten die vom Algorithmus berechneten auf eins normierte Koordinaten. Durch Multiplikation der Breite und Höhe der gezeichneten Fläche mit einem Pufferwert (z.B. 0.75) werden die Bubbles zentriert und nicht bis zum Rand gezeichnet. Ansonsten könnte es passieren, dass Bubbles genau am Rand stehen und dadurch aufgrund des zentrierten Ankerpunkts des Kreises nur zur Hälfte sichtbar sind.
+Die vorliegende Implementierung berechnet die x- und y-Koordinaten für die Platzierung der Studiengangs-Bubbles innerhalb des Canvas. In diesem Fall enthält die Variable \code{renderedSize} die Breite des Canvas in Relation zur physischen Pixeldichte. Die Variablen \code{data[i][4][0]} und \code{data[i][4][1]} enthalten die vom Algorithmus berechneten auf eins normierte Koordinaten. Durch Multiplikation der Breite und Höhe der gezeichneten Fläche mit einem Pufferwert (z.B. 0.75) werden die Bubbles zentriert und gleichzeitig dabei nicht bis zum Rand gezeichnet. Andernfalls könnte es vorkommen, dass die Bubbles, deren x- oder y-Koordinaten mit 0 oder 1 berechnet wurden, genau am Rand stehen und somit aufgrund der Zentrierung des Ankerpunktes des Kreises nur zur Hälfte sichtbar sind.
 
 \begin{figure}[H]
     \centering
@@ -71,13 +57,13 @@ Die vorliegende Implementierung berechnet die x- und y-Koordinaten für die jewe
     \label{fig:pixijs-tooltip-1}
 \end{figure}
 
-Die Implementierung beinhaltet außerdem die Funktionalität, dass ein Tooltip erscheint, wenn man mit der Maus über die Bubble fährt (siehe \autoref{fig:pixijs-tooltip-1}). In der Entwicklung treten jedoch zwei große Herausforderungen auf: Wie funktioniert dieses Feature auf einem Smartphone ohne Maus? Was passiert, wenn das Tooltip außerhalb des Bildschirms gezeichnet wird?
+Die Implementierung beinhaltet außerdem die Funktionalität, dass ein Tooltip erscheint, wenn man mit der Maus über eine Bubble fährt (siehe \autoref{fig:pixijs-tooltip-1}). In der Entwicklung treten dabei jedoch zwei große Herausforderungen auf: Wie funktioniert dieses Feature auf einem Smartphone ohne Maus? Was passiert, wenn das Tooltip außerhalb des Bildschirms gezeichnet wird?
 
 % TODO: Bei Bedienung muss noch die Hitarea beim Hovern dazukommen.
 \paragraph*{Herausforderung 1: Bedienung}
 PixiJS verfügt über ein ereignisbasiertes System zur Verfolgung von Interaktionen mit der Zeichenfläche. Es gibt verschiedene Eventtypen, wie zum Beispiel \code{.click()}. Dieses Event wird ausgelöst, wenn auf das Objekt geklickt wird, auf dem der sogenannte Eventlistener aktiviert wurde. \parencite{pixijs_interaction_2024}
 
-Für das Tracking, ob der Benutzer mit der Maus über der Bubble ist, wird der Eventtyp \code{.onmouseover()} verwendet. Die Studiengänge werden, wie im Konzept vorgestellt, in Supergruppen eingeteilt. Alle Studiengänge, die zur gleichen Supergruppe gehören, werden durch ein Label mit dem Namen der Supergruppe und einen leichten Hintergrundnebel gekennzeichnet, um ihre Zugehörigkeit zu zeigen. Wenn der Benutzer keine Interaktion mit dem Canvas durchführt, wird kein Studiengang mit einem Label versehen, sondern lediglich als farbiger Kreis dargestellt (siehe \autoref{fig:pixijs-canvas-2}).
+Für das Tracking, ob der Benutzer mit der Maus über der Bubble ist, wird der Eventtyp \code{.onmouseover()} verwendet. Die Studiengänge werden, wie im Konzept vorgestellt, in Supergruppen eingeteilt. Alle Studiengänge, die zur gleichen Supergruppe gehören, werden durch ein Label mit dem Namen der Supergruppe und einen leichten Hintergrundnebel gekennzeichnet, um ihre Zugehörigkeit zu zeigen. Ohne Interaktion mit dem Canvas werden die Studiengänge nicht beschriftet, sondern nur als farbige Kreise dargestellt. (siehe \autoref{fig:pixijs-canvas-2}).
 
 \begin{figure}[H]
     \centering
@@ -99,16 +85,16 @@ Sobald dieser Fall eintritt, wird das Label der Supergruppe deaktiviert und alle
     \label{fig:pixijs-canvas-3}
 \end{figure}
 
-Schließlich besitzt jede Bubble einen zusätzlichen \code{.onmouseover()}-Eventlistener. Wenn dieses Event ausgelöst wird, wird die Bubble vergrößert und immer gegenüber eventuell überschneidenden Bubbles in den Vordergrund gestellt. Die Labels der anderen Studiengänge in allen anderen Supergruppen werden deaktiviert, um den Fokus auf diese Inhaltskategorie und explizit diese Bubble zu legen. Daraufhin erscheint darüber das Tooltip, das in \autoref{fig:pixijs-tooltip-1} zu sehen ist. Ein Klick auf die fokussierte Bubble oder den dargestellten Tooltip öffnet das Popup mit den Details zum Studiengang.
+Schließlich besitzt jede Bubble einen zusätzlichen \code{.onmouseover()}-Eventlistener. Wenn dieses Event ausgelöst wird, wird die Bubble vergrößert und immer gegenüber eventuell überschneidenden Bubbles in den Vordergrund gestellt. Die Labels der anderen Studiengänge in allen anderen Supergruppen werden deaktiviert, um den Fokus auf diese Inhaltskategorie und explizit diesen Studiengang zu legen. Daraufhin erscheint darüber das Tooltip, das in \autoref{fig:pixijs-tooltip-1} zu sehen ist. Ein Klick auf die fokussierte Bubble oder den dargestellten Tooltip öffnet das Popup mit den Details zum Studiengang.
 
-Da ein Smartphone in der Regel keine Maus angeschlossen hat, wird anstelle des für Desktop-Benutzer verwendete \code{.onmouseover()}-Event das \code{.ontap()}-Event verwendet. Dieses Ereignis wird ausgelöst, wenn der Benutzer auf die Bubble des Studiengangs tippt. Die Hitarea des Supergruppen-Nebels wird dabei ignoriert.
+Da ein Smartphone in der Regel keine Maus angeschlossen hat, wird anstelle des für Desktop-Benutzer verwendete \code{.onmouseover()}-Event das \code{.ontap()}-Event verwendet. Dieses Ereignis wird ausgelöst, wenn der Benutzer auf die Bubble des Studiengangs tippt. Die Hitarea des Supergruppen-Nebels wird dabei auf Smartphones ignoriert.
 
-Auch hier muss erneut differenziert werden. Wenn ein Desktop-Nutzer auf eine Bubble klickt, öffnet sich der Dialog mit den Studiengangsdetails gemäß dem Konzept. Wenn ein Smartphone-Nutzer auf die Bubble tippt, sollte sich das Popup nicht direkt öffnen. Es ist wichtig, dass der Nutzer zuvor das Tooltip gesehen hat, um zu wissen, welchen Studiengang er öffnet.
+Auch hier muss erneut differenziert werden. Wenn ein Desktop-Nutzer auf eine Bubble klickt, öffnet sich gemäß dem Konzept der Dialog mit den Studiengangsdetails. Tippt ein Smartphone-Nutzer auf die Bubble, sollte sich das Popup nicht direkt öffnen. Es ist wichtig, dass der Nutzer zuvor das Tooltip gesehen hat, um zu wissen, welchen Studiengang er öffnet.
 
 Aus diesem Grund wird beim \code{.ontap()}-Event auf eine Bubble zwischen drei Zuständen unterschieden:
 
 \begin{enumerate}
-    \item \textbf{Bisher noch nichts anderes angetippt:} Dann wird der gleiche Hover-Effekt ausgeführt, den auch ein Desktop-Endgerät beim \code{.onmouseover()}-Event über eine Bubble auslösen würde.
+    \item \textbf{Bisher noch keine andere Bubble angetippt:} Sollte bisher noch keine Bubble selektiert oder angetippt worden sein, wird der gleiche Hover-Effekt ausgeführt, den auch ein Desktop-Endgerät beim \code{.onmouseover()}-Event über eine Bubble auslösen würde.
     \item \textbf{Es wurde bereits eine andere Bubble angeklickt:} In diesem Fall wird der Hover-Effekt für die bereits angeklickte Bubble deaktiviert und für diese Bubble aktiviert.
     \item \textbf{Diese Bubble wurde bereits angeklickt:} Daraufhin wird das Tooltip entfernt und das Popup mit den Details zum Studiengang geöffnet. Dies ist das Äquivalent zu einem Doppelklick auf die Bubble.
 \end{enumerate}
@@ -120,7 +106,7 @@ Die Zeichenoberfläche von PixiJS enthält keine vorgefertigten Anzeigeelemente 
 
 Das gezeigte Tooltip besteht aus einem abgerundeten Rechteck, das den Text darüber enthält, und einem Dreieck, das anzeigt, für welche Bubble das Tooltip geöffnet wurde. Das Rechteck und das dazugehörige Dreieck werden in Schwarz aneinander gesetzt, so dass das kleine Fenster wie eine Sprechblase aussieht.
 
-Bei der Entwicklung der Klasse Tooltip wurde festgelegt, dass die Standardrichtung zum Öffnen des Tooltips nach oben zeigt. Der folgende Codeausschnitt zeigt, wie die Richtung festgelegt wird:
+Die Standardrichtung zum Öffnen des Tooltips wurde bei der Entwicklung der Klasse Tooltip nach oben festgelegt. Der folgende Codeausschnitt zeigt, wie die Richtung festgelegt wird:
 
 \begin{lstlisting}[style=Python]
 this.direction = 'top';
@@ -138,7 +124,7 @@ if (this.rootObjectYPosition - this.distance - this.container.height < 0) {
 
 Die Variablen \code{this.rootObjectXPosition} und \code{this.rootObjectYPosition} enthalten die x- und y-Koordinaten des Elements, an dem der Tooltip erscheinen soll. In diesem Fall sind dies die Koordinaten der jeweiligen Bubble. Die Variable \code{this.distance} enthält den vordefinierten Abstand, um den der Tooltip vom Element entfernt sein soll. Im vorliegendem Fall handelt es sich mindestens um den Radius des Studiengangskreises. Die Größe des Tooltips wird wiederum in den Variablen \code{this.container.height} und \code{this.container.width} gespeichert.
 
-Die Richtung des Tooltip-Fensters wird nach dem Ausschlussverfahren festgelegt. Wenn das Tooltip mit der Standardrichtung \code{'top'} (nach oben) aus der Zeichenfläche hinausragt, wird die Richtung nach unten (\code{'bottom'}) festgelegt. Anschließend wird überprüft, ob das Element die linke Fenstergrenze überschreitet. Falls dies der Fall ist, wird die Richtung auf \code{'rechts'} gesetzt. In diesem Fall wird die Richtung auf \code{'links'} gesetzt. Analog dazu wird geprüft, ob das Objekt die rechte Grenze überschreitet.
+Die Richtung des Tooltip-Fensters wird nach dem Ausschlussverfahren festgelegt. Wenn das Tooltip mit der Standardrichtung \code{'top'} (nach oben) aus der Zeichenfläche hinausragt, wird die Richtung nach unten (\code{'bottom'}) geändert. Anschließend wird überprüft, ob das Element die linke Fenstergrenze überschreitet. Falls dies der Fall ist, wird die Richtung auf \code{'rechts'} gesetzt. Analog dazu wird geprüft, ob das Objekt die rechte Grenze überschreitet. In diesem Fall wird die Richtung auf \code{'links'} gesetzt.
 
 Sobald die Ausrichtung des Tooltips festgelegt wurde, müssen die Elemente einzeln verschoben und gedreht werden. Führt die vorangegangene if-Bedingung dazu, dass die Richtungsvariable \code{direction} auf \code{'left'} gesetzt wird, muss das Tooltip wie in der folgenden \autoref{fig:pixijs-tooltip-2} dargestellt links neben der Bubble erscheinen.
 
@@ -346,15 +332,12 @@ Nuancen berücksichtigen müsste. Angesichts dieser Komplexität wurde die
 Entscheidung getroffen, auf die bewährte und leistungsstarke
 SciKit-Learn-Bibliothek zurückzugreifen. Die Verwendung dieser etablierten
 Implementierung ermöglicht eine präzise und effiziente Lösung, wobei der Fokus
-auf den zentralen Fragestellungen der Masterarbeit liegt. Außerdem gewährleistet
+auf den zentralen Fragestellungen der Masterarbeit bleibt. Außerdem gewährleistet
 die Einbindung von SciKit-Learn neben der Robustheit der MDS-Umsetzung, auch die
 Reduktion der Entwicklungskomplexität im Hinblick auf die
 Algorithmusimplementierung. \parencite{developers_scikit-learn_2023}
 
-Das Ergebnis des Skripts sind Koordinaten für jeden Studiengang im
-zweidimensionalen Raum. Diese Koordinaten werden anschließend zusammen mit den
-vorher eingelesenen Meta-Daten zu den Studiengängen in JSON-Dateien gespeichert,
-die schließlich vom Backend über eine Webschnittstelle bereitgestellt werden.
+Das Ergebnis des Skripts sind Koordinaten für jeden Studiengang im zweidimensionalen Raum. Diese Koordinaten werden anschließend auf eins normiert und zusammen mit den vorher eingelesenen Meta-Daten zu den Studiengängen in JSON-Dateien gespeichert, die schließlich vom Backend über eine Webschnittstelle bereitgestellt werden.
 
 Der Vorteil bei der Speicherung der berechneten Positionen in Form von
 JSON-Dateien liegt darin, dass die Daten wesentlich seltener geändert werden,
@@ -372,9 +355,9 @@ Inhalten von Studiengängen, oder beim Hinzufügen bzw. Entfernen eines
 Studiengangs ausgelöst. Dies wiederum passiere meist insgesamt nur einmal pro
 Jahr.
 
-Das Python-Skript hat neben der Berechnung und Speicherung der Koordinaten der Studiengänge noch eine weitere Aufgabe. Sobald der Benutzer auf der StudyMap eine Bubble anklickt, öffnet sich ein Popup mit Details zum entsprechenden Studiengang (siehe Konzept \autoref{fig:mockup-bubbles-popup}). Wie im weiteren Verlauf der Arbeit noch erläutert wird, können diese Details über die Administrationsoberfläche bearbeitet werden. Es ist jedoch notwendig, dass die Dateien mit diesen Informationen bereits angelegt werden und sowohl die Werte der Inhaltskategorien für die Darstellung mit den Balken als auch die ähnlichen Studiengänge bereits in diese Dateien geschrieben werden. Diese Funktion übernimmt das Python-Skript.
+Das Python-Skript hat neben der Berechnung und Speicherung der Koordinaten der Studiengänge noch eine weitere Aufgabe. Sobald der Benutzer auf der StudyMap eine Bubble anklickt, öffnet sich ein Popup mit Details zum entsprechenden Studiengang (siehe Konzept \autoref{fig:mockup-bubbles-popup}). Wie im weiteren Verlauf der Arbeit noch erläutert wird, können diese Details über die Administrationsoberfläche bearbeitet werden. Um die Details in der Administrationsmaske bearbeiten zu können, legt das Python-Skript für jeden Studiengang eine .json-Datei mit den erforderlichen Attributen an. Gleichzeitig werden die ähnlichen Studiengänge, die durch den MDS-Algorithmus berechnet wurden, sowie die Werte der Inhaltskategorien eingefügt.
 
-Bei der Berechnung neuer Koordinaten wird für jeden eingelesenen Studiengang eine .json-Datei mit einem leeren Template erstellt. Wenn bereits eine Datei für den Studiengang aus einer vorherigen Datenquelle existiert, wird diese geöffnet und bearbeitet. Zur späteren Darstellung der Inhaltskategorien werden anschließend die Originalwerte aus der Datenquelle in die .json-Datei kopiert (siehe folgendes Beispiel-JSON-Objekt \code{contents}).
+Bei der Berechnung neuer Koordinaten wird, wie im vorherigen Abschnitt erwähnt, für jeden eingelesenen Studiengang eine .json-Datei mit einem leeren Template erstellt. Wenn bereits eine Datei für den Studiengang aus einer vorherigen Datenquelle existiert, wird diese geöffnet und bearbeitet. Zur späteren Darstellung der Inhaltskategorien werden anschließend die Originalwerte aus der Datenquelle in die .json-Datei kopiert (siehe folgendes Beispiel-JSON-Objekt \code{contents}).
 
 Um ähnliche Studiengänge zu ermitteln, wird für jeden Studiengang anhand der zuvor berechneten Koordinaten der euklidische Abstand zu allen anderen Studiengängen ermittelt. Alle Studiengänge, die innerhalb einer bestimmten Grenze liegen, werden in eine Liste aufgenommen und schließlich in die .json-Datei des jeweiligen Studiengangs geschrieben (siehe folgendes Beispiel-JSON-Objekt \code{related\_studies}).
 
@@ -608,10 +591,10 @@ Durch die in diesem Unterkapitel beschriebene Web-Schnittstelle kann das PixiJS-
 
 \paragraph*{GET /admin/data/details}
 \vspace{-1.0em}
-Dieser Endpunkt ruft die Dateinamen aller gespeicherten Studiengangsdetails ab und gibt sie aus. Wenn die Inhalte per .csv-Datei hochgeladen werden, wird für jeden Studiengang, sofern noch nicht vorhanden, eine .json-Datei mit den Studiengangsdetails erstellt. Mithilfe dieses Endpunkts können die Dateinamen dieser Dateien abgerufen werden.
+Dieser Endpunkt ruft die Dateinamen aller gespeicherten Studiengangsdetails ab und gibt sie aus. Sobald die Datenquelle per .csv-Datei hochgeladen wird, wird für jeden Studiengang, sofern noch nicht vorhanden, eine .json-Datei mit den Studiengangsdetails erstellt. Mithilfe dieses Endpunkts können die Dateinamen dieser Dateien abgerufen werden.
 
 \noindent
-Beispielausgabe nach erfolgtem Upload von Studiengängen (HTTP-Statuscode 200):
+Beispielausgabe nach erfolgreichem Upload und Verarbeitung der Studiengängen (HTTP-Statuscode 200):
 \begin{lstlisting}[style=Python]
 [
     "A.json","B.json","BE.json","BM.json","DBM.json","EI.json","GK.json",
@@ -650,9 +633,9 @@ Zusätzlich zum Angular-Framework wird ein CSS-Framework benötigt, um vordefini
 
 HTML steht für HyperText Markup Language und ist die Sprache des Internets. HTML ist eine Dokumentenbeschreibungssprache, mit der die Struktur von Webseiten definiert wird. Mithilfe von CSS wird dann das Layout und Aussehen der in HTML definierten Elemente (z.B. Schaltflächen) festgelegt. \parencite{mozilla_corporation_html_2023} CSS wiederum steht für Cascading Style Sheets und definiert Darstellungsregeln für HTML-Elemente. CSS-Regeln enthalten Definitionen zu Größe, Form, Farbe, Animation und Layout der einzelnen HTML-Elemente einer Website. \parencite{mozilla_corporation_what_2024}
 
-Im Fall von StudyMap wird Angular Material UI verwendet. Angular Material UI ist ein von Google entwickeltes CSS-Framework. Die Entscheidung für dieses Framework beruht darauf, dass es ebenso wie das Angular Framework von Google LLC entwickelt wurde und daher sehr gut parallel kombiniert werden kann. \parencite{google_llc_angular_2024}
+Im Fall von StudyMap wird Angular Material UI verwendet. Angular Material UI ist ein von Google entwickeltes CSS-Framework. Die Entscheidung für dieses Framework beruht darauf, dass es ebenso wie das Angular Framework von Google LLC entwickelt wurde und daher sehr gut miteinander kombiniert werden kann. \parencite{google_llc_angular_2024}
 
-Die Implementierung der Authentifizierung in Angular ist vorerst nicht erforderlich, da diese bereits durch die Authentifizierungs-Middleware der Node.js-API abgedeckt ist.
+Obwohl es ohne größeren Mehraufwand möglich wäre, eine sichere Authentifizierung in Angular mithilfe des CanActivate-Interface zu implementieren, ist dies vorerst nicht erforderlich \parencite{google_inc_angular_2024}. Durch die Authentifizierungs-Middleware der Node.js-API wird die Authentifizierung für die Administrationsoberfläche bereits abgedeckt.
 
 \noindent
 Die Verwaltungssoftware hat in ihrer ersten Version fünf Seiten:
@@ -707,9 +690,7 @@ Nach der Auswahl der beiden Dateien können diese mithilfe der Schaltfläche \gl
     \label{fig:adminui-details-1}
 \end{figure}
 
-Sobald die Dateien hochgeladen wurden, wird für jeden Studiengang eine Studiengangsdetails-Datei angelegt. Diese kann mithilfe eines grafischen Formulars in der Administrationsoberfläche bearbeitet werden. \autoref{fig:adminui-details-1} zeigt einen Ausschnitt dieses Formulars. Zunächst muss der zu bearbeitende Studiengang oben im Auswahlfenster ausgewählt werden. Anschließend können alle statischen Inhalte des Popups, das sich beim Klick auf eine Bubble in der StudyMap öffnet, bearbeitet werden. Die Liste der lokalen Unternehmen ist ebenfalls Teil davon.
-
-% TODO: CONTINUE HERE!
+Sobald die Dateien hochgeladen wurden, wird für jeden Studiengang eine Studiengangsdetails-Datei angelegt. Diese kann mithilfe eines grafischen Formulars in der Administrationsoberfläche bearbeitet werden. \autoref{fig:adminui-details-1} zeigt einen Ausschnitt dieses Formulars. Zunächst muss der zu bearbeitende Studiengang oben im Auswahlfenster ausgewählt werden. Anschließend können alle statischen Inhalte des Popups, das sich beim Klick auf eine Bubble in der StudyMap öffnet, bearbeitet werden. Die Liste der regionalen Unternehmen, die Karrieremöglichkeiten für diesen Studiengang anbieten, ist ebenfalls in das zu bearbeitende Formular integriert.
 
 \newpage
 \subsection{Softwarearchitektur}
@@ -759,7 +740,7 @@ Wie in \autoref{fig:studymap-architecture} dargestellt, ist die Produktiv-Schnit
 Webschnittstelle: \code{/index.html}
 
 \paragraph*{Staging}
-Die Staging-Umgebung ist identisch zur Produktivumgebung. Der einzige Unterschied besteht darin, dass die StudyMap-App nicht mit \code{/app.html}, sondern mit \code{/app.html?mode=staging} eingebunden wird. StudyMap soll die Daten aus dem Staging-Bereich des Backends abrufen und darstellen.
+Die Staging-Umgebung ist nahezu identisch mit der Produktivumgebung. Der Unterschied zwischen den beiden besteht darin, dass hier zusätzlich der Queryparameter \code{?mode=staging} an die Quelladresse des iFrames (\code{/app.html}) angehängt wird. Anhand dieses Parameters erkennt PixiJS, dass es sich um eine Testumgebung handelt und holt sich die Daten aus dem Staging-Bereich des Backends.
 
 Mit dieser Testseite können neue Daten vor der Veröffentlichung getestet und optimiert werden. Die Staging-Komponente ist ebenfalls nur per VPN erreichbar.
 
@@ -767,7 +748,7 @@ Mit dieser Testseite können neue Daten vor der Veröffentlichung getestet und o
 Webschnittstelle: \code{/staging.html}
 
 \paragraph*{Angular}\label{paragraph:angular-basic-auth}
-Die vierte und letzte Komponente ist die Angular-Administrationsoberfläche. Offensichtlich darf auch dieser Teil der Anwendung nur über eine authentifizierte VPN-Verbindung erreichbar sein. Der gesamte Administrationsbereich ist außerdem durch eine Basic-Auth-Middleware geschützt.
+Die vierte und letzte Komponente ist die Angular-Administrationsoberfläche. Offensichtlich darf vor allem dieser Teil der Anwendung nur über eine authentifizierte VPN-Verbindung erreichbar sein. Der gesamte Administrationsbereich ist außerdem durch eine Basic-Auth-Middleware geschützt.
 
 \begin{figure}[H]
     \centering
@@ -930,7 +911,7 @@ In Zeile fünf wird die Anweisung gegeben, die Paketlisten des Systems zu aktual
 
 In Zeile acht wird das Arbeitsverzeichnis des Containers auf den Pfad \code{/app} gesetzt, indem der Befehl \code{WORKDIR} verwendet wird. Alle folgenden Befehle werden relativ zu diesem Ordner ausgeführt. Falls der angegebene Pfad nicht vorhanden ist, wird Docker ihn im Dateisystem des Containers erstellen. \parencite{docker_inc_dockerfile_2024}
 
-Mit dem \code{COPY}-Befehl wird der gesamte Inhalt des Ordners, in dem sich die Dockerfile befindet, in den Ordner kopiert, in dem sich der Container gerade befindet. \parencite{docker_inc_dockerfile_2024} Die Dockerfile befindet sich im äußersten Verzeichnis des StudyMap-Git-Repositorys. Das bedeutet, dass alle Dateien und Unterordner des Studiengangsfinders in den Container kopiert werden. Nachdem das \code{WORKDIR} auf \code{/app} gesetzt wurde, werden alle Dateien dementsprechend nach \code{/app} kopiert.
+Mit dem gegebenen \code{COPY}-Befehl wird der gesamte Inhalt des Ordners, in dem sich die Dockerfile befindet, in den Ordner kopiert, in dem sich der Container gerade befindet. \parencite{docker_inc_dockerfile_2024} Die Dockerfile befindet sich im äußersten Verzeichnis des StudyMap-Git-Repositorys. Das bedeutet, dass alle Dateien und Unterordner des Studiengangsfinders in den Container kopiert werden. Nachdem das \code{WORKDIR} auf \code{/app} gesetzt wurde, werden alle Dateien dementsprechend nach \code{/app} kopiert.
 
 Zeilen 14 bis 23 installieren alle Abhängigkeiten der einzelnen Subprojekte und kompilieren die Dateien zu ausführbaren Anwendungen. In Zeile 14 wird eine Version der Node.js-Webschnittstelle und REST-API erstellt. Anschließend wird in Zeile 15 das Arbeitsverzeichnis auf den Subordner der Administrationsoberfläche gesetzt und mit \code{RUN npm install} und \code{RUN npm build} dessen Abhängigkeiten installiert und kompiliert. Schließlich werden in den Zeilen 18 bis 20 des PixiJS-Projekts dieselben Schritte durchgeführt. Abschließend werden die Python-Abhängigkeiten mit dem bereits vorgestellten Paketmanager pip3 und einer Abhängigkeitsliste im Unterordner \code{requirements.txt} installiert. Python benötigt keinen Build-Prozess, da das Skript zur Laufzeit von der Python-Engine gelesen und ausgeführt wird. Zum Schluss wird in Zeile 23 das Arbeitsverzeichnis auf \code{/app} zurückgesetzt.
 
@@ -944,14 +925,14 @@ docker build -t studymap .
 docker run -p 8080:8080 studymap
 \end{lstlisting}
 
-Der erste Befehl führt den Build-Prozess anhand der Dockerfile im aktuellen Verzeichnis aus und benennt das Image als \code{studymap}. Der zweite Befehl erstellt einen Container mit dem gerade erstellten Image und leitet den Port 8080 aus dem Container auf den Port 8080 des Betriebssystems des Servers weiter.
+Der erste Befehl führt den Build-Prozess unter Verwendung der Dockerfile aus, die sich im aktuellen Verzeichnis befindet, und gibt dem daraus entstehenden Image den Namen \code{studymap}. Der zweite Befehl erstellt einen Container mit dem gerade erstellten Image und leitet den Port 8080 aus dem Container auf den Port 8080 des Betriebssystems des Servers weiter.
 
 \paragraph*{Persistierung der Daten durch Docker Volumes und Docker Compose}
 Wie bereits erläutert, werden in StudyMap Dateien von außen in den Container hochgeladen und verarbeitet. Wenn ein Docker Container jedoch neu gestartet wird, wird sein Zustand zurückgesetzt. Das bedeutet, dass alle veränderten Dateien wieder im Originalzustand sind und alle neu hinzugefügten Dateien gelöscht werden. Aus diesem Grund ist die Verwendung von Docker Volumes zur Persistenz über einen Neustart hinaus notwendig.
 
 Docker Volumes ermöglichen es, Daten von Containern betriebssystemunabhängig zu persistieren. Sie ermöglichen die Erstellung von Container-übergreifendem Speicher und sind dabei deutlich effizienter und performanter als Bind-Mounts eines Betriebssystems. \parencite{docker_inc_volumes_0000}
 
-Für die Verwendung von Docker Volumes muss der Kommandozeilenbefehl zum Starten des Containers angepasst werden. Eine Alternative hierzu ist die Verwendung von Docker Compose. Docker Compose wurde entwickelt, um mehrere Container effizient zu steuern und eine klare Struktur von vielen Containern zu ermöglichen. Hier gibt es neben den Dockerfiles auch eine \code{docker-compose.yml}-Datei, die alle Informationen zu den Containern bezüglich Netzwerk, Speicher und freizugebenden Ports enthält. Da der Kommandozeilenbefehl zum Starten des StudyMap-Docker Containers aufgrund der Ports und Volumes dokumentiert werden müsste, bietet sich die Verwendung von Docker Compose an. Die benötigten Volumes sowie der freizugebende Port 8080 werden in einer Datei festgehalten. \parencite{docker_inc_docker_0000} Der Administrator kann die StudyMap-Anwendung mit folgenden konsistenten Befehlen verwalten:
+Für die Verwendung von Docker Volumes muss der Kommandozeilenbefehl zum Starten des Containers angepasst bzw. deutlich erweitert werden. Eine Alternative hierzu ist die Verwendung von Docker Compose. Docker Compose wurde entwickelt, um mehrere Container effizient zu steuern und eine klare Struktur von vielen Containern zu ermöglichen. Hier gibt es neben den Dockerfiles auch eine \code{docker-compose.yml}-Datei, die alle Informationen zu den Containern bezüglich Netzwerk, Speicher und freizugebenden Ports enthält. Da der Kommandozeilenbefehl zum Starten des StudyMap-Docker Containers aufgrund der Ports und Volumes dokumentiert werden müsste, bietet sich die Verwendung von Docker Compose an. Die benötigten Volumes sowie der freizugebende Port 8080 werden in einer Datei festgehalten. \parencite{docker_inc_docker_0000} Der Administrator kann die StudyMap-Anwendung mit folgenden konsistenten Befehlen verwalten:
 
 \noindent
 \begin{minipage}{\linewidth}
