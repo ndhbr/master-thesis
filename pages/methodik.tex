@@ -1,11 +1,6 @@
 \section{Methodik}\label{sec:methodik}
 \subsection{Beschreibung der Algorithmen}
-StudyMap soll Studieninteressierten einen schnellen Überblick über
-alle in Frage kommenden Studiengänge ermöglichen.  Dabei soll dem Nutzer eine
-interaktive Grafik präsentiert werden, mit der er anhand von Studieninhalten
-(z.B. \glqq Gesundheit und Soziales\grqq{}) sofort alle relevanten Studiengänge
-findet. Dazu ist es notwendig, die Studiengänge nach ihren Inhalten zu
-gruppieren (Clustering) und schließlich visuell ästhetisch aufzubereiten.
+StudyMap soll Studieninteressierten einen schnellen Überblick über alle in Frage kommenden Studiengänge ermöglichen.  Dabei soll dem Nutzer eine interaktive Grafik präsentiert werden, mit der er anhand von Studieninhalten (z.B. \glqq Gesundheit und Soziales\grqq{}) sofort alle relevanten Studiengänge findet. Um die Studiengänge nach inhaltlicher Ähnlichkeit zu gruppieren, ist es notwendig, sie als Knoten eines Graphen darzustellen und dann nach ihrem Inhalt zu clustern. Anschließend können sie für den Nutzer visuell ästhetisch aufbereitet werden.
 
 Bei der Festlegung des Clustering-Algorithmus für den Studiengangsfinder wurden
 verschiedene Optionen in Betracht gezogen, darunter K-Means Clustering,
@@ -25,17 +20,7 @@ Force-Directed Graph Drawing ist eine Methode zur Visualisierung von Graphen, be
     \label{fig:force-directed-layouts}
 \end{figure}
 
-Force-Directed Layouts sind besonders effektiv für die übersichtliche
-Darstellung von Netzwerken, in denen die Verbindungen zwischen den Elementen im
-Vordergrund stehen. \parencite{schonfeld_fruchtermanreingold_2019} Im Gegensatz dazu
-erfordert der Studiengangsfinder eine kontinuierliche Positionierung der
-Studiengänge basierend auf inhaltlichen Ähnlichkeiten, was nicht unbedingt der
-Stärke von Force-Directed Layouts entspricht. Force-Directed Graph Drawing
-benötigt als Vorraussetzung bereits einen Graphen mit Knoten und Kanten, welche
-im Fall des Studiengangsfinders die Ähnlichkeiten zwischen den einzelnen
-Studiengängen entsprechen würde. Gerade die Berechnung der Ähnlichkeit zwischen
-den einzelnen Studiengängen ist jedoch wesentlicher Bestandteil dieser Arbeit,
-weshalb der Algorithmus nicht näher untersucht wurde.
+Force-Directed Layouts sind besonders effektiv für die übersichtliche Darstellung von Netzwerken, in denen die Verbindungen zwischen den Elementen im Vordergrund stehen. \parencite{schonfeld_fruchtermanreingold_2019} Im Gegensatz dazu erfordert der Studiengangsfinder eine kontinuierliche Positionierung der Studiengänge basierend auf inhaltlichen Ähnlichkeiten, was nicht unbedingt der Stärke von Force-Directed Layouts entspricht. Force-Directed Graph Drawing benötigt als Eingabedaten bereits einen Graphen mit Knoten und Kanten. Im Fall des Studiengangsfinders entsprechen die Knoten den Studiengängen und die Kanten den Ähnlichkeiten zwischen ihnen. Gerade die Berechnung der Ähnlichkeit zwischen den einzelnen Studiengängen ist jedoch wesentlicher Bestandteil dieser Arbeit, weshalb der Algorithmus nicht näher untersucht wurde.
 
 \subsubsection{K-Means Clustering Algorithmus}
 K-Means ist ein Clustering-Algorithmus, der Datenpunkte in $k$ vordefinierte
@@ -52,7 +37,7 @@ innerhalb der Cluster minimiert wird (siehe \autoref{fig:kmeans}).
     \label{fig:kmeans}
 \end{figure}
 
-Die Entscheidung, den K-Means-Algorithmus nicht zu verwenden, basiert darauf, dass dieser hauptsächlich darauf abzielt, Datenpunkte zu gruppieren und weniger auf deren präzise Positionierung in einem zweidimensionalen Raum. Der Algorithmus fordert außerdem eine vordefinierte Clusteranzahl $k$. Das stellt im Falle des Studiengangsfinders jedoch keine Einschränkung dar, da jeder Cluster eine Inhaltskategorie, wie zum Beispiel \glqq Informatik\grqq{} repräsentieren würde. Dennoch ist der K-Means-Clustering-Algorithmus aufgrund seiner Empfindlichkeit gegenüber Ausreißern ungeeignet. Der Algorithmus versucht, Clusterzentren zu finden, die die Gesamtvarianz minimieren. Wenn es Ausreißer in den Studienschwerpunkten gibt, könnten sie das Ergebnis beeinflussen. \parencite{roth_demonstration_2023}
+Die Entscheidung, den K-Means-Algorithmus nicht zu verwenden, basiert darauf, dass dieser hauptsächlich darauf abzielt, Datenpunkte zu gruppieren und weniger auf deren präzise Positionierung in einem zweidimensionalen Raum. Der Algorithmus fordert außerdem eine vordefinierte Clusteranzahl $k$. Das stellt im Falle des Studiengangsfinders jedoch keine Einschränkung dar, da jeder Cluster eine Inhaltsgruppierung, wie zum Beispiel \glqq Informatik\grqq{} repräsentieren würde. Dennoch ist der K-Means-Clustering-Algorithmus aufgrund seiner Empfindlichkeit gegenüber Ausreißern ungeeignet. Der Algorithmus versucht, Clusterzentren zu finden, die die Gesamtvarianz minimieren. Wenn es Ausreißer in den Studienschwerpunkten gibt, könnten sie das Ergebnis beeinflussen. \parencite{roth_demonstration_2023}
 
 \subsubsection{Multidimensionale Skalierung (MDS)}\label{sec:MDS}
 MDS ermöglicht die Reduktion $n$-dimensionaler Daten auf $m$-Dimensionen,
@@ -114,18 +99,12 @@ Abstand zwischen zwei Punkten $ P_{i} $ und $ P_{j} $ wird nach der Formel
 $$ d(P_i, P_j) = \sqrt{(x_i - x_j)^2 + (y_i - y_j)^2 + \ldots + (z_i - z_j)^2} $$
 
 berechnet, wobei $ x_{i} $, $ y_{i} $, ..., $ z_{i} $ die Koordinaten von Punkt
-$ P_{i} $ im $n$-dimensionalen Raum sind \parencite{ceopedia_multidimensional_2018}. Für die
-Studiengangsdaten bedeutet das, dass die $n$-Dimensionen die verschiedenen
-Inhaltskategorien repräsentieren.
+$ P_{i} $ im $n$-dimensionalen Raum sind \parencite{ceopedia_multidimensional_2018}. Für die Daten des Studiengangs bedeutet dies, dass jede der $n$ Dimensionen genau eine Inhaltskategorie repräsentiert.
 
-Die euklidische Distanzmatrix $ D_{ij} $ enthält dann die euklidischen Abstände
-zwischen jedem Paar von Studiengängen. In der Matrix sind die Elemente
-$ D_{ij} $ die Distanzen zwischen den Studiengängen $ i $ und $ j $. Je näher
-die Studiengänge in der Distanzmatrix beieinander liegen, desto näher werden sie
-im finalen Diagramm platziert und umgekehrt.
+Nach der Berechnung enthält die euklidische Distanzmatrix $ D_{ij} $ die Abstände zwischen jedem Paar von Studiengängen. Die Matrixelemente $ D_{ij} $ sind die Distanzen zwischen den Studiengängen i und j. Je näher die Studiengänge in der Distanzmatrix beieinander liegen, desto näher werden sie im finalen Diagramm platziert und umgekehrt.
 
-Konkret in Python implementiert, sieht die Berechnung der Distanzmatrix wie
-folgt aus:
+\noindent
+Konkret in Python implementiert, sieht die Berechnung der Distanzmatrix wie folgt aus:
 
 \begin{lstlisting}[style=Python]
 def calculate_distance_matrix(X):
@@ -144,22 +123,24 @@ def calculate_distance_matrix(X):
 % https://www.hongfeili.com/files/paper100/paper4.pdf
 \paragraph*{2. Anwendung der Centering Matrix $ C $ zur Normalisierung der
 Distanzen}
-Die Formel $ C = I - \frac{1}{n} \vec{e} * \vec{e}^T $ berechnet die sogenannte Centering Matrix. $ I $ ist die Einheitsmatrix, $ \frac{1}{n} $ ist der Kehrwert der Anzahl der Datenpunkte und $ \vec{e} $ ist ein Vektor gefüllt mit Einsen. Das Symbol $ \vec{e}^T $ bezeichnet wie in der Mathematik üblich die Transposition des Vektors. \parencite{wickelmaier_introduction_2003}
+Im nächsten Schritt wird die Centering Matrix berechnet, um die ermittelten Abstände zu normalisieren. Die Centering Matrix wird mit Hilfe der Formel $ C = I - \frac{1}{n} \vec{e} * \vec{e}^T $ bestimmt. Dabei steht $ I $ für die Einheitsmatrix, $ \frac{1}{n} $ ist der Kehrwert der Anzahl der Datenpunkte und $ \vec{e} $ ist ein Vektor gefüllt mit Einsen. Das Symbol $ \vec{e}^T $ bezeichnet wie in der Mathematik üblich die Transposition des Vektors. \parencite{wickelmaier_introduction_2003}
 
 Die Centering Matrix $ C $ wird verwendet, um die Distanzmatrix $ D $ zu
 zentrieren. Das Zentrieren ist wichtig, um die Distanzen zwischen den Punkten
 in der $n$-dimensionalen Raummatrix zu normieren und somit den Schwerpunkt der
 Daten im Raum zu korrigieren. \parencite{wickelmaier_introduction_2003}
 
-Schließlich wird diese eingesetzt um die Zentriermatrix $ B $ aus der
+Schließlich wird diese eingesetzt um die Bewertungsmatrix $ B $ aus der
 Distanzmatrix zu berechnen:
 $$ B = - \frac{1}{2} * C * D_{ij} * C $$
 
+Das Ergebnis dieser Formel ist die symmetrische Matrix $ B $, die die \glqq inneren Produkte\grqq{} der Datenpunkte im niedrigdimensionalen Raum darstellt. \parencite{he_classical_2018} Durch die Berechnung der Elemente von $ B $ wird versucht, die Abstände zwischen den Datenpunkten im Originalraum so genau wie möglich in einem niedrigdimensionalen Raum zu erhalten.
+
 \paragraph*{3. Spektralzerlegung}
-Die Matrix $ B $ wird nun spektral zerlegt, um die Eigenwerte $ \lambda_{i} $ und die zugehörigen Eigenvektoren $ v_{i} $ zu erhalten. $$ B = W * \Lambda * W^-1 $$ Hierbei ist $ W $ die Matrix der Eigenvektoren und $ \Lambda $ ist eine Diagonalmatrix mit den Eigenwerten auf der Hauptdiagonale. Anschließend werden die Eigenvektoren sortiert und die größten positiven Eigenwerte $ \lambda_{1} ... \lambda{m} $ mit dazugehörigen Eigenvektoren $ v_{1} ... v_{m} $ aus B extrahiert. \parencite{wickelmaier_introduction_2003}
+Die Bewertungsmatrix $ B $ wird nun spektral zerlegt, um die Eigenwerte $ \lambda_{i} $ und die zugehörigen Eigenvektoren $ v_{i} $ zu erhalten. $$ B = W * \Lambda * W^-1 $$ Hierbei ist $ W $ die Matrix der Eigenvektoren und $ \Lambda $ ist eine Diagonalmatrix mit den Eigenwerten auf der Hauptdiagonale. Anschließend werden die Eigenvektoren sortiert und die größten positiven Eigenwerte $ \lambda_{1} ... \lambda{m} $ mit dazugehörigen Eigenvektoren $ v_{1} ... v_{m} $ aus B extrahiert. \parencite{wickelmaier_introduction_2003}
 
 \paragraph*{4. Projektion der Datenpunkte}
-Um nun die Datenpunkte von einem höherdimensionalen Raum (basierend auf den
+Um im letzten Schritt nun die Datenpunkte von einem höherdimensionalen Raum (basierend auf den
 Beziehungen in der Distanzmatrix $ D $) auf einen niedrigdimensionalen Raum,
 der durch die Eigenvektoren und Eigenwerte repräsentiert wird, abzubilden,
 benötigt man folgende Projektion \parencite{he_classical_2018}:
@@ -201,7 +182,7 @@ Die Grundlage für den Studiengangsfinder wurde in enger Zusammenarbeit mit Prof
 
 Diese Anforderungen wurden dann innerhalb der Hochschule kommuniziert und von einer Teilmenge der Studiendekane für vereinzelte Studiengänge ausgefüllt. Für 22 Studiengänge wurde von den Studiendekanen jeweils ein subjektiver Wert für jede dieser inhaltlichen Kategorien festgelegt, und zwar in einem ersten Schritt unabhängig voneinander. % TODO: PASST NICHT
 
-Frau Rösel bleibt bis zur Übergabe der Arbeit weiterhin für die Beschaffung der Daten verantwortlich. Eine systematische Bewertung aller Studiengänge anhand des Modulplans und der jeweiligen ECTS pro Inhaltskategorie wird von Frau Rösel in Zusammenarbeit mit den Studiengangsverantwortlichen entwickelt.
+Frau Rösel bleibt bis zur Übergabe der Arbeit weiterhin für die Beschaffung der Daten verantwortlich. Um zu verhindern, dass die inhaltliche Bewertung der einzelnen Studienprogramme willkürlich erfolgt, wurde gemeinsam mit Frau Rösel eine systematische Bewertung entwickelt. Grundlage ist die Anzahl der ECTS pro Inhaltskategorie pro Studiengang, wie sie im Modulplan festgelegt ist.
 
 Das European Credit Transfer System (ECTS) ist ein System zur Normierung von Studienleistungen innerhalb des Europäischen Hochschulraums. Dadurch können Unterschiede zwischen nationalen Hochschulsystemen ausgeglichen werden. \parencite{european_commission_europaisches_nodate} Jedes Fach an der OTH Regensburg hat eine bestimmte Anzahl von Credits (ECTS), die sich nach der Intensität des Faches richtet.
 

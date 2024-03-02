@@ -29,7 +29,7 @@ führen. \parencite{bostock_d3js_2023}
 
 % d3js-trend, d3js-trend-2
 
-Aufgrund der festgestellten Einschränkungen in der Flexibilität von \textit{Chart.js} wurde gegen die Verwendung der Bibliothek entschieden. Auch wenn Chart.js die Erstellung einer Vielzahl von Diagrammen ermöglicht, hat sich gezeigt, dass die Anpassbarkeit begrenzt ist. \parencite{etimberg_chartjs_2023}
+Aufgrund der festgestellten Einschränkungen in der Flexibilität von \textit{Chart.js} wurde gegen die Verwendung der Bibliothek entschieden. Mit Chart.js lassen sich zwar sehr viele verschiedene Charts erstellen, aber die Anpassungsmöglichkeiten hinsichtlich des Aussehens und der zu übermittelnden Parameter sind beschränkt. \parencite{etimberg_chartjs_2023}
 
 Basierend auf der wahrgenommenen Inaktivität des Projekts und den festgestellten 
 Einschränkungen in Bezug auf Event-Handler wurde entschieden, \textit{Paper.js}
@@ -57,7 +57,7 @@ Die vorliegende Implementierung berechnet die x- und y-Koordinaten für die Plat
     \label{fig:pixijs-tooltip-1}
 \end{figure}
 
-Die Implementierung beinhaltet außerdem die Funktionalität, dass ein Tooltip erscheint, wenn man mit der Maus über eine Bubble fährt (siehe \autoref{fig:pixijs-tooltip-1}). In der Entwicklung treten dabei jedoch zwei große Herausforderungen auf: Wie funktioniert dieses Feature auf einem Smartphone ohne Maus? Was passiert, wenn das Tooltip außerhalb des Bildschirms gezeichnet wird?
+Die Implementierung beinhaltet außerdem die Funktionalität, dass ein Tooltip erscheint, wenn man mit der Maus über eine Bubble fährt (siehe \autoref{fig:pixijs-tooltip-1}). In der Entwicklung treten dabei jedoch zwei große Herausforderungen auf: Wie funktioniert dieses Feature auf einem Smartphone ohne Maus? Was passiert, wenn der Tooltip außerhalb des Bildschirms gezeichnet wird?
 
 % TODO: Bei Bedienung muss noch die Hitarea beim Hovern dazukommen.
 \paragraph*{Herausforderung 1: Bedienung}
@@ -73,7 +73,7 @@ Für das Tracking, ob der Benutzer mit der Maus über der Bubble ist, wird der E
     \label{fig:pixijs-canvas-2}
 \end{figure}
 
-Beim Berechnen des Nebels der Supergruppen werden gleichzeitig die Minima und Maxima der x- und y-Koordinaten berechnet. Das Ergebnis ist ein unsichtbares Rechteck, das alle Studiengänge in dieser Inhaltskategorie umfasst; dieses Rechteck hat die Funktion einer Hitarea. Auf dieser Hitarea wird ein \code{.onmouseover()}-Eventlistener platziert, der ausgelöst wird, sobald der Benutzer mit der Maus in die Nähe eines Studiengangs dieser Kategorie kommt.
+Beim Berechnen des Nebels der Supergruppen werden gleichzeitig die Minima und Maxima der x- und y-Koordinaten berechnet. Aus den Minima und Maxima wird ein unsichtbares Rechteck gespannt, das alle Studiengänge in dieser Inhaltskategorie umfasst; dieses Rechteck hat die Funktion einer Hitarea. Auf dieser Hitarea wird ein \code{.onmouseover()}-Eventlistener platziert, der ausgelöst wird, sobald der Benutzer mit der Maus in die Nähe eines Studiengangs dieser Kategorie kommt bzw. über das unsichtbare Rechteck fährt.
 
 Sobald dieser Fall eintritt, wird das Label der Supergruppe deaktiviert und alle Studiengangs-Bubbles erhalten als Label das Kürzel des jeweiligen Studiengangs (siehe \autoref{fig:pixijs-canvas-3}).
 
@@ -85,26 +85,26 @@ Sobald dieser Fall eintritt, wird das Label der Supergruppe deaktiviert und alle
     \label{fig:pixijs-canvas-3}
 \end{figure}
 
-Schließlich besitzt jede Bubble einen zusätzlichen \code{.onmouseover()}-Eventlistener. Wenn dieses Event ausgelöst wird, wird die Bubble vergrößert und immer gegenüber eventuell überschneidenden Bubbles in den Vordergrund gestellt. Die Labels der anderen Studiengänge in allen anderen Supergruppen werden deaktiviert, um den Fokus auf diese Inhaltskategorie und explizit diesen Studiengang zu legen. Daraufhin erscheint darüber das Tooltip, das in \autoref{fig:pixijs-tooltip-1} zu sehen ist. Ein Klick auf die fokussierte Bubble oder den dargestellten Tooltip öffnet das Popup mit den Details zum Studiengang.
+Schließlich besitzt jede Bubble einen zusätzlichen \code{.onmouseover()}-Eventlistener. Wenn dieses Event ausgelöst wird, wird die Bubble vergrößert und immer gegenüber eventuell überschneidenden Bubbles in den Vordergrund gestellt. Die Labels der anderen Studiengänge in allen anderen Supergruppen werden deaktiviert, um den Fokus auf diese Inhaltskategorie und explizit diesen Studiengang zu legen. Daraufhin erscheint darüber der Tooltip, das in \autoref{fig:pixijs-tooltip-1} zu sehen ist. Ein Klick auf die fokussierte Bubble oder den dargestellten Tooltip öffnet das Popup mit den Details zum Studiengang.
 
 Da ein Smartphone in der Regel keine Maus angeschlossen hat, wird anstelle des für Desktop-Benutzer verwendete \code{.onmouseover()}-Event das \code{.ontap()}-Event verwendet. Dieses Ereignis wird ausgelöst, wenn der Benutzer auf die Bubble des Studiengangs tippt. Die Hitarea des Supergruppen-Nebels wird dabei auf Smartphones ignoriert.
 
-Auch hier muss erneut differenziert werden. Wenn ein Desktop-Nutzer auf eine Bubble klickt, öffnet sich gemäß dem Konzept der Dialog mit den Studiengangsdetails. Tippt ein Smartphone-Nutzer auf die Bubble, sollte sich das Popup nicht direkt öffnen. Es ist wichtig, dass der Nutzer zuvor das Tooltip gesehen hat, um zu wissen, welchen Studiengang er öffnet.
+Auch hier muss erneut differenziert werden. Wenn ein Desktop-Nutzer auf eine Bubble klickt, öffnet sich gemäß dem Konzept der Dialog mit den Studiengangsdetails. Tippt ein Smartphone-Nutzer auf die Bubble, sollte sich das Popup nicht direkt öffnen. Es ist wichtig, dass der Nutzer zuvor der Tooltip gesehen hat, um zu wissen, welchen Studiengang er öffnet.
 
 Aus diesem Grund wird beim \code{.ontap()}-Event auf eine Bubble zwischen drei Zuständen unterschieden:
 
 \begin{enumerate}
     \item \textbf{Bisher noch keine andere Bubble angetippt:} Sollte bisher noch keine Bubble selektiert oder angetippt worden sein, wird der gleiche Hover-Effekt ausgeführt, den auch ein Desktop-Endgerät beim \code{.onmouseover()}-Event über eine Bubble auslösen würde.
     \item \textbf{Es wurde bereits eine andere Bubble angeklickt:} In diesem Fall wird der Hover-Effekt für die bereits angeklickte Bubble deaktiviert und für diese Bubble aktiviert.
-    \item \textbf{Diese Bubble wurde bereits angeklickt:} Daraufhin wird das Tooltip entfernt und das Popup mit den Details zum Studiengang geöffnet. Dies ist das Äquivalent zu einem Doppelklick auf die Bubble.
+    \item \textbf{Diese Bubble wurde bereits angeklickt:} Daraufhin wird der Tooltip entfernt und das Popup mit den Details zum Studiengang geöffnet. Dies ist das Äquivalent zu einem Doppelklick auf die Bubble.
 \end{enumerate}
 
 Zur Implementierung dieser Funktionalität ist die Zwischenspeicherung eines Active-State erforderlich, der immer die zuletzt angeklickte Bubble enthält.
 
-\paragraph*{Herausforderung 2: Was passiert, wenn das Tooltip außerhalb des Bildschirms gezeichnet wird?}
-Die Zeichenoberfläche von PixiJS enthält keine vorgefertigten Anzeigeelemente oder Komponenten zur Erstellung einer Benutzeroberfläche. Das bedeutet, dass Elemente wie z.B. das Tooltip in Abbildung X selbst mit Hilfe von Polygonen gezeichnet werden müssen.
+\paragraph*{Herausforderung 2: Was passiert, wenn der Tooltip außerhalb des Bildschirms gezeichnet wird?}
+Die Zeichenoberfläche von PixiJS enthält keine vorgefertigten Anzeigeelemente oder Komponenten zur Erstellung einer Benutzeroberfläche. Das bedeutet, dass Elemente wie z.B. der Tooltip in \autoref{fig:pixijs-tooltip-1} selbst mit Hilfe von Polygonen gezeichnet werden müssen.
 
-Das gezeigte Tooltip besteht aus einem abgerundeten Rechteck, das den Text darüber enthält, und einem Dreieck, das anzeigt, für welche Bubble das Tooltip geöffnet wurde. Das Rechteck und das dazugehörige Dreieck werden in Schwarz aneinander gesetzt, so dass das kleine Fenster wie eine Sprechblase aussieht.
+Das gezeigte Tooltip besteht aus einem abgerundeten Rechteck, das den Text darüber enthält, und einem Dreieck, das anzeigt, für welche Bubble der Tooltip geöffnet wurde. Das Rechteck und das dazugehörige Dreieck werden in Schwarz aneinander gesetzt, so dass das kleine Fenster wie eine Sprechblase aussieht.
 
 Die Standardrichtung zum Öffnen des Tooltips wurde bei der Entwicklung der Klasse Tooltip nach oben festgelegt. Der folgende Codeausschnitt zeigt, wie die Richtung festgelegt wird:
 
@@ -122,11 +122,11 @@ if (this.rootObjectYPosition - this.distance - this.container.height < 0) {
 }
 \end{lstlisting}
 
-Die Variablen \code{this.rootObjectXPosition} und \code{this.rootObjectYPosition} enthalten die x- und y-Koordinaten des Elements, an dem der Tooltip erscheinen soll. In diesem Fall sind dies die Koordinaten der jeweiligen Bubble. Die Variable \code{this.distance} enthält den vordefinierten Abstand, um den der Tooltip vom Element entfernt sein soll. Im vorliegendem Fall handelt es sich mindestens um den Radius des Studiengangskreises. Die Größe des Tooltips wird wiederum in den Variablen \code{this.container.height} und \code{this.container.width} gespeichert.
+Die Variablen \code{this.rootObjectXPosition} und \code{this.rootObjectYPosition} enthalten die x- und y-Koordinaten des Elements, an dem der Tooltip erscheinen soll. In diesem Fall sind dies die Koordinaten der jeweiligen Bubble. Die Variable \code{this.distance} enthält den vordefinierten Abstand, um den der Tooltip vom Element entfernt sein soll. Im vorliegendem Fall handelt es sich mindestens um den Radius des Studiengangskreises, da der Ankerpunkt des Kreises in der Mitte liegt. Die Größe des Tooltips wird wiederum in den Variablen \code{this.container.height} und \code{this.container.width} gespeichert.
 
-Die Richtung des Tooltip-Fensters wird nach dem Ausschlussverfahren festgelegt. Wenn das Tooltip mit der Standardrichtung \code{'top'} (nach oben) aus der Zeichenfläche hinausragt, wird die Richtung nach unten (\code{'bottom'}) geändert. Anschließend wird überprüft, ob das Element die linke Fenstergrenze überschreitet. Falls dies der Fall ist, wird die Richtung auf \code{'rechts'} gesetzt. Analog dazu wird geprüft, ob das Objekt die rechte Grenze überschreitet. In diesem Fall wird die Richtung auf \code{'links'} gesetzt.
+Die Richtung des Tooltip-Fensters wird nach dem Ausschlussverfahren festgelegt. Wenn der Tooltip mit der Standardrichtung \code{'top'} (nach oben) aus der Zeichenfläche hinausragt, wird die Richtung nach unten (\code{'bottom'}) geändert. Anschließend wird überprüft, ob das Element die linke Fenstergrenze überschreitet. Falls dies der Fall ist, wird die Richtung auf \code{'rechts'} gesetzt. Analog dazu wird geprüft, ob das Objekt die rechte Grenze überschreitet. In diesem Fall wird die Richtung auf \code{'links'} gesetzt.
 
-Sobald die Ausrichtung des Tooltips festgelegt wurde, müssen die Elemente einzeln verschoben und gedreht werden. Führt die vorangegangene if-Bedingung dazu, dass die Richtungsvariable \code{direction} auf \code{'left'} gesetzt wird, muss das Tooltip wie in der folgenden \autoref{fig:pixijs-tooltip-2} dargestellt links neben der Bubble erscheinen.
+Sobald die Ausrichtung des Tooltips festgelegt wurde, müssen die Elemente einzeln verschoben und gedreht werden. Führen die vorangegangenen Bedingungen dazu, dass die Richtungsvariable \code{direction} auf \code{'left'} gesetzt wird, muss der Tooltip wie in der folgenden \autoref{fig:pixijs-tooltip-2} dargestellt links neben der Bubble erscheinen.
 
 \begin{figure}[H]
     \centering
@@ -151,7 +151,7 @@ if (this.direction == 'left') {
 }
 \end{lstlisting}
 
-Dieser Ansatz funktioniert jedoch nur bis zu einem gewissen Grad. Wenn das Tooltip breiter als die x-Achse des Endgeräts ist, wird es immer über die Ränder des Canvas hinausragen, da auf keiner der beiden Seiten genügend Platz für das Tooltip zur Verfügung steht. % TODO: In Zukunftsaussichten aufnehmen
+Dieser Ansatz funktioniert jedoch nur bis zu einem gewissen Grad. Wenn der Tooltip breiter als die x-Achse des Endgeräts ist, wird es immer über die Ränder des Canvas hinausragen, da auf keiner der beiden Seiten genügend Platz für der Tooltip zur Verfügung steht. % TODO: In Zukunftsaussichten aufnehmen
 
 \paragraph*{Popup-Dialog mit Studiengangsdetails}
 Sobald das im vorigen Abschnitt beschriebene Ereignis zum Öffnen des Popups ausgelöst wird, werden die benötigten Studiengangsdetails von der später beschriebenen Webschnittstelle abgerufen und angezeigt. Zur Darstellung der Dialog-Komponente wird eine weitere Programmibliothek verwendet: Bootstrap.
@@ -357,9 +357,9 @@ Jahr.
 
 Das Python-Skript hat neben der Berechnung und Speicherung der Koordinaten der Studiengänge noch eine weitere Aufgabe. Sobald der Benutzer auf der StudyMap eine Bubble anklickt, öffnet sich ein Popup mit Details zum entsprechenden Studiengang (siehe Konzept \autoref{fig:mockup-bubbles-popup}). Wie im weiteren Verlauf der Arbeit noch erläutert wird, können diese Details über die Administrationsoberfläche bearbeitet werden. Um die Details in der Administrationsmaske bearbeiten zu können, legt das Python-Skript für jeden Studiengang eine .json-Datei mit den erforderlichen Attributen an. Gleichzeitig werden die ähnlichen Studiengänge, die durch den MDS-Algorithmus berechnet wurden, sowie die Werte der Inhaltskategorien eingefügt.
 
-Bei der Berechnung neuer Koordinaten wird, wie im vorherigen Abschnitt erwähnt, für jeden eingelesenen Studiengang eine .json-Datei mit einem leeren Template erstellt. Wenn bereits eine Datei für den Studiengang aus einer vorherigen Datenquelle existiert, wird diese geöffnet und bearbeitet. Zur späteren Darstellung der Inhaltskategorien werden anschließend die Originalwerte aus der Datenquelle in die .json-Datei kopiert (siehe folgendes Beispiel-JSON-Objekt \code{contents}).
+Bei der Berechnung neuer Koordinaten wird, wie im vorherigen Abschnitt erwähnt, für jeden eingelesenen Studiengang eine .json-Datei mit einem leeren Template erstellt. Wenn bereits eine Datei für den Studiengang aus einer vorherigen Datenquelle existiert, wird diese geöffnet und bearbeitet. Zur späteren Darstellung der Inhaltskategorien werden anschließend die Originalwerte aus der Datenquelle in die .json-Datei kopiert (siehe in folgendem Beispiel-JSON das Array \code{contents}).
 
-Um ähnliche Studiengänge zu ermitteln, wird für jeden Studiengang anhand der zuvor berechneten Koordinaten der euklidische Abstand zu allen anderen Studiengängen ermittelt. Alle Studiengänge, die innerhalb einer bestimmten Grenze liegen, werden in eine Liste aufgenommen und schließlich in die .json-Datei des jeweiligen Studiengangs geschrieben (siehe folgendes Beispiel-JSON-Objekt \code{related\_studies}).
+Um ähnliche Studiengänge zu ermitteln, wird für jeden Studiengang anhand der zuvor berechneten Koordinaten der euklidische Abstand zu allen anderen Studiengängen ermittelt. Alle Studiengänge, die innerhalb einer bestimmten Grenze liegen, werden in eine Liste aufgenommen und schließlich in die .json-Datei des jeweiligen Studiengangs geschrieben (siehe in folgendem Beispiel-JSON das Array \code{related\_studies}).
 
 \noindent
 Beispiel: Leeres Template des Studiengangs Architektur mit Inhalten und ähnlichen Studiengängen:
@@ -392,7 +392,6 @@ Beispiel: Leeres Template des Studiengangs Architektur mit Inhalten und ähnlich
 
 Falls sich im Ordner weitere .json-Dateien befinden, die von Studiengängen stammen, die in der aktuellen Datenquelle nicht mehr aufgeführt sind, werden diese automatisch gelöscht.
 
-\newpage
 \subsubsection{Node.js - REST-API}\label{sec:node-js-restapi}
 Wie im vorherigen Abschnitt erläutert, ist neben dem Python-Programm auch eine Webschnittstelle erforderlich. In diesem Fall wird hierfür Node.js in Kombination mit der Bibliothek Express verwendet. Node.js ist eine JavaScript-Runtime-Umgebung, die auf der V8 JavaScript Engine von Google basiert und eine serverseitige Ausführung von JavaScript ermöglicht. \parencite{foundation_nodejs_2023} Express wiederum ist ein quelloffenes Webanwendungs-Framework für Node.js. Es erleichtert die Erstellung von Webanwendungen und APIs, indem es eine Reihe von Funktionen und Tools für den Aufbau von Webanwendungen bereitstellt.
 \parencite{foundation_express_2023}
@@ -472,7 +471,8 @@ Beispielausgabe:
 Sobald alle Studiengänge abgerufen wurden und der Benutzer auf eine der dargestellten Bubbles klickt, öffnet sich ein Popup mit Details über den Studiengang. Der Klick ruft den API-Endpunkt \code{/details/:abb} auf, wobei \code{:abb} für das Kürzel des Studiengangs steht. Die Ausgabe ist erneut ein JSON und enthält die Details des Studiengangs.
 
 \noindent
-Queryparameter: \code{:mode} $\in$ {'staging', 'production'}
+Queryparameter: \code{:mode} $\in$ {'staging', 'production'}\newline
+Pfadparameter: \code{:abb} $\in$ Menge der vorhandenen Studiengangskürzel
 
 \noindent
 Beispielausgabe:
@@ -520,7 +520,7 @@ Beispielausgabe:
 
 \paragraph*{PATCH /admin/data/history/restore/:id}
 \vspace{-1.0em}
-Stellt Datensicherung mit der ID :id wieder in die Staging-Umgebung her. :id ist ein Pfadparameter.
+Stellt Datensicherung mit der ID :id wieder in die Staging-Umgebung her.
 
 \noindent
 Beispielausgabe bei erfolgreicher Wiederherstellung (HTTP-Statuscode 200):
@@ -538,9 +538,12 @@ Beispielausgabe bei Fehlerfall (HTTP-Statuscode 500):
 }
 \end{lstlisting}
 
+\noindent
+Pfadparameter: \code{:id} $\in$ Menge der vorhandenen Wiederherstellungspunkte
+
 \paragraph*{GET /admin/data/generate?mode=:mode}
 \vspace{-1.0em}
-Erstellt anhand der bereits hochgeladenen Dateien eine neue Version und erzeugt im Falle einer Produktivversion eine Datensicherung.
+Basierend auf den bereits hochgeladenen Dateien wird eine neue Version generiert. Wenn der Queryparameter :mode den Wert 'production' hat, wird zusätzlich eine Datensicherung erstellt.
 
 \noindent
 Queryparameter: \code{:mode} $\in$ {'staging', 'production'}
@@ -608,6 +611,9 @@ Beispielausgabe nach erfolgreichem Upload und Verarbeitung der Studiengängen (H
 \vspace{-1.0em}
 Nachdem alle verfügbaren Studiengänge mit \code{/admin/data/details} abgerufen wurden, können mithilfe von \code{/details/:abb} die vollständigen Details zu einem einzelnen Studiengang abgefragt werden. Anschließend kann der Benutzer die abgerufenen Details in der Administrationsoberfläche bearbeiten und die Änderungen mit diesem Endpunkt der API persistieren.
 
+\noindent
+Pfadparameter: \code{:filename} $\in$ Menge der vorhandenen Studiengangsdetails-Dateinamen
+
 Der Request Body dieser Anfrage muss das bearbeitete JSON-Objekt der Studiengangsdetails sein. Der Request Body enthält die zu sendenden Daten der HTTP-Anfrage. \parencite{parthiban_essential_2023}
 
 Bei erfolgreicher Speicherung der Studiengangsdetails wird zusammen mit dem Statuscode 200 der neue Inhalt der Datei zurückgegeben. Ein Beispiel dazu befindet sich in der Schnittstellenbeschreibung für \code{GET /details/:abb}.
@@ -629,9 +635,9 @@ Für die Entwicklung der Administrationsoberfläche wurde Angular als Webframewo
 
 Angular ist ein komponentenbasiertes Framework zur Erstellung von skalierbaren Webanwendungen auf Basis der Programmiersprache TypeScript. Es enthält unter anderem Bibliotheken für das Routing zwischen Seiten, dynamische Formulare, Client-Server-Kommunikation und mehr. \parencite{google_inc_angular_2023} 
 
-Zusätzlich zum Angular-Framework wird ein CSS-Framework benötigt, um vordefinierte Styles und wiederverwendbare Komponenten wie z.B. Dialoge zu erhalten.
+Zusätzlich zum Angular-Framework wird ein CSS-Framework benötigt, um vordefinierte Styles und wiederverwendbare HTML-Komponenten wie z.B. Dialoge zu erhalten.
 
-HTML steht für HyperText Markup Language und ist die Sprache des Internets. HTML ist eine Dokumentenbeschreibungssprache, mit der die Struktur von Webseiten definiert wird. Mithilfe von CSS wird dann das Layout und Aussehen der in HTML definierten Elemente (z.B. Schaltflächen) festgelegt. \parencite{mozilla_corporation_html_2023} CSS wiederum steht für Cascading Style Sheets und definiert Darstellungsregeln für HTML-Elemente. CSS-Regeln enthalten Definitionen zu Größe, Form, Farbe, Animation und Layout der einzelnen HTML-Elemente einer Website. \parencite{mozilla_corporation_what_2024}
+HTML steht für HyperText Markup Language und ist die Sprache des Internets. Mit HTML, einer Dokumentenbeschreibungssprache, werden die Struktur und die Komponenten (z.B. Texte, Formulare, Bilder, ...) von Webseiten definiert. \parencite{mozilla_corporation_html_2023} CSS wiederum steht für Cascading Style Sheets. Durch CSS-Regeln wird das Layout und Erscheinungsbild der Webseite festgelegt. CSS-Styles enthalten beispielsweise Definitionen zu Größe, Form, Farbe, Animation und Layout der einzelnen HTML-Elemente einer Website. \parencite{mozilla_corporation_what_2024}
 
 Im Fall von StudyMap wird Angular Material UI verwendet. Angular Material UI ist ein von Google entwickeltes CSS-Framework. Die Entscheidung für dieses Framework beruht darauf, dass es ebenso wie das Angular Framework von Google LLC entwickelt wurde und daher sehr gut miteinander kombiniert werden kann. \parencite{google_llc_angular_2024}
 
@@ -661,7 +667,19 @@ Die Seite \glqq Überblick\grqq{} bietet einen Überblick über das Gesamtsystem
 Direkt unterhalb befinden sich auf der Übersichtsseite außerdem zwei Architekturgrafiken, die dem Benutzer die Struktur von StudyMap und die damit verbundene Datensicherung über die Versionshistorie verdeutlichen sollen.
 
 \paragraph*{Neue Daten einpflegen}
-Auf der Seite zur Eingabe neuer Daten gibt es die Möglichkeit, zwei CSV-Dateien vom Computer auszuwählen (siehe \autoref{fig:adminui-new-data-1}). Dies ist die Datenquelle, die in \autoref{sec:datenquelle} beschrieben wurde. Sie enthält alle Studiengänge und die dazugehörigen Werte der Inhaltskategorien. Die zweite Datei enthält die Abkürzungen der Fakultäten und den entsprechenden Farbcodes, um die Bubbles entsprechend den Fakultäten einzufärben.
+Auf der Seite zur Eingabe neuer Daten gibt es die Möglichkeit, zwei .csv-Dateien vom Computer auszuwählen (siehe \autoref{fig:adminui-new-data-1}). Dies ist die Datenquelle, die in \autoref{sec:datenquelle} beschrieben wurde. Sie enthält alle Studiengänge und die dazugehörigen Werte der Inhaltskategorien. Die zweite Datei enthält die Abkürzungen der Fakultäten und den entsprechenden Farbcodes, um die Bubbles entsprechend den Fakultäten einzufärben (siehe \autoref{table:input-file-faculties}).
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|}
+    \hline
+    \textbf{A} & \textbf{M} & \textbf{IM} & \textbf{BW} & \textbf{...} \\ \hline
+    \#FFED00   & \#009BAC   & \#164194    & \#C22E0C    & ... \\ \hline         
+    \end{tabular}
+
+    \caption{StudyMap: Fakultätsfarben}
+    \label{table:input-file-faculties}
+\end{table}
 
 \begin{figure}[H]
     \centering
@@ -703,16 +721,16 @@ Obwohl die Softwarearchitektur erst in den letzten 30 Jahren an Bedeutung gewonn
     \item Worauf sind Strukturierungen und Entscheidungen zurückzuführen?
 \end{itemize}
 
-Für StudyMap ist eine Darstellung der Softwarearchitektur aus mehreren Gründen essentiell.
+Für StudyMap ist eine Darstellung der Softwarearchitektur aus mehreren Gründen essentiell. In den drei folgenden Abschnitten werden die wichtigsten Gründe für die Dokumentation und Planung der Softwarearchitektur in diesem Projekt genannt.
 
 \paragraph*{Grund 1: Komplexität}
 Die Komplexität der Software wird übersichtlicher dargestellt. Da bei der Verwendung mehrerer Programmiersprachen wie JavaScript, TypeScript und Python schnell die Übersicht über die einzelnen Komponenten verloren gehen kann, besteht die Gefahr, ineffizienten oder im schlimmsten Fall fehlerhaften Code zu produzieren. Ein weiterer Grund ist die Einarbeitung zukünftiger Entwickler.
 
 \paragraph*{Grund 2: Einarbeitung}
-Da StudyMap im Rahmen dieser Masterarbeit entsteht, ist es abzusehen, dass es immer wieder wechselnde Stakeholder und Weiterentwickler für das Projekt geben wird. Diese müssen zwangsläufig eingearbeitet werden und das Gesamtprojekt verstehen. Ein Entwickler, dem der gesamte Workspace ohne Strukturgrafik mit vier miteinander kommunizierenden Projekten präsentiert wird, könnte anfangs überfordert sein. Deshalb dient die Softwarearchitektur der effizienten Einarbeitung.
+Da StudyMap im Rahmen dieser Masterarbeit entsteht, ist es abzusehen, dass es immer wieder wechselnde Stakeholder und Weiterentwickler für das Projekt geben wird. Diese müssen zwangsläufig eingearbeitet werden und das Gesamtprojekt verstehen. Ein Entwickler könnte anfangs überfordert sein, wenn ihm der gesamte Workspace mit vier miteinander kommunizierenden Projekten ohne Dokumentation der Architektur präsentiert wird. Deshalb dient die Softwarearchitektur mit einer begleitenden Strukturgrafik der Komponenten der effizienten Einarbeitung.
 
 \paragraph*{Grund 3: Sicherheit}
-Schließlich ist die Strukturgrafik für die Sicherheit der Hochschule von Bedeutung. StudyMap enthält einen geschützten Administrationsbereich. Es sollte im Vorfeld genau festgelegt werden, dass z.B. der Administrationsbereich nur über das VPN der Hochschule erreichbar ist, um die Wahrscheinlichkeit eines Hackerangriffs zu reduzieren. Solche Beziehungen lassen sich mithilfe der Definition einer Softwarearchitektur präzise festlegen. Außerdem benötigt man diese Darstellung explizit an der OTH-Regensburg, um einen Server vom Rechenzentrum für das Hosting von StudyMap zu erhalten. Weitere Informationen dazu finden Sie im \autoref{sec:deployment}.
+Schließlich ist die Strukturgrafik für die Sicherheit der Hochschule von Bedeutung. StudyMap enthält einen geschützten Administrationsbereich. Es sollte im Vorfeld genau festgelegt werden, dass z.B. der Administrationsbereich nur über das VPN der Hochschule erreichbar ist, um die Wahrscheinlichkeit eines Hackerangriffs zu reduzieren. Solche Beziehungen lassen sich mithilfe der Definition einer Softwarearchitektur präzise festlegen. Außerdem benötigt man dieses Architekturdiagramm explizit an der OTH-Regensburg, um einen Server vom Rechenzentrum für das Hosting von StudyMap zu erhalten. Weitere Informationen dazu finden Sie im \autoref{sec:deployment}.
 
 \begin{figure}[H]
     \centering
@@ -728,7 +746,7 @@ Schließlich ist die Strukturgrafik für die Sicherheit der Hochschule von Bedeu
 Alle Frontend-Komponenten werden über die Node.js-Webschnittstelle gehostet. Node.js wird mithilfe von Express genutzt, um neben der in \autoref{sec:node-js-restapi} erläuterten REST-API auch die restlichen Webseiten wie die Anwendung selbst und die Administrationsoberfläche bereitzustellen. Die Frontend-Komponenten in Dunkelblau sind ausschließlich über eine aktive VPN-Verbindung der Hochschule erreichbar.
 
 \paragraph*{StudyMap}
-Die Frontend-Komponente StudyMap ist das fertige Produkt. Die StudyMap-App besteht aus dem PixiJS-Canvas, der mit Bootstrap verbunden ist, um den Studiengangsdetails-Dialog anzuzeigen (siehe \autoref{fig:mockup-bubbles-popup}). Es handelt sich um eine reine Web-App ohne weitere Design-Elemente rund um den Canvas herum. Der Grund dafür ist, dass die StudyMap-Anwendung als iFrame in die Website der Hochschule eingebunden wird, d.h. die Anwendung muss den gesamten Bildschirminhalt ausfüllen, damit sich der iFrame später nahtlos in die Hochschulwebsite einfügt. Das HTML-Element iFrame erlaubt die Einbindung externer Webseiten in eine Seite. Ein klassisches Beispiel hierfür ist die Einbindung einer Anfahrtskarte eines Kartendienstleisters wie OpenStreetMap auf Unternehmenswebsites. \parencite{mozilla_corporation_iframe_2024} In dieser Arbeit wird der Studiengangsfinder in die Hochschulwebsite eingebettet.
+Die Frontend-Komponente StudyMap ist öffentliche Schnittstelle zum Benutzer. Die StudyMap-App besteht aus dem PixiJS-Canvas, der mit Bootstrap verbunden ist, um den Studiengangsdetails-Dialog anzuzeigen (siehe \autoref{fig:mockup-bubbles-popup}). Es handelt sich um eine reine Web-App ohne weitere Design-Elemente rund um den Canvas herum. Der Grund dafür ist, dass die StudyMap-Anwendung als iFrame in die Website der Hochschule eingebunden wird, d.h. die Anwendung muss den gesamten Bildschirminhalt ausfüllen, damit sich der iFrame später nahtlos in die Hochschulwebsite einfügt. Das HTML-Element iFrame erlaubt die Einbindung externer Webseiten in eine Seite. Ein klassisches Beispiel hierfür ist die Einbindung einer Anfahrtskarte eines Kartendienstleisters wie OpenStreetMap auf Unternehmenswebsites. \parencite{mozilla_corporation_iframe_2024} In dieser Arbeit wird der Studiengangsfinder in die Hochschulwebsite eingebettet.
 
 \noindent
 Webschnittstelle: \code{/app.html}
@@ -787,7 +805,7 @@ Wenn jemand in der Administrationsoberfläche neue Dateien hochlädt, wird eine 
 \paragraph*{Python}
 Die Python-Komponente hat im Wesentlichen nur eine Verbindung zu einer anderen Komponente, nämlich zur REST-API, die Python aufruft. Die Komponente enthält sowohl die Logik für die Generierung der Dateien, die von der API zur Verfügung gestellt werden, als auch für die Sicherung der Daten. Das Python-Skript implementiert hierbei den MDS-Algorithmus zur Berechnung der genauen Positionsdaten auf Basis der Ähnlichkeiten zwischen den Studiengängen. Das Skript wird ausschließlich über die Kommandozeile von der REST-API ausgeführt.
 
-Es besteht eine weitere implizite Verbindung zwischen PixiJS und den Daten des Python-Skripts für die Anzeige der Bubbles. Die eigentliche Kommunikation zwischen den Komponenten erfolgt jedoch über die Programmierschnittstelle.
+Es besteht eine weitere implizite Verbindung zwischen PixiJS und den Daten des Python-Skripts für die Anzeige der Bubbles. Die eigentliche Kommunikation zwischen den Komponenten erfolgt jedoch über die ausführlich erläuterte Programmierschnittstelle.
 
 \newpage
 \subsection{Software Deployment}\label{sec:deployment}
@@ -824,6 +842,7 @@ Aus diesem Grund gehören die verarbeiteten Informationen zur Hochschul-Informat
 
 \paragraph*{Wie wird sichergestellt, dass gewisse Bereiche nur per VPN zugänglich sind?}
 % TODO
+TODO
 
 \paragraph*{Wie wird die Authentifizierung sichergestellt?}
 Wie bereits in \autoref{paragraph:angular-basic-auth} erläutert, wird die Authentifizierung mittels einer Middleware im Webserver sichergestellt. Zudem wird vom Rechenzentrum eine separate IP-Adresse angefordert, um den Zugriff auf bestimmte Bereiche, wie beispielsweise den Administrationsbereich, nur mit aktiver VPN-Verbindung zu ermöglichen. % TODO: Wirklich so?
@@ -842,7 +861,7 @@ Frau Rösel ist für die Aktualität der Daten verantwortlich, während der Entw
 \paragraph*{Werden regelmäßige System- und Datensicherungen duchgeführt?}
 Der Server von StudyMap befindet sich im zentralen Serverraum des Rechenzentrums der OTH-Regensburg. Dadurch wird sichergestellt, dass die Organisation täglich eine Systemsicherung durchführt.
 
-Eine Datensicherung erfolgt nur beim Überführen eines Datenstands von Staging in die Produktivumgebung. Wie bereits beschrieben, speichert StudyMap immer die letzten zehn Produktivstände, um im Falle von korrupten Daten eine Datensicherung wiederherstellen zu können. Es gibt keine zeitgesteuerten Intervall-Datensicherungen.
+Eine Datensicherung erfolgt nur beim Überführen eines Datenstands von Staging in die Produktivumgebung. Wie bereits beschrieben, speichert StudyMap immer die letzten zehn Produktivstände, um im Falle von korrupten Daten eine Datensicherung wiederherstellen zu können. Es gibt weder zeitgesteuerte Intervall-Datensicherungen noch externe Datensicherungen.
 
 \paragraph*{Was ist der Ablauf bei einem eintretenden Sicherheitsvorfall?}
 Sollte es zu einer Kompromittierung des Servers kommen, muss die verantwortliche Person sofort Kontakt mit security@oth-regensburg.de aufnehmen und diese über den Vorfall informieren.
@@ -853,6 +872,8 @@ Damit die Verbindung zu StudyMap funktioniert, wird ein SSL-Zertifikat sowohl f�
 Wenn kein SSL-Zertifikat auf dem Webserver installiert ist, werden die Login-Anfragen unverschlüsselt verschickt. Ein Angreifer könnte dadurch die Zugangsdaten mitlesen und daraus einen weiteren Hackangriff starten.
 
 Obwohl keine sicherheitsrelevanten Informationen beim Öffnen der Besucheransicht geteilt werden, benötigt StudyMap auch für den öffentlichen Bereich ein SSL-Zertifikat. Der Grund dafür ist, dass die Hochschulwebsite eine https-Verbindung erzwingt. Moderne Browser erlauben es nicht, einen iFrame mit einer unverschlüsselten Website auf einer verschlüsselten Website einzubinden. \parencite{vyas_mixed_2013}
+
+Die Hochschule erstellt für den Studiengangsfinder die Subdomain im-studiengangfinder.oth-regensburg.de. Diese Domain ist öffentlich verfügbar und zeigt auf den vom Rechenzentrum bereitgestellten Server. Sie wird durch ein SSL-Zertifikat geschützt. Das SSL-Zertifikat wird von Let's Encrypt ausgestellt. Let's Encrypt ist eine gemeinnützige Zertifizierungsstelle, die kostenfreie SSL-Zertifikate ausstellt und von Großkonzernen wie Alphabet Inc., Amazon.com Inc., Cisco Systems Inc. und Meta Platforms Inc. unterstützt wird \parencite{internet_security_research_group_isrg_lets_nodate}. Da die Zertifikate von Let's Encrypt nur jeweils ein Jahr gültig sind, benötigt der Server einen sogenannten Certbot, der vor Ablauf des Zertifikats automatisch ein neues bei Let's Encrypt anfordert \parencite{electronic_frontier_foundation_certbot_nodate}.
 
 \subsubsection{Testen}
 In dieser Phase des Deployment-Prozesses wird eine Testumgebung erstellt, um zu überprüfen, ob alles wie vorgesehen funktioniert. Ziel ist die Schaffung einer möglichst realitätsnahen Umgebung, damit der endgültige Prozess der Bereitstellung auf dem Server der Universität mit möglichst wenigen unvorhersehbaren Komplikationen verbunden ist.
@@ -915,7 +936,7 @@ Mit dem gegebenen \code{COPY}-Befehl wird der gesamte Inhalt des Ordners, in dem
 
 Zeilen 14 bis 23 installieren alle Abhängigkeiten der einzelnen Subprojekte und kompilieren die Dateien zu ausführbaren Anwendungen. In Zeile 14 wird eine Version der Node.js-Webschnittstelle und REST-API erstellt. Anschließend wird in Zeile 15 das Arbeitsverzeichnis auf den Subordner der Administrationsoberfläche gesetzt und mit \code{RUN npm install} und \code{RUN npm build} dessen Abhängigkeiten installiert und kompiliert. Schließlich werden in den Zeilen 18 bis 20 des PixiJS-Projekts dieselben Schritte durchgeführt. Abschließend werden die Python-Abhängigkeiten mit dem bereits vorgestellten Paketmanager pip3 und einer Abhängigkeitsliste im Unterordner \code{requirements.txt} installiert. Python benötigt keinen Build-Prozess, da das Skript zur Laufzeit von der Python-Engine gelesen und ausgeführt wird. Zum Schluss wird in Zeile 23 das Arbeitsverzeichnis auf \code{/app} zurückgesetzt.
 
-In Zeile 26 wird mit dem Kommando \code{EXPOSE 8080} Docker darüber informiert, dass der Port 8080 für die Netzwerkkommunikation genutzt werden soll. Ein Netzwerkport ist eine definierte Nummer, die die Kommunikation für einen bestimmten Dienst empfängt oder überträgt. \parencite{wright_was_2022} Ein Beispiel aus dem Alltag wäre die Wohnungsnummer in einem Mehrparteienhaus, damit die Post den Brief zur richtigen Wohnung innerhalb des Hauses zustellen kann. Der \code{EXPOSE}-Befehl informiert lediglich über den Port, schaltet ihn jedoch nicht frei. Um den Port freizugeben, muss beim Start des Containers der Parameter \code{-p} für Port angegeben werden. \parencite{docker_inc_dockerfile_2024}
+In Zeile 26 wird mit dem Kommando \code{EXPOSE 8080} Docker darüber informiert, dass der Port 8080 für die Netzwerkkommunikation genutzt werden soll. Ein Netzwerkport ist eine definierte Nummer, die die Kommunikation für einen bestimmten Dienst empfängt oder überträgt. \parencite{wright_was_2022} Eine Analogie aus dem täglichen Leben ist die Wohnungsnummer in einem Mehrfamilienhaus, die es der Post ermöglicht, den Brief an die richtige Wohnung im Haus zu liefern. In diesem Fall entspricht das Haus dem Server und die Wohnung dem Dienst, der auf dem Server bereitgestellt wird. Der \code{EXPOSE}-Befehl informiert lediglich über den Port, schaltet ihn jedoch nicht frei. Um den Port freizugeben, muss beim Start des Containers der Parameter \code{-p} für Port angegeben werden. \parencite{docker_inc_dockerfile_2024}
 
 Die letzte Zeile enthält lediglich den Startbefehl für das Node.js Projekt, welches anschließend alle weiteren Projekte hostet. Wenn der Container gestartet wird, wird der Kommandozeilenbefehl ausgeführt, der mit dem \code{CMD}-Befehl definiert wurde. Aus diesem Grund darf es im Dockerfile auch nur einen \code{CMD}-Befehl geben. \parencite{docker_inc_dockerfile_2024}
 
@@ -962,7 +983,7 @@ volumes:
   input-files:
 \end{lstlisting}
 
-Die Container-Definition für den Studiengangsfinder befindet sich in den Zeilen vier bis elf. In Zeile vier wird der Name des Containers angegeben und in Zeile fünf das Image, das der Container verwenden soll. In diesem Fall ist das ein wichtiger Punkt, denn die \code{docker-compose.yml}-Datei liegt im selben Verzeichnis wie die Dockerfile. Das bedeutet, dass Docker Compose automatisch die Dockerfile sucht, das Image baut und als Grundlage für den Container verwendet. In Zeile sieben wird der freizugebende Port festgelegt. Der Container gibt den Port 8080 frei, welcher dann auf den Systemport 80 geleitet wird. In Zeile acht bis zehn werden die Volumes festgelegt. Hierbei handelt es sich um zwei Verzeichnisse. Einmal das Verzeichnis, in dem die hochgeladenen Dateien des Benutzers landen und die Datensicherungen angelegt werden, und das zweite Volume, welches die durch den Algorithmus generierten Dateien enthält. Zeile elf ist äquivalent zum \code{CMD}-Befehl aus der bereits erläuterten Dockerfile. In den Zeilen 13 bis 15 werden abschließend die verwendeten Volumes definiert.
+Die Container-Definition für den Studiengangsfinder befindet sich in den Zeilen vier bis elf. In Zeile vier wird der Name des Containers angegeben und in Zeile fünf das Image, das der Container verwenden soll. Der Punkt in dieser Zeile spielt dabei eine wichtige Rolle, denn die \code{docker-compose.yml}-Datei liegt im selben Verzeichnis wie die Dockerfile. Das bedeutet, dass Docker Compose automatisch die Dockerfile sucht, das Image baut und als Grundlage für den Container verwendet. In Zeile sieben wird der freizugebende Port festgelegt. Der Container gibt den Port 8080 frei, welcher dann auf den Systemport 80 geleitet wird. In Zeile acht bis zehn werden die Volumes festgelegt. Hierbei handelt es sich um zwei Verzeichnisse. Einmal das Verzeichnis, in dem die hochgeladenen Dateien des Benutzers landen und die Datensicherungen angelegt werden, und das zweite Volume, welches die durch den Algorithmus generierten Dateien enthält. Zeile elf ist äquivalent zum \code{CMD}-Befehl aus der bereits erläuterten Dockerfile. In den Zeilen 13 bis 15 werden abschließend die verwendeten Volumes definiert.
 
 Mithilfe der genannten Docker-Dateien kann die Anwendung und das Deployment nun entweder lokal auf dem Entwicklungsrechner oder auf Testservern getestet werden. Nachdem der Container erfolgreich gestartet werden kann, kann mit dem letzten Schritt des Deployments der eigentlichen Bereitstellung begonnen werden.
 
